@@ -305,27 +305,40 @@ body { background: var(--bg); color: var(--text); font-family: -apple-system, 'P
       <div class="stat-card">
         <div class="stat-label">今日新增 Alert</div>
         <div class="stat-value">47</div>
-        <div class="stat-sub" style="color:var(--red)">▲ 12 vs 昨日</div>
+        <div style="display:flex;gap:8px;margin-top:4px">
+          <span style="font-size:10px;color:var(--blue)">TS 31</span>
+          <span style="font-size:10px;color:var(--purple)">TM 16</span>
+          <span style="font-size:10px;color:var(--red);margin-left:auto">▲ 12 vs 昨日</span>
+        </div>
       </div>
       <div class="stat-card">
         <div class="stat-label">待处理</div>
         <div class="stat-value" style="color:var(--red)">128</div>
-        <div class="stat-sub" style="color:var(--red)">🔴 紧急 8 条</div>
+        <div style="display:flex;gap:8px;margin-top:4px">
+          <span style="font-size:10px;color:var(--blue)">TS 92</span>
+          <span style="font-size:10px;color:var(--purple)">TM 36</span>
+          <span style="font-size:10px;color:var(--red);margin-left:auto">🔴 紧急 8</span>
+        </div>
       </div>
       <div class="stat-card">
-        <div class="stat-label">AI 已完成分析</div>
-        <div class="stat-value" style="color:var(--blue)">128</div>
-        <div class="stat-sub" style="color:var(--green)">✅ 覆盖率 100%</div>
+        <div class="stat-label">AI 分析覆盖率</div>
+        <div class="stat-value" style="color:var(--blue)">100%</div>
+        <div style="display:flex;gap:6px;margin-top:4px;align-items:center">
+          <span style="font-size:10px;color:var(--green)">✅ TS+TM 全覆盖</span>
+        </div>
       </div>
       <div class="stat-card">
         <div class="stat-label">本月精准率</div>
         <div class="stat-value" style="color:var(--green)">34.2%</div>
-        <div class="stat-sub" style="color:var(--green)">▲ 5.2% MoM</div>
+        <div style="display:flex;gap:8px;margin-top:4px">
+          <span style="font-size:10px;color:var(--blue)">TS 38.1%</span>
+          <span style="font-size:10px;color:var(--purple)">TM 26.4%</span>
+        </div>
       </div>
       <div class="stat-card" style="border-color:rgba(31,111,235,.35);background:rgba(31,111,235,.07);cursor:pointer" onclick="showView('workflow')">
         <div class="stat-label" style="color:var(--blue)">AI 工作流</div>
         <div class="stat-value" style="font-size:18px;color:var(--blue);margin-top:4px">→ 开始处理</div>
-        <div class="stat-sub" style="color:var(--blue)">建议已就绪 128 条</div>
+        <div class="stat-sub" style="color:var(--blue)">Co-pilot 已就绪 · 128 条</div>
       </div>
     </div>
 
@@ -397,27 +410,84 @@ body { background: var(--bg); color: var(--text); font-family: -apple-system, 'P
       <!-- Col 2: Chart + Live -->
       <div class="kb-col">
         <div class="card" style="flex-shrink:0">
-          <div class="card-title">Alert 趋势（近 14 天）</div>
-          <div class="mini-chart">
-            <div class="bar" style="height:45%;background:var(--blue);opacity:.7"></div>
-            <div class="bar" style="height:55%;background:var(--blue);opacity:.7"></div>
-            <div class="bar" style="height:40%;background:var(--blue);opacity:.7"></div>
-            <div class="bar" style="height:65%;background:var(--blue);opacity:.7"></div>
-            <div class="bar" style="height:50%;background:var(--blue);opacity:.7"></div>
-            <div class="bar" style="height:35%;background:var(--blue);opacity:.7"></div>
-            <div class="bar" style="height:70%;background:var(--blue);opacity:.7"></div>
-            <div class="bar" style="height:60%;background:var(--blue);opacity:.7"></div>
-            <div class="bar" style="height:45%;background:var(--purple);opacity:.7"></div>
-            <div class="bar" style="height:55%;background:var(--purple);opacity:.7"></div>
-            <div class="bar" style="height:80%;background:var(--purple);opacity:.7"></div>
-            <div class="bar" style="height:75%;background:var(--red);opacity:.8"></div>
-            <div class="bar" style="height:85%;background:var(--red);opacity:.8"></div>
-            <div class="bar" style="height:90%;background:var(--red)"></div>
+          <div class="card-title">Alert 趋势（近 14 天）<span style="font-size:10px;font-weight:400;color:var(--red);margin-left:6px">近 3 日 ▲35%</span></div>
+          <!-- 堆叠柱状图：每列 = 1 天，蓝=TS，紫=TM -->
+          <div class="mini-chart" style="align-items:flex-end;height:64px">
+            <!-- 03/13 TS20 TM5 -->
+            <div style="flex:1;display:flex;flex-direction:column;justify-content:flex-end;gap:1px">
+              <div style="height:6px;background:var(--purple);opacity:.75;border-radius:1px 1px 0 0"></div>
+              <div style="height:22px;background:var(--blue);opacity:.7;border-radius:0"></div>
+            </div>
+            <!-- 03/14 TS24 TM7 -->
+            <div style="flex:1;display:flex;flex-direction:column;justify-content:flex-end;gap:1px">
+              <div style="height:8px;background:var(--purple);opacity:.75;border-radius:1px 1px 0 0"></div>
+              <div style="height:26px;background:var(--blue);opacity:.7"></div>
+            </div>
+            <!-- 03/15 TS16 TM4 -->
+            <div style="flex:1;display:flex;flex-direction:column;justify-content:flex-end;gap:1px">
+              <div style="height:5px;background:var(--purple);opacity:.75;border-radius:1px 1px 0 0"></div>
+              <div style="height:18px;background:var(--blue);opacity:.7"></div>
+            </div>
+            <!-- 03/16 TS28 TM8 -->
+            <div style="flex:1;display:flex;flex-direction:column;justify-content:flex-end;gap:1px">
+              <div style="height:9px;background:var(--purple);opacity:.75;border-radius:1px 1px 0 0"></div>
+              <div style="height:30px;background:var(--blue);opacity:.7"></div>
+            </div>
+            <!-- 03/17 TS22 TM6 -->
+            <div style="flex:1;display:flex;flex-direction:column;justify-content:flex-end;gap:1px">
+              <div style="height:7px;background:var(--purple);opacity:.75;border-radius:1px 1px 0 0"></div>
+              <div style="height:24px;background:var(--blue);opacity:.7"></div>
+            </div>
+            <!-- 03/18 TS13 TM3 (周末) -->
+            <div style="flex:1;display:flex;flex-direction:column;justify-content:flex-end;gap:1px">
+              <div style="height:4px;background:var(--purple);opacity:.5;border-radius:1px 1px 0 0"></div>
+              <div style="height:14px;background:var(--blue);opacity:.4"></div>
+            </div>
+            <!-- 03/19 TS10 TM2 (周末) -->
+            <div style="flex:1;display:flex;flex-direction:column;justify-content:flex-end;gap:1px">
+              <div style="height:3px;background:var(--purple);opacity:.5;border-radius:1px 1px 0 0"></div>
+              <div style="height:11px;background:var(--blue);opacity:.4"></div>
+            </div>
+            <!-- 03/20 TS26 TM9 -->
+            <div style="flex:1;display:flex;flex-direction:column;justify-content:flex-end;gap:1px">
+              <div style="height:10px;background:var(--purple);opacity:.75;border-radius:1px 1px 0 0"></div>
+              <div style="height:28px;background:var(--blue);opacity:.7"></div>
+            </div>
+            <!-- 03/21 TS23 TM9 -->
+            <div style="flex:1;display:flex;flex-direction:column;justify-content:flex-end;gap:1px">
+              <div style="height:10px;background:var(--purple);opacity:.75;border-radius:1px 1px 0 0"></div>
+              <div style="height:25px;background:var(--blue);opacity:.7"></div>
+            </div>
+            <!-- 03/22 TS25 TM10 -->
+            <div style="flex:1;display:flex;flex-direction:column;justify-content:flex-end;gap:1px">
+              <div style="height:11px;background:var(--purple);opacity:.75;border-radius:1px 1px 0 0"></div>
+              <div style="height:27px;background:var(--blue);opacity:.7"></div>
+            </div>
+            <!-- 03/23 TS27 TM11 -->
+            <div style="flex:1;display:flex;flex-direction:column;justify-content:flex-end;gap:1px">
+              <div style="height:12px;background:var(--purple);opacity:.8;border-radius:1px 1px 0 0"></div>
+              <div style="height:29px;background:var(--blue);opacity:.75"></div>
+            </div>
+            <!-- 03/24 TS33 TM13 ↑ surge -->
+            <div style="flex:1;display:flex;flex-direction:column;justify-content:flex-end;gap:1px">
+              <div style="height:14px;background:var(--purple);opacity:.85;border-radius:1px 1px 0 0"></div>
+              <div style="height:36px;background:var(--blue);opacity:.85"></div>
+            </div>
+            <!-- 03/25 TS30 TM14 -->
+            <div style="flex:1;display:flex;flex-direction:column;justify-content:flex-end;gap:1px">
+              <div style="height:15px;background:var(--purple);opacity:.9;border-radius:1px 1px 0 0"></div>
+              <div style="height:33px;background:var(--blue);opacity:.85"></div>
+            </div>
+            <!-- 03/26 TS31 TM16 今日 -->
+            <div style="flex:1;display:flex;flex-direction:column;justify-content:flex-end;gap:1px;outline:1px solid rgba(248,81,73,.4);outline-offset:1px;border-radius:2px">
+              <div style="height:17px;background:var(--purple);border-radius:1px 1px 0 0"></div>
+              <div style="height:34px;background:var(--blue)"></div>
+            </div>
           </div>
-          <div style="display:flex;gap:12px">
-            <span style="font-size:10px;color:var(--blue)">■ TS</span>
-            <span style="font-size:10px;color:var(--purple)">■ TM</span>
-            <span style="font-size:10px;color:var(--muted);margin-left:auto">TBNZ · 03/13–03/26</span>
+          <div style="display:flex;align-items:center;gap:12px;margin-top:6px">
+            <span style="font-size:10px;color:var(--blue)">■ TS（交易监控）</span>
+            <span style="font-size:10px;color:var(--purple)">■ TM（资金监控）</span>
+            <span style="font-size:10px;color:var(--muted);margin-left:auto">TBNZ · 03/13–03/26 · 今日高亮</span>
           </div>
         </div>
 
@@ -430,59 +500,77 @@ body { background: var(--bg); color: var(--text); font-family: -apple-system, 'P
       <!-- Col 3: Watchlist + Rules + Progress -->
       <div class="kb-col">
         <div class="card">
-          <div class="card-title">👁 高风险客户关注</div>
+          <div class="card-title">👁 高风险 Watchlist <span class="badge">TS+TM 统一</span></div>
           <div class="watch-item">
             <div class="risk-ring rr-high">87</div>
             <div>
-              <div class="watch-name">U389-*** <span class="tag tag-red" style="font-size:10px;padding:1px 5px">V7</span></div>
-              <div class="watch-sub">12 条 Alert · 今日 2 条 🔴</div>
+              <div class="watch-name">U389-*** <span class="tag tag-red" style="font-size:10px;padding:1px 5px">V7</span> <span style="font-size:10px;color:var(--blue)">TS</span></div>
+              <div class="watch-sub">12 条 Alert · 今日 2 条 🔴 · Wash Trade</div>
             </div>
           </div>
           <div class="watch-item">
             <div class="risk-ring rr-high">71</div>
             <div>
-              <div class="watch-name">U721-*** <span class="tag tag-orange" style="font-size:10px;padding:1px 5px">V4</span></div>
-              <div class="watch-sub">6 条 Alert · 调查中</div>
+              <div class="watch-name">U721-*** <span class="tag tag-orange" style="font-size:10px;padding:1px 5px">V4</span> <span style="font-size:10px;color:var(--blue)">TS</span></div>
+              <div class="watch-sub">6 条 Alert · 调查中 · P&amp;D</div>
             </div>
           </div>
           <div class="watch-item">
             <div class="risk-ring rr-med">63</div>
             <div>
-              <div class="watch-name">U156-*** <span class="tag tag-muted" style="font-size:10px;padding:1px 5px">V3</span></div>
-              <div class="watch-sub">3 条 Alert · 待问询</div>
+              <div class="watch-name">U156-*** <span class="tag tag-muted" style="font-size:10px;padding:1px 5px">V3</span> <span style="font-size:10px;color:var(--blue)">TS</span></div>
+              <div class="watch-sub">3 条 Alert · 待问询 · Insider</div>
             </div>
           </div>
           <div class="watch-item">
             <div class="risk-ring rr-med">58</div>
             <div>
-              <div class="watch-name">U834-*** <span class="tag tag-muted" style="font-size:10px;padding:1px 5px">V5</span></div>
-              <div class="watch-sub">出金异常 · 待核查</div>
+              <div class="watch-name">U834-*** <span class="tag tag-muted" style="font-size:10px;padding:1px 5px">V5</span> <span style="font-size:10px;color:var(--purple)">TM</span></div>
+              <div class="watch-sub">出金异常 $250K · 待核查</div>
             </div>
           </div>
         </div>
 
         <div class="card">
           <div class="card-title">⚙️ 规则健康度</div>
-          <div class="rule-row-item"><span>🟢</span><span style="flex:1;font-size:12px">Pump &amp; Dump</span><span style="font-size:12px;font-weight:600;color:var(--green)">52.1%</span></div>
-          <div class="rule-row-item"><span>🟢</span><span style="flex:1;font-size:12px">Insider Trade</span><span style="font-size:12px;font-weight:600;color:var(--green)">61.3%</span></div>
+          <div class="rule-row-item">
+            <span>🟢</span>
+            <span style="flex:1;font-size:12px">Pump &amp; Dump <span style="font-size:9px;color:var(--green);border:1px solid rgba(63,185,80,.3);border-radius:3px;padding:0 3px">实时</span></span>
+            <span style="font-size:12px;font-weight:600;color:var(--green)">52.1%</span>
+          </div>
+          <div class="rule-row-item">
+            <span>🟢</span>
+            <span style="flex:1;font-size:12px">Insider Trade <span style="font-size:9px;color:var(--green);border:1px solid rgba(63,185,80,.3);border-radius:3px;padding:0 3px">实时</span></span>
+            <span style="font-size:12px;font-weight:600;color:var(--green)">61.3%</span>
+          </div>
           <div class="rule-row-item"><span>🟢</span><span style="flex:1;font-size:12px">Wash Trade A→B</span><span style="font-size:12px;font-weight:600;color:var(--orange)">38.2%</span></div>
           <div class="rule-row-item"><span>🔴</span><span style="flex:1;font-size:12px">Layering ⚠️</span><span style="font-size:12px;font-weight:600;color:var(--red)">22.4%</span></div>
           <div class="rule-row-item"><span>🔴</span><span style="flex:1;font-size:12px">High Cancel ⚠️</span><span style="font-size:12px;font-weight:600;color:var(--red)">18.7%</span></div>
           <div style="margin-top:8px;padding:7px 9px;background:rgba(227,179,65,.07);border-radius:6px;font-size:11px;color:var(--orange)">
-            ⚠️ 2 条规则精准率低于 25%，建议调参
+            ⚠️ 2 条规则精准率 &lt; 25%，建议调参
           </div>
         </div>
 
         <div class="card">
           <div class="card-title">📊 今日处理进度</div>
-          <div style="display:flex;flex-direction:column;gap:10px;font-size:12px">
+          <div style="display:flex;flex-direction:column;gap:8px;font-size:12px">
             <div>
-              <div style="display:flex;justify-content:space-between;margin-bottom:5px"><span>已确认</span><span style="color:var(--muted)">3 / 47</span></div>
-              <div class="score-track" style="height:5px"><div class="score-fill" id="kb-prog" style="width:6%;background:var(--blue)"></div></div>
+              <div style="display:flex;justify-content:space-between;margin-bottom:4px">
+                <span>TS 已处理</span><span style="color:var(--blue)">2 / 31</span>
+              </div>
+              <div class="score-track" style="height:4px"><div class="score-fill" id="kb-prog" style="width:6%;background:var(--blue)"></div></div>
             </div>
+            <div>
+              <div style="display:flex;justify-content:space-between;margin-bottom:4px">
+                <span>TM 已处理</span><span style="color:var(--purple)">1 / 16</span>
+              </div>
+              <div class="score-track" style="height:4px"><div class="score-fill" style="width:6%;background:var(--purple)"></div></div>
+            </div>
+            <div style="height:1px;background:var(--border);margin:2px 0"></div>
             <div style="display:flex;justify-content:space-between"><span>已立 Case</span><span style="color:var(--red)">1</span></div>
             <div style="display:flex;justify-content:space-between"><span>已问询</span><span style="color:var(--orange)">0</span></div>
             <div style="display:flex;justify-content:space-between"><span>已关闭（误报）</span><span style="color:var(--green)">2</span></div>
+            <div style="display:flex;justify-content:space-between"><span style="color:var(--blue)">AI Co-pilot 使用</span><span style="color:var(--blue)">3 次</span></div>
           </div>
         </div>
       </div>

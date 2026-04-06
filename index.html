@@ -268,7 +268,6 @@ body { background: var(--bg); color: var(--text); font-family: -apple-system, 'P
     <div style="display:flex;align-items:center;gap:5px;font-size:11px;color:var(--green)">
       <div class="live-dot"></div> LIVE
     </div>
-    <button class="btn btn-secondary" style="font-size:11px;margin-left:8px">🔔 通知设置</button>
   </div>
 
   <!-- ══════════ 大看板 ══════════ -->
@@ -1044,18 +1043,101 @@ body { background: var(--bg); color: var(--text); font-family: -apple-system, 'P
         <div id="d-wl001" style="display:none;flex-direction:column;gap:12px">
           <div style="display:flex;align-items:center;gap:10px">
             <div>
-              <div style="font-size:16px;font-weight:700">U389*** · Watchlist 监控</div>
-              <div style="font-size:12px;color:var(--muted);margin-top:2px">加入时间：2026-03-01 · 来源：AL-8821</div>
+              <div style="font-size:16px;font-weight:700">U389*** · 客户风险档案</div>
+              <div style="font-size:12px;color:var(--muted);margin-top:2px">Watchlist 监控中 · 加入 2026-03-01 · 来源：AL-8821</div>
             </div>
-            <div style="margin-left:auto"><span class="tag tag-purple">监控中</span></div>
+            <div style="margin-left:auto;display:flex;gap:8px;align-items:center">
+              <span class="tag tag-purple">监控中</span>
+              <button class="btn btn-secondary btn-sm">📧 发起问询</button>
+            </div>
           </div>
+
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px">
+            <!-- 客户基本信息 -->
+            <div class="card">
+              <div class="card-title">👤 客户信息</div>
+              <div class="info-row"><span class="info-key">账户 ID</span><span class="info-val">U389-ACC-001/002</span></div>
+              <div class="info-row"><span class="info-key">VIP 等级</span><span class="info-val">V7</span></div>
+              <div class="info-row"><span class="info-key">NLV</span><span class="info-val">$480,000</span></div>
+              <div class="info-row"><span class="info-key">历史 Alert</span><span class="info-val" style="color:var(--red)">12 条（3 条立案）</span></div>
+              <div class="info-row"><span class="info-key">Watchlist 原因</span><span class="info-val">Wash Trade 重复 ×4</span></div>
+              <div class="info-row"><span class="info-key">监控到期</span><span class="info-val">2026-09-01</span></div>
+              <div class="info-row"><span class="info-key">Client Tag</span><span class="info-val"><span class="tag tag-orange">In Inquiry</span></span></div>
+            </div>
+
+            <!-- AI 综合风险评分 -->
+            <div class="card">
+              <div class="card-title">🤖 AI 综合风险评分</div>
+              <div style="display:flex;align-items:center;gap:14px;margin-bottom:14px">
+                <div style="position:relative;width:68px;height:68px;flex-shrink:0">
+                  <svg width="68" height="68" viewBox="0 0 68 68">
+                    <circle cx="34" cy="34" r="27" fill="none" stroke="rgba(248,81,73,.15)" stroke-width="6"/>
+                    <circle cx="34" cy="34" r="27" fill="none" stroke="var(--red)" stroke-width="6"
+                      stroke-dasharray="169.6" stroke-dashoffset="22.0"
+                      transform="rotate(-90 34 34)" stroke-linecap="round"/>
+                  </svg>
+                  <div style="position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);text-align:center">
+                    <div style="font-size:20px;font-weight:900;color:var(--red);line-height:1">87</div>
+                    <div style="font-size:9px;color:var(--muted)">风险分</div>
+                  </div>
+                </div>
+                <div style="font-size:11px;color:var(--muted);line-height:1.6">综合评分 <span style="color:var(--red);font-weight:600">87/100</span>，属高风险客户<br>建议持续监控并准备立案材料</div>
+              </div>
+              <div style="display:flex;flex-direction:column;gap:7px">
+                <div>
+                  <div style="display:flex;justify-content:space-between;font-size:11px;margin-bottom:3px"><span style="color:var(--muted)">交易风险</span><span style="color:var(--red);font-weight:600">94</span></div>
+                  <div class="score-track" style="height:4px"><div class="score-fill" style="width:94%;background:var(--red)"></div></div>
+                </div>
+                <div>
+                  <div style="display:flex;justify-content:space-between;font-size:11px;margin-bottom:3px"><span style="color:var(--muted)">关联账户风险</span><span style="color:var(--red);font-weight:600">88</span></div>
+                  <div class="score-track" style="height:4px"><div class="score-fill" style="width:88%;background:var(--red)"></div></div>
+                </div>
+                <div>
+                  <div style="display:flex;justify-content:space-between;font-size:11px;margin-bottom:3px"><span style="color:var(--muted)">行为异常度</span><span style="color:var(--orange);font-weight:600">81</span></div>
+                  <div class="score-track" style="height:4px"><div class="score-fill" style="width:81%;background:var(--orange)"></div></div>
+                </div>
+                <div>
+                  <div style="display:flex;justify-content:space-between;font-size:11px;margin-bottom:3px"><span style="color:var(--muted)">资金风险</span><span style="color:var(--orange);font-weight:600">72</span></div>
+                  <div class="score-track" style="height:4px"><div class="score-fill" style="width:72%;background:var(--orange)"></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- 账户关联网络图 -->
           <div class="card">
-            <div class="card-title">👤 客户画像</div>
-            <div class="info-row"><span class="info-key">风险评分</span><span class="info-val" style="color:var(--red)">87</span></div>
-            <div class="info-row"><span class="info-key">历史 Alert</span><span class="info-val">12 条（3 条已立案）</span></div>
-            <div class="info-row"><span class="info-key">Watchlist 原因</span><span class="info-val">Wash Trade 重复触发 ×4</span></div>
-            <div class="info-row"><span class="info-key">监控到期</span><span class="info-val">2026-09-01</span></div>
+            <div class="card-title">🕸️ 账户关联网络图</div>
+            <div class="graph-area" style="height:170px">
+              <svg class="graph-svg" style="width:100%;height:100%">
+                <!-- U389-001 → U389-002: 同IP/设备 -->
+                <line x1="190" y1="75" x2="90" y2="130" stroke="#f85149" stroke-width="2"/>
+                <text x="108" y="98" fill="#f85149" font-size="9">同IP/设备</text>
+                <!-- U389-001 → U721: Wash Trade -->
+                <line x1="190" y1="75" x2="310" y2="50" stroke="#e3b341" stroke-width="1.5" stroke-dasharray="4"/>
+                <text x="228" y="54" fill="#e3b341" font-size="9">Wash Trade</text>
+                <!-- U389-002 → U721: 间接关联 -->
+                <line x1="90" y1="130" x2="310" y2="50" stroke="#e3b341" stroke-width="1" stroke-dasharray="3" opacity="0.4"/>
+                <!-- U389-001 → TSLA: 持仓 -->
+                <line x1="190" y1="75" x2="280" y2="140" stroke="#58a6ff" stroke-width="1.5"/>
+                <text x="224" y="120" fill="#58a6ff" font-size="9">持仓</text>
+                <!-- U389-001 → U443: 资金往来 -->
+                <line x1="190" y1="75" x2="75" y2="35" stroke="#bc8cff" stroke-width="1" stroke-dasharray="3"/>
+                <text x="100" y="45" fill="#bc8cff" font-size="9">资金往来</text>
+              </svg>
+              <div class="graph-node" style="top:45px;left:162px"><div class="nc nc-r">U389<br>001</div><div class="nl">主账户</div></div>
+              <div class="graph-node" style="top:100px;left:60px"><div class="nc nc-o">U389<br>002</div><div class="nl">关联账户</div></div>
+              <div class="graph-node" style="top:20px;left:280px"><div class="nc nc-o">U721</div><div class="nl">交易对手</div></div>
+              <div class="graph-node" style="top:108px;left:250px"><div class="nc nc-b">TSLA</div><div class="nl">标的</div></div>
+              <div class="graph-node" style="top:10px;left:45px"><div class="nc nc-p">U443</div><div class="nl">关联账户</div></div>
+            </div>
+            <div style="display:flex;gap:16px;padding-top:8px;margin-top:4px;border-top:1px solid var(--border);font-size:10px;flex-wrap:wrap">
+              <span style="color:var(--red)">─── 同设备/IP</span>
+              <span style="color:var(--orange)">- - - Wash Trade</span>
+              <span style="color:var(--blue)">─── 持仓关系</span>
+              <span style="color:var(--purple)">- - - 资金往来</span>
+            </div>
           </div>
+
           <div class="action-panel">
             <div class="action-title">⚡ 处置决定</div>
             <div class="action-grid">

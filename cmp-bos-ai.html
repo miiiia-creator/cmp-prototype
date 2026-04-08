@@ -5,81 +5,114 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>CMP – BOS AI Integration Prototype</title>
 <style>
+/* ── Reset ── */
 * { box-sizing: border-box; margin: 0; padding: 0; }
 body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif; font-size: 13px; color: rgba(0,0,0,.85); background: #f0f2f5; }
 
+/* ── Design tokens (BOS yellow theme) ── */
+:root {
+  --primary: #ffe100;
+  --primary-hover: #ffec40;
+  --primary-active: #d9b800;
+  --primary-bg: #fffbe6;
+  --primary-border: #ffe100;
+  --primary-shadow: rgba(255,225,0,.25);
+  --ai-color: #722ed1;
+  --ai-bg: #f9f0ff;
+  --ai-border: #d3adf7;
+  --ai-dark: #531dab;
+  --text: rgba(0,0,0,.85);
+  --text-sec: rgba(0,0,0,.65);
+  --text-hint: rgba(0,0,0,.45);
+  --text-dis: rgba(0,0,0,.25);
+  --border: #f0f0f0;
+  --border-base: #d9d9d9;
+  --bg: #f0f2f5;
+  --bg-card: #fff;
+  --bg-table-head: #fafafa;
+}
+
 /* ── Top Nav ── */
 .topnav { background: #001529; height: 48px; display: flex; align-items: center; padding: 0 16px; gap: 24px; position: fixed; top: 0; left: 0; right: 0; z-index: 100; }
-.topnav-logo { color: #ffe100; font-weight: 700; font-size: 16px; letter-spacing: 1px; }
-.topnav-menu { display: flex; gap: 20px; }
-.topnav-item { color: rgba(255,255,255,.65); font-size: 13px; cursor: pointer; padding: 4px 8px; border-radius: 4px; transition: background .2s; }
-.topnav-item:hover, .topnav-item.active { color: #fff; background: rgba(255,255,255,.1); }
-.topnav-right { margin-left: auto; color: rgba(255,255,255,.65); font-size: 12px; display: flex; align-items: center; gap: 12px; }
+.topnav-logo { color: var(--primary); font-weight: 700; font-size: 16px; letter-spacing: 1px; }
+.topnav-menu { display: flex; gap: 4px; }
+.topnav-item { color: rgba(255,255,255,.65); font-size: 13px; cursor: pointer; padding: 4px 10px; border-radius: 4px; transition: all .2s; }
+.topnav-item:hover { color: #fff; background: rgba(255,255,255,.08); }
+.topnav-item.active { color: var(--primary); }
+.topnav-right { margin-left: auto; color: rgba(255,255,255,.55); font-size: 12px; display: flex; align-items: center; gap: 12px; }
 
 /* ── Layout ── */
 .layout { display: flex; padding-top: 48px; min-height: 100vh; }
 .sidebar { width: 200px; background: #fff; border-right: 1px solid #f0f0f0; position: fixed; top: 48px; bottom: 0; left: 0; overflow-y: auto; padding: 8px 0; }
-.sidebar-group { padding: 12px 16px 4px; font-size: 11px; color: rgba(0,0,0,.45); text-transform: uppercase; letter-spacing: .5px; }
-.sidebar-item { padding: 8px 16px; cursor: pointer; color: rgba(0,0,0,.65); transition: background .15s; border-right: 3px solid transparent; }
-.sidebar-item:hover { background: #f5f5f5; color: rgba(0,0,0,.85); }
-.sidebar-item.active { background: #e6f4ff; color: #1677ff; border-right-color: #1677ff; font-weight: 500; }
+.sidebar-group { padding: 14px 16px 4px; font-size: 11px; color: var(--text-hint); text-transform: uppercase; letter-spacing: .5px; }
+.sidebar-item { padding: 8px 16px 8px 20px; cursor: pointer; color: var(--text-sec); transition: background .15s; border-right: 3px solid transparent; line-height: 1.4; }
+.sidebar-item:hover { background: rgba(255,225,0,.06); color: var(--text); }
+.sidebar-item.active { background: var(--primary-bg); color: var(--text); border-right-color: var(--primary); font-weight: 500; }
 .content { margin-left: 200px; padding: 16px; flex: 1; }
 
-/* ── Page ── */
+/* ── Pages ── */
 .page { display: none; }
 .page.active { display: block; }
-.breadcrumb { font-size: 12px; color: rgba(0,0,0,.45); margin-bottom: 12px; }
-.breadcrumb a { color: #1677ff; cursor: pointer; }
-.breadcrumb a:hover { text-decoration: underline; }
-.page-title { font-size: 18px; font-weight: 600; margin-bottom: 16px; color: rgba(0,0,0,.85); }
+.breadcrumb { font-size: 12px; color: var(--text-hint); margin-bottom: 12px; display: flex; align-items: center; gap: 4px; }
+.breadcrumb a { color: var(--text-sec); cursor: pointer; }
+.breadcrumb a:hover { color: var(--text); text-decoration: underline; }
 
-/* ── Card ── */
-.card { background: #fff; border-radius: 6px; border: 1px solid #f0f0f0; margin-bottom: 12px; }
-.card-head { padding: 12px 16px; border-bottom: 1px solid #f0f0f0; font-weight: 600; font-size: 13px; display: flex; align-items: center; justify-content: space-between; }
-.card-body { padding: 16px; }
+/* ── Cards ── */
+.card { background: #fff; border-radius: 6px; border: 1px solid var(--border); margin-bottom: 12px; overflow: hidden; }
+.card-head { padding: 10px 16px; border-bottom: 1px solid var(--border); font-weight: 600; font-size: 13px; display: flex; align-items: center; gap: 8px; }
 
 /* ── Stats bar ── */
 .stats-bar { display: flex; gap: 8px; margin-bottom: 12px; }
-.stat-card { background: #fff; border: 1px solid #f0f0f0; border-radius: 6px; padding: 10px 20px; text-align: center; flex: 1; }
-.stat-num { font-size: 22px; font-weight: 600; color: rgba(0,0,0,.85); }
-.stat-num.red { color: #ff4d4f; }
-.stat-num.blue { color: #1677ff; }
-.stat-label { font-size: 11px; color: rgba(0,0,0,.45); margin-top: 2px; }
+.stat-card { background: #fff; border: 1px solid var(--border); border-radius: 6px; padding: 10px 20px; text-align: center; flex: 1; }
+.stat-num { font-size: 22px; font-weight: 600; }
+.stat-num.orange { color: #d46b08; }
+.stat-num.yellow { color: #7c4a00; }
+.stat-num.dim { color: var(--text-hint); }
+.stat-label { font-size: 11px; color: var(--text-hint); margin-top: 2px; }
 
 /* ── Filter bar ── */
-.filter-bar { background: #fff; border: 1px solid #f0f0f0; border-radius: 6px; padding: 12px 16px; margin-bottom: 12px; display: flex; flex-wrap: wrap; gap: 8px; align-items: center; }
-.filter-item { display: flex; align-items: center; gap: 4px; }
-.filter-label { font-size: 12px; color: rgba(0,0,0,.65); white-space: nowrap; }
-.filter-select, .filter-input { height: 28px; border: 1px solid #d9d9d9; border-radius: 4px; padding: 0 8px; font-size: 12px; color: rgba(0,0,0,.85); background: #fff; outline: none; }
-.filter-select:focus, .filter-input:focus { border-color: #1677ff; box-shadow: 0 0 0 2px rgba(22,119,255,.1); }
-.btn { height: 28px; padding: 0 12px; border-radius: 4px; border: 1px solid #d9d9d9; background: #fff; font-size: 12px; cursor: pointer; transition: all .2s; display: inline-flex; align-items: center; gap: 4px; }
-.btn:hover { border-color: #1677ff; color: #1677ff; }
-.btn-primary { background: #1677ff; border-color: #1677ff; color: #fff; }
-.btn-primary:hover { background: #4096ff; border-color: #4096ff; color: #fff; }
-.btn-sm { height: 24px; padding: 0 8px; font-size: 11px; }
-.btn-ai { background: #e6f4ff; border-color: #91caff; color: #1677ff; font-weight: 500; }
-.btn-ai:hover { background: #bae0ff; border-color: #1677ff; color: #1677ff; }
+.filter-bar { background: #fff; border: 1px solid var(--border); border-radius: 6px; padding: 12px 16px; margin-bottom: 12px; display: flex; flex-wrap: wrap; gap: 8px; align-items: center; }
+.filter-label { font-size: 12px; color: var(--text-sec); white-space: nowrap; }
+.filter-select, .filter-input { height: 28px; border: 1px solid var(--border-base); border-radius: 4px; padding: 0 8px; font-size: 12px; color: var(--text); background: #fff; outline: none; }
+.filter-select:focus, .filter-input:focus { border-color: var(--primary); box-shadow: 0 0 0 2px var(--primary-shadow); }
 
-/* ── Table ── */
-.table-bar { background: #fff; border: 1px solid #f0f0f0; border-radius: 6px; padding: 8px 16px; margin-bottom: 2px; display: flex; align-items: center; gap: 8px; font-size: 12px; color: rgba(0,0,0,.45); }
-.table-wrap { background: #fff; border: 1px solid #f0f0f0; border-radius: 6px; overflow: hidden; }
+/* ── Buttons ── */
+.btn { height: 28px; padding: 0 12px; border-radius: 4px; border: 1px solid var(--border-base); background: #fff; font-size: 12px; cursor: pointer; transition: all .15s; display: inline-flex; align-items: center; gap: 4px; color: var(--text-sec); }
+.btn:hover { border-color: var(--primary); color: var(--text); background: var(--primary-bg); }
+.btn-primary { background: var(--primary); border-color: var(--primary); color: rgba(0,0,0,.85); font-weight: 500; }
+.btn-primary:hover { background: var(--primary-hover); border-color: var(--primary-hover); color: rgba(0,0,0,.85); }
+.btn-primary:active { background: var(--primary-active); border-color: var(--primary-active); }
+.btn-sm { height: 24px; padding: 0 8px; font-size: 11px; }
+.btn-ai { background: var(--ai-bg); border-color: var(--ai-border); color: var(--ai-color); font-weight: 500; }
+.btn-ai:hover { background: #efdbff; border-color: var(--ai-color); color: var(--ai-dark); }
+.btn-draft { background: var(--ai-color); border: none; color: #fff; height: 28px; padding: 0 12px; border-radius: 4px; font-size: 12px; cursor: pointer; display: inline-flex; align-items: center; gap: 4px; transition: background .15s; }
+.btn-draft:hover { background: var(--ai-dark); }
+
+/* ── Tables ── */
+.table-bar { background: #fff; border: 1px solid var(--border); border-radius: 6px 6px 0 0; padding: 8px 16px; display: flex; align-items: center; gap: 8px; font-size: 12px; color: var(--text-hint); border-bottom: none; }
+.table-wrap { background: #fff; border: 1px solid var(--border); border-radius: 0 0 6px 6px; overflow: auto; }
+.table-wrap-full { background: #fff; border: 1px solid var(--border); border-radius: 6px; overflow: auto; }
 table { width: 100%; border-collapse: collapse; font-size: 12px; }
-thead th { background: #fafafa; padding: 8px 10px; text-align: left; font-weight: 500; color: rgba(0,0,0,.85); border-bottom: 1px solid #f0f0f0; white-space: nowrap; }
-tbody td { padding: 8px 10px; border-bottom: 1px solid #f5f5f5; color: rgba(0,0,0,.65); vertical-align: middle; }
+thead th { background: var(--bg-table-head); padding: 8px 10px; text-align: left; font-weight: 500; color: var(--text); border-bottom: 1px solid var(--border); white-space: nowrap; }
+thead th.ai-col { background: #fffdf0; }
+tbody td { padding: 8px 10px; border-bottom: 1px solid #f7f7f7; color: var(--text-sec); vertical-align: middle; }
 tbody tr:last-child td { border-bottom: none; }
-tbody tr:hover td { background: #fafafa; }
-tbody tr.selected td { background: #e6f4ff; }
-.col-id { font-weight: 600; color: #1677ff; cursor: pointer; }
-.col-id:hover { text-decoration: underline; }
+tbody tr:hover td { background: #fffdf0; }
+.col-link { color: var(--text); font-weight: 500; cursor: pointer; }
+.col-link:hover { text-decoration: underline; color: #7c4a00; }
 
 /* ── Tags ── */
-.tag { display: inline-flex; align-items: center; padding: 1px 6px; border-radius: 3px; font-size: 11px; font-weight: 500; }
-.tag-processing { background: #e6f4ff; color: #1677ff; border: 1px solid #91caff; }
-.tag-closed { background: #f5f5f5; color: rgba(0,0,0,.45); border: 1px solid #d9d9d9; }
+.tag { display: inline-flex; align-items: center; padding: 1px 6px; border-radius: 3px; font-size: 11px; font-weight: 500; white-space: nowrap; }
+.tag-processing { background: #fffbe6; color: #7c4a00; border: 1px solid #ffe58f; }
+.tag-closed { background: #f5f5f5; color: var(--text-hint); border: 1px solid #d9d9d9; }
 .tag-new { background: #fff7e6; color: #d46b08; border: 1px solid #ffd591; }
 .tag-escalated { background: #fff2f0; color: #cf1322; border: 1px solid #ffa39e; }
 .tag-cleared { background: #f6ffed; color: #389e0d; border: 1px solid #b7eb8f; }
-.tag-ai { background: #f9f0ff; color: #531dab; border: 1px solid #d3adf7; font-size: 10px; padding: 0 5px; }
+.tag-ai { background: var(--ai-bg); color: var(--ai-color); border: 1px solid var(--ai-border); font-size: 10px; letter-spacing: .3px; }
+.tag-watchlist { background: #fff7e6; color: #d46b08; border: 1px solid #ffd591; }
+.tag-high { background: #fff2f0; color: #cf1322; border: 1px solid #ffa39e; }
+.tag-medium { background: #fff7e6; color: #d46b08; border: 1px solid #ffd591; }
+.tag-low { background: #f6ffed; color: #389e0d; border: 1px solid #b7eb8f; }
 
 /* ── AI Score badge ── */
 .ai-score { display: inline-flex; align-items: center; justify-content: center; width: 36px; height: 20px; border-radius: 10px; font-size: 11px; font-weight: 700; }
@@ -87,109 +120,133 @@ tbody tr.selected td { background: #e6f4ff; }
 .ai-score-mid { background: #fff7e6; color: #d46b08; border: 1px solid #ffd591; }
 .ai-score-low { background: #f6ffed; color: #389e0d; border: 1px solid #b7eb8f; }
 
-/* ── AI Analysis Card ── */
-.ai-card { background: #f0f7ff; border: 1px solid #91caff; border-radius: 6px; margin-bottom: 12px; overflow: hidden; }
-.ai-card-head { background: #e6f4ff; padding: 10px 16px; display: flex; align-items: center; justify-content: space-between; border-bottom: 1px solid #bae0ff; }
-.ai-card-title { font-weight: 600; font-size: 13px; color: #003eb3; display: flex; align-items: center; gap: 6px; }
-.ai-badge { background: #1677ff; color: #fff; font-size: 10px; font-weight: 700; padding: 1px 5px; border-radius: 3px; letter-spacing: .5px; }
+/* ── AI Card ── */
+.ai-card { background: #fdf8ff; border: 1px solid var(--ai-border); border-radius: 6px; margin-bottom: 12px; overflow: hidden; }
+.ai-card-head { background: var(--ai-bg); padding: 10px 16px; display: flex; align-items: center; justify-content: space-between; border-bottom: 1px solid var(--ai-border); }
+.ai-card-title { font-weight: 600; font-size: 13px; color: var(--ai-dark); display: flex; align-items: center; gap: 6px; }
+.ai-badge { background: var(--ai-color); color: #fff; font-size: 10px; font-weight: 700; padding: 1px 5px; border-radius: 3px; letter-spacing: .3px; }
 .ai-card-body { padding: 14px 16px; }
-.ai-score-row { display: flex; align-items: center; gap: 24px; margin-bottom: 12px; padding-bottom: 12px; border-bottom: 1px solid #bae0ff; }
-.ai-score-big { font-size: 36px; font-weight: 700; color: #d46b08; line-height: 1; }
+.ai-score-row { display: flex; align-items: flex-start; gap: 24px; margin-bottom: 12px; padding-bottom: 12px; border-bottom: 1px solid #e9d8fd; flex-wrap: wrap; }
+.ai-score-big { font-size: 36px; font-weight: 700; line-height: 1; }
 .ai-score-big.high { color: #cf1322; }
 .ai-score-big.medium { color: #d46b08; }
-.ai-score-meta { font-size: 11px; color: rgba(0,0,0,.45); margin-top: 2px; }
+.ai-score-big.low { color: #389e0d; }
 .ai-recommend { display: inline-flex; align-items: center; gap: 4px; padding: 4px 10px; border-radius: 4px; font-weight: 600; font-size: 12px; }
 .ai-recommend-escalate { background: #fff2f0; color: #cf1322; border: 1px solid #ffa39e; }
 .ai-recommend-close { background: #f6ffed; color: #389e0d; border: 1px solid #b7eb8f; }
 .ai-recommend-investigate { background: #fff7e6; color: #d46b08; border: 1px solid #ffd591; }
 .ai-evidence { margin-bottom: 12px; }
-.ai-evidence-title { font-size: 11px; font-weight: 600; color: rgba(0,0,0,.65); margin-bottom: 6px; text-transform: uppercase; letter-spacing: .3px; }
+.ai-evidence-title { font-size: 11px; font-weight: 600; color: var(--text-hint); margin-bottom: 6px; text-transform: uppercase; letter-spacing: .3px; }
 .ai-evidence ul { list-style: none; display: flex; flex-direction: column; gap: 5px; }
-.ai-evidence li { display: flex; gap: 6px; color: rgba(0,0,0,.75); line-height: 1.5; }
-.ai-evidence li::before { content: '•'; color: #1677ff; flex-shrink: 0; margin-top: 1px; }
+.ai-evidence li { display: flex; gap: 6px; color: var(--text-sec); line-height: 1.55; font-size: 12px; }
+.ai-evidence li::before { content: '•'; color: var(--ai-color); flex-shrink: 0; }
 .ai-actions-row { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
-.ai-divider { flex: 1; }
 
-/* ── 追问 widget ── */
-.ask-ai-section { border-top: 1px solid #bae0ff; margin-top: 12px; padding-top: 12px; }
-.ask-ai-toggle { background: none; border: none; color: #1677ff; font-size: 12px; cursor: pointer; padding: 0; display: flex; align-items: center; gap: 4px; }
+/* ── Ask AI ── */
+.ask-ai-section { border-top: 1px solid #e9d8fd; margin-top: 12px; padding-top: 12px; }
+.ask-ai-toggle { background: none; border: none; color: var(--ai-color); font-size: 12px; cursor: pointer; padding: 0; display: flex; align-items: center; gap: 4px; }
 .ask-ai-toggle:hover { text-decoration: underline; }
 .ask-ai-content { margin-top: 10px; display: none; }
 .ask-ai-content.open { display: block; }
-.ai-messages { display: flex; flex-direction: column; gap: 8px; margin-bottom: 10px; max-height: 200px; overflow-y: auto; }
+.ai-messages { display: flex; flex-direction: column; gap: 8px; margin-bottom: 10px; max-height: 200px; overflow-y: auto; padding: 4px 0; }
 .ai-msg { display: flex; gap: 6px; }
-.ai-msg-bubble { padding: 7px 10px; border-radius: 6px; line-height: 1.5; max-width: 85%; font-size: 12px; }
-.ai-msg.bot .ai-msg-bubble { background: #fff; border: 1px solid #e0e0e0; color: rgba(0,0,0,.75); }
-.ai-msg.user .ai-msg-bubble { background: #1677ff; color: #fff; margin-left: auto; }
+.ai-msg-bubble { padding: 7px 10px; border-radius: 6px; line-height: 1.55; max-width: 86%; font-size: 12px; }
+.ai-msg.bot .ai-msg-bubble { background: #fff; border: 1px solid #e0e0e0; color: var(--text-sec); }
+.ai-msg.user .ai-msg-bubble { background: var(--ai-color); color: #fff; margin-left: auto; }
 .ai-msg.user { flex-direction: row-reverse; }
 .ai-msg-icon { width: 22px; height: 22px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 10px; font-weight: 700; flex-shrink: 0; margin-top: 2px; }
-.ai-msg-icon.bot { background: #e6f4ff; color: #1677ff; }
-.ai-msg-icon.user { background: #1677ff; color: #fff; }
+.ai-msg-icon.bot { background: var(--ai-bg); color: var(--ai-color); }
+.ai-msg-icon.user { background: var(--ai-color); color: #fff; }
 .chips-row { display: flex; gap: 6px; flex-wrap: wrap; margin-bottom: 8px; }
-.chip { padding: 3px 8px; background: #fff; border: 1px solid #d9d9d9; border-radius: 12px; font-size: 11px; color: rgba(0,0,0,.65); cursor: pointer; transition: all .15s; }
-.chip:hover { border-color: #1677ff; color: #1677ff; background: #e6f4ff; }
-.chip.used { background: #e6f4ff; border-color: #91caff; color: #1677ff; }
+.chip { padding: 3px 8px; background: #fff; border: 1px solid var(--border-base); border-radius: 12px; font-size: 11px; color: var(--text-sec); cursor: pointer; transition: all .15s; }
+.chip:hover { border-color: var(--ai-border); color: var(--ai-color); background: var(--ai-bg); }
 .ask-input-row { display: flex; gap: 6px; }
-.ask-input { flex: 1; height: 28px; border: 1px solid #d9d9d9; border-radius: 4px; padding: 0 8px; font-size: 12px; outline: none; }
-.ask-input:focus { border-color: #1677ff; box-shadow: 0 0 0 2px rgba(22,119,255,.1); }
+.ask-input { flex: 1; height: 28px; border: 1px solid var(--border-base); border-radius: 4px; padding: 0 8px; font-size: 12px; outline: none; }
+.ask-input:focus { border-color: var(--ai-color); box-shadow: 0 0 0 2px rgba(114,46,209,.15); }
 
 /* ── Meta grid ── */
-.meta-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 0; }
-.meta-item { padding: 8px 12px; border-bottom: 1px solid #f0f0f0; border-right: 1px solid #f0f0f0; }
+.meta-grid { display: grid; grid-template-columns: repeat(4, 1fr); }
+.meta-item { padding: 10px 14px; border-bottom: 1px solid var(--border); border-right: 1px solid var(--border); }
 .meta-item:nth-child(4n) { border-right: none; }
-.meta-label { font-size: 11px; color: rgba(0,0,0,.45); margin-bottom: 2px; }
-.meta-val { font-size: 13px; color: rgba(0,0,0,.85); font-weight: 500; }
-.meta-val.link { color: #1677ff; cursor: pointer; }
-.meta-val.empty { color: rgba(0,0,0,.25); font-weight: 400; }
+.meta-item.span2 { grid-column: span 2; }
+.meta-label { font-size: 11px; color: var(--text-hint); margin-bottom: 3px; }
+.meta-val { font-size: 13px; color: var(--text); font-weight: 500; }
+.meta-val.link { color: #7c4a00; cursor: pointer; text-decoration: underline; text-underline-offset: 2px; }
+.meta-val.empty { color: var(--text-dis); font-weight: 400; }
 
 /* ── Section title ── */
-.section-title { font-size: 13px; font-weight: 600; color: rgba(0,0,0,.85); padding: 10px 16px; border-bottom: 1px solid #f0f0f0; display: flex; align-items: center; gap: 8px; }
-.section-subtitle { font-size: 11px; font-weight: 400; color: rgba(0,0,0,.45); margin-left: 4px; }
+.section-title { font-size: 13px; font-weight: 600; color: var(--text); padding: 10px 16px; border-bottom: 1px solid var(--border); display: flex; align-items: center; gap: 8px; }
+.section-subtitle { font-size: 11px; font-weight: 400; color: var(--text-hint); }
 
-/* ── Tab bar ── */
-.tab-bar { display: flex; border-bottom: 1px solid #f0f0f0; padding: 0 16px; background: #fafafa; }
-.tab { padding: 10px 16px; font-size: 12px; cursor: pointer; color: rgba(0,0,0,.65); border-bottom: 2px solid transparent; margin-bottom: -1px; transition: all .2s; }
-.tab:hover { color: #1677ff; }
-.tab.active { color: #1677ff; border-bottom-color: #1677ff; font-weight: 500; }
+/* ── Tabs ── */
+.tab-bar { display: flex; border-bottom: 1px solid var(--border); padding: 0 16px; background: #fafafa; }
+.tab { padding: 9px 14px; font-size: 12px; cursor: pointer; color: var(--text-sec); border-bottom: 2px solid transparent; margin-bottom: -1px; transition: all .15s; }
+.tab:hover { color: var(--text); }
+.tab.active { color: rgba(0,0,0,.85); border-bottom-color: var(--primary); font-weight: 500; }
 .tab-pane { display: none; padding: 12px 16px; }
 .tab-pane.active { display: block; }
 
 /* ── Investigation notes ── */
-.notes-card { background: #fffbf0; border: 1px solid #ffd591; border-radius: 6px; margin-bottom: 12px; overflow: hidden; }
-.notes-head { background: #fff7e6; padding: 10px 16px; display: flex; align-items: center; justify-content: space-between; border-bottom: 1px solid #ffd591; }
+.notes-card { background: #fffdf6; border: 1px solid #ffe58f; border-radius: 6px; margin-bottom: 12px; overflow: hidden; }
+.notes-head { background: var(--primary-bg); padding: 10px 16px; display: flex; align-items: center; justify-content: space-between; border-bottom: 1px solid #ffe58f; }
 .notes-title { font-weight: 600; font-size: 13px; color: #7c4a00; display: flex; align-items: center; gap: 6px; }
-.notes-textarea { width: 100%; min-height: 140px; border: none; background: #fffbf0; padding: 14px 16px; font-size: 12px; line-height: 1.7; color: rgba(0,0,0,.75); resize: vertical; outline: none; font-family: inherit; }
-.notes-footer { padding: 8px 16px; background: #fff7e6; border-top: 1px solid #ffd591; display: flex; align-items: center; gap: 8px; }
-.btn-draft { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); border: none; color: #fff; height: 28px; padding: 0 12px; border-radius: 4px; font-size: 12px; cursor: pointer; display: inline-flex; align-items: center; gap: 4px; transition: opacity .2s; }
-.btn-draft:hover { opacity: .85; }
+.notes-textarea { width: 100%; min-height: 140px; border: none; background: #fffdf6; padding: 14px 16px; font-size: 12px; line-height: 1.75; color: var(--text-sec); resize: vertical; outline: none; font-family: inherit; }
+.notes-footer { padding: 8px 16px; background: var(--primary-bg); border-top: 1px solid #ffe58f; display: flex; align-items: center; gap: 8px; }
 
 /* ── Operation log ── */
-.log-item { padding: 10px 0; border-bottom: 1px solid #f0f0f0; }
+.log-item { padding: 10px 0; border-bottom: 1px solid var(--border); }
 .log-item:last-child { border-bottom: none; }
-.log-meta { font-size: 11px; color: rgba(0,0,0,.45); margin-bottom: 4px; display: flex; gap: 8px; }
-.log-op { display: inline-block; background: #e6f4ff; color: #1677ff; padding: 1px 6px; border-radius: 3px; font-size: 11px; }
-.log-detail { font-size: 12px; color: rgba(0,0,0,.65); line-height: 1.6; }
+.log-meta { font-size: 11px; color: var(--text-hint); margin-bottom: 4px; display: flex; gap: 8px; align-items: center; }
+.log-op { background: var(--primary-bg); color: #7c4a00; padding: 1px 6px; border-radius: 3px; font-size: 11px; border: 1px solid #ffe58f; }
+.log-detail { font-size: 12px; color: var(--text-sec); line-height: 1.6; }
 
-/* ── Case card ── */
-.case-card-list { display: flex; flex-direction: column; gap: 8px; }
-.case-card { background: #fff; border: 1px solid #f0f0f0; border-radius: 6px; padding: 12px 16px; display: flex; justify-content: space-between; align-items: flex-start; transition: box-shadow .2s; cursor: pointer; }
-.case-card:hover { box-shadow: 0 2px 8px rgba(0,0,0,.08); border-color: #d0e8ff; }
-.case-card-left { flex: 1; }
-.case-card-code { font-size: 11px; color: rgba(0,0,0,.45); margin-bottom: 3px; }
-.case-card-name { font-size: 13px; font-weight: 600; color: rgba(0,0,0,.85); margin-bottom: 6px; }
-.case-card-meta { display: flex; flex-wrap: wrap; gap: 12px; font-size: 12px; color: rgba(0,0,0,.45); }
-.case-card-meta span { display: flex; align-items: center; gap: 3px; }
+/* ── Case cards ── */
+.case-card { background: #fff; border: 1px solid var(--border); border-radius: 6px; padding: 12px 16px; display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 8px; cursor: pointer; transition: box-shadow .15s, border-color .15s; }
+.case-card:hover { box-shadow: 0 2px 8px rgba(0,0,0,.07); border-color: #ffe58f; }
+.case-card-code { font-size: 11px; color: var(--text-hint); margin-bottom: 3px; }
+.case-card-name { font-size: 13px; font-weight: 600; margin-bottom: 6px; }
+.case-card-meta { display: flex; flex-wrap: wrap; gap: 12px; font-size: 12px; color: var(--text-hint); }
+
+/* ── Timeline ── */
+.timeline { position: relative; padding-left: 20px; }
+.timeline::before { content: ''; position: absolute; left: 6px; top: 0; bottom: 0; width: 1px; background: var(--border); }
+.tl-item { position: relative; padding: 0 0 16px 16px; }
+.tl-item:last-child { padding-bottom: 0; }
+.tl-dot { position: absolute; left: -14px; top: 3px; width: 10px; height: 10px; border-radius: 50%; border: 2px solid var(--border-base); background: #fff; }
+.tl-dot.yellow { border-color: var(--primary); background: var(--primary); }
+.tl-dot.red { border-color: #ff4d4f; background: #ff4d4f; }
+.tl-dot.green { border-color: #52c41a; background: #52c41a; }
+.tl-dot.purple { border-color: var(--ai-color); background: var(--ai-color); }
+.tl-dot.gray { border-color: #d9d9d9; background: #d9d9d9; }
+.tl-date { font-size: 11px; color: var(--text-hint); margin-bottom: 2px; }
+.tl-title { font-size: 12px; font-weight: 600; color: var(--text); margin-bottom: 2px; }
+.tl-desc { font-size: 12px; color: var(--text-sec); line-height: 1.5; }
+
+/* ── Risk gauge bar ── */
+.gauge-wrap { background: #f5f5f5; border-radius: 4px; height: 8px; margin: 4px 0 2px; overflow: hidden; }
+.gauge-fill { height: 100%; border-radius: 4px; transition: width .6s; }
+.gauge-fill.high { background: linear-gradient(90deg, #faad14, #cf1322); }
+.gauge-fill.medium { background: linear-gradient(90deg, #ffe100, #fa8c16); }
+.gauge-fill.low { background: linear-gradient(90deg, #95de64, #52c41a); }
+
+/* ── Profile card ── */
+.profile-section { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 12px; }
+@media(max-width:1100px){ .profile-section { grid-template-columns: 1fr; } }
+.dim-row { display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px; }
+.dim-label { font-size: 12px; color: var(--text-sec); }
+.dim-score { font-size: 12px; font-weight: 600; }
 
 /* ── Misc ── */
-.empty-state { padding: 32px; text-align: center; color: rgba(0,0,0,.25); font-size: 12px; }
-.divider { border: none; border-top: 1px solid #f0f0f0; margin: 0; }
-.actions-row { padding: 12px 16px; display: flex; gap: 8px; background: #fafafa; border-top: 1px solid #f0f0f0; }
-.highlight-new { background: #fffbe6 !important; }
+.page-actions { display: flex; gap: 8px; margin-bottom: 12px; align-items: center; }
+.divider { height: 1px; background: var(--border); margin: 12px 0; }
+.empty { padding: 24px; text-align: center; color: var(--text-dis); font-size: 12px; }
+.two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+@media(max-width:1100px){ .two-col { grid-template-columns: 1fr; } }
 </style>
 </head>
 <body>
 
-<!-- Top Nav -->
+<!-- ── Top Nav ── -->
 <div class="topnav">
   <div class="topnav-logo">BOS</div>
   <div class="topnav-menu">
@@ -203,512 +260,619 @@ tbody tr.selected td { background: #e6f4ff; }
   </div>
   <div class="topnav-right">
     <span>zhoumi</span>
-    <span style="color:rgba(255,255,255,.35)">|</span>
+    <span style="color:rgba(255,255,255,.25)">|</span>
     <span>BJT</span>
   </div>
 </div>
 
 <div class="layout">
-  <!-- Sidebar -->
+  <!-- ── Sidebar ── -->
   <div class="sidebar">
     <div class="sidebar-group">Compliance Monitoring</div>
     <div class="sidebar-item active" onclick="showPage('alert-viewer')">Alert Viewer</div>
     <div class="sidebar-item" onclick="showPage('case-management')">Case Management</div>
-    <div class="sidebar-group" style="margin-top:8px">Tools</div>
-    <div class="sidebar-item">Label Mgt.</div>
-    <div class="sidebar-item">List Mgt.</div>
-    <div class="sidebar-item">Employee List</div>
+    <div class="sidebar-item" onclick="showPage('client-management')">Client Management</div>
     <div class="sidebar-item">Rule Testing</div>
     <div class="sidebar-item">WatchList Viewer</div>
+    <div class="sidebar-item">Inquire</div>
   </div>
 
-  <!-- Content -->
   <div class="content">
 
-    <!-- ═══════════════ ALERT VIEWER ═══════════════ -->
-    <div class="page active" id="page-alert-viewer">
-      <div class="breadcrumb">Compliance Monitoring › Alert Viewer</div>
+<!-- ══════════════════════════════════════════
+     PAGE: ALERT VIEWER
+══════════════════════════════════════════ -->
+<div class="page active" id="page-alert-viewer">
+  <div class="breadcrumb"><span>Compliance Monitoring</span> › <span>Alert Viewer</span></div>
 
-      <div class="stats-bar">
-        <div class="stat-card"><div class="stat-num red">3</div><div class="stat-label">New</div></div>
-        <div class="stat-card"><div class="stat-num blue">284</div><div class="stat-label">Processing</div></div>
-        <div class="stat-card"><div class="stat-num">12</div><div class="stat-label">Pending</div></div>
-        <div class="stat-card"><div class="stat-num">1,204</div><div class="stat-label">Closed</div></div>
-      </div>
+  <div class="stats-bar">
+    <div class="stat-card"><div class="stat-num orange">3</div><div class="stat-label">New</div></div>
+    <div class="stat-card"><div class="stat-num" style="color:rgba(0,0,0,.85)">284</div><div class="stat-label">Processing</div></div>
+    <div class="stat-card"><div class="stat-num dim">12</div><div class="stat-label">Pending</div></div>
+    <div class="stat-card"><div class="stat-num dim">1,204</div><div class="stat-label">Closed</div></div>
+  </div>
 
-      <div class="filter-bar">
-        <div class="filter-item"><span class="filter-label">Status</span>
-          <select class="filter-select"><option>All</option><option>New</option><option>Processing</option><option>Pending</option><option>Closed</option></select></div>
-        <div class="filter-item"><span class="filter-label">Rule Name</span>
-          <select class="filter-select" style="width:160px"><option>All</option><option>pre-arranged trading (Profit)</option><option>possible ramping</option></select></div>
-        <div class="filter-item"><span class="filter-label">Account</span>
-          <input class="filter-input" style="width:90px" placeholder="Account ID"></div>
-        <div class="filter-item"><span class="filter-label">Symbol</span>
-          <input class="filter-input" style="width:80px" placeholder="Symbol"></div>
-        <div class="filter-item"><span class="filter-label">AI Score ≥</span>
-          <select class="filter-select" style="width:70px"><option>—</option><option>50</option><option>70</option><option>85</option></select></div>
-        <button class="btn btn-primary btn-sm">查询</button>
-        <button class="btn btn-sm">重置</button>
-        <button class="btn btn-sm" style="margin-left:auto">Export</button>
-      </div>
+  <div class="filter-bar">
+    <span class="filter-label">Status</span>
+    <select class="filter-select"><option>All</option><option>New</option><option>Processing</option><option>Pending</option><option>Closed</option></select>
+    <span class="filter-label">Rule Name</span>
+    <select class="filter-select" style="width:170px"><option>Please select</option><option>pre-arranged trading (Profit)</option><option>possible ramping</option><option>possible wash trade (A to A)</option></select>
+    <span class="filter-label">Account</span>
+    <input class="filter-input" style="width:90px" placeholder="Account ID">
+    <span class="filter-label">Symbol</span>
+    <input class="filter-input" style="width:80px" placeholder="Symbol">
+    <span class="filter-label" style="color:var(--ai-color);font-weight:500">AI Score ≥</span>
+    <select class="filter-select" style="width:64px;border-color:var(--ai-border)"><option>—</option><option>50</option><option>70</option><option>85</option></select>
+    <button class="btn btn-primary btn-sm">查询</button>
+    <button class="btn btn-sm">重置</button>
+    <button class="btn btn-sm" style="margin-left:auto">Export</button>
+  </div>
 
-      <div class="table-bar">
-        <span>0 Alerts selected,&nbsp;<strong>284</strong>&nbsp;Alerts in total</span>
-        <button class="btn btn-sm" style="margin-left:auto">Manage in bulk</button>
-      </div>
-      <div class="table-wrap">
-        <table>
-          <thead>
-            <tr>
-              <th><input type="checkbox"></th>
-              <th>ID</th>
-              <th>Hit Time</th>
-              <th>Account ID</th>
-              <th>Symbol</th>
-              <th>License</th>
-              <th>Rule Name</th>
-              <th>Status</th>
-              <th>Risk Level</th>
-              <!-- NEW COLUMN -->
-              <th style="background:#f0f7ff; color:#003eb3;">AI 评分 <span class="tag-ai tag">AI</span></th>
-              <th>Alert Owner</th>
-              <th>Operation</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr class="highlight-new">
-              <td><input type="checkbox"></td>
-              <td class="col-id" onclick="showPage('alert-details')">19150109</td>
-              <td>2026-04-07 08:43 EDT</td>
-              <td>3215451</td>
-              <td>SPXW 20260406 6615.0 C</td>
-              <td>TBNZ</td>
-              <td>pre-arranged trading (Profit)</td>
-              <td><span class="tag tag-processing">Processing</span></td>
-              <td>—</td>
-              <td style="background:#f0f7ff;"><span class="ai-score ai-score-high">82</span></td>
-              <td>houyuexuan</td>
-              <td><button class="btn btn-sm" onclick="showPage('alert-details')">Detail</button></td>
-            </tr>
-            <tr>
-              <td><input type="checkbox"></td>
-              <td class="col-id">19150108</td>
-              <td>2026-04-07 08:40 EDT</td>
-              <td>3465714</td>
-              <td>PN</td>
-              <td>TBNZ</td>
-              <td>trade to trade (without tick data)</td>
-              <td><span class="tag tag-processing">Processing</span></td>
-              <td>—</td>
-              <td style="background:#f0f7ff;"><span class="ai-score ai-score-mid">58</span></td>
-              <td>houyuexuan</td>
-              <td><button class="btn btn-sm">Detail</button></td>
-            </tr>
-            <tr>
-              <td><input type="checkbox"></td>
-              <td class="col-id">19150107</td>
-              <td>2026-04-07 08:40 EDT</td>
-              <td>5462118</td>
-              <td>FUBO</td>
-              <td>TBNZ</td>
-              <td>possible ramping (without tick data)</td>
-              <td><span class="tag tag-processing">Processing</span></td>
-              <td>—</td>
-              <td style="background:#f0f7ff;"><span class="ai-score ai-score-low">31</span></td>
-              <td>houyuexuan</td>
-              <td><button class="btn btn-sm">Detail</button></td>
-            </tr>
-            <tr>
-              <td><input type="checkbox"></td>
-              <td class="col-id">19150104</td>
-              <td>2026-04-07 08:40 EDT</td>
-              <td>7526677</td>
-              <td>SOXL</td>
-              <td>TBNZ</td>
-              <td>possible ramping (without tick data)</td>
-              <td><span class="tag tag-processing">Processing</span></td>
-              <td>—</td>
-              <td style="background:#f0f7ff;"><span class="ai-score ai-score-mid">64</span></td>
-              <td>houyuexuan</td>
-              <td><button class="btn btn-sm">Detail</button></td>
-            </tr>
-            <tr>
-              <td><input type="checkbox"></td>
-              <td class="col-id">19150101</td>
-              <td>2026-04-06 20:44 EDT</td>
-              <td>2353510</td>
-              <td>NQ2606</td>
-              <td>TBNZ</td>
-              <td>possible wash trade (A to A)</td>
-              <td><span class="tag tag-processing">Processing</span></td>
-              <td>—</td>
-              <td style="background:#f0f7ff;"><span class="ai-score ai-score-high">79</span></td>
-              <td>houyuexuan</td>
-              <td><button class="btn btn-sm">Detail</button></td>
-            </tr>
-          </tbody>
-        </table>
-      </div>
-      <div style="padding:12px 16px;background:#fff;border:1px solid #f0f0f0;border-top:none;border-radius:0 0 6px 6px;font-size:12px;color:rgba(0,0,0,.45);display:flex;align-items:center;justify-content:flex-end;gap:8px;">
-        <span>20 条/页</span> <span>1 / 15</span>
-        <button class="btn btn-sm">‹</button><button class="btn btn-sm">›</button>
-      </div>
+  <div class="table-bar">
+    <span>0 Alerts selected, <strong>284</strong> Alerts in total</span>
+    <button class="btn btn-sm" style="margin-left:auto">Manage in bulk</button>
+  </div>
+  <div class="table-wrap">
+    <table>
+      <thead>
+        <tr>
+          <th style="width:32px"><input type="checkbox"></th>
+          <th>ID</th><th>Hit Time</th><th>Account ID</th><th>Symbol</th><th>License</th>
+          <th>Rule Name</th><th>Status</th><th>Risk Level</th>
+          <th class="ai-col" style="color:var(--ai-dark)">AI 评分 <span class="tag tag-ai">AI</span></th>
+          <th>Alert Owner</th><th>Operation</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><input type="checkbox"></td>
+          <td class="col-link" onclick="showPage('alert-details')">19150109</td>
+          <td>2026-04-07 08:43 EDT</td><td>3215451</td><td>SPXW 20260406 6615.0 C</td><td>TBNZ</td>
+          <td>pre-arranged trading (Profit)</td>
+          <td><span class="tag tag-processing">Processing</span></td><td>—</td>
+          <td style="background:#fffdf0"><span class="ai-score ai-score-high">82</span></td>
+          <td>houyuexuan</td>
+          <td><button class="btn btn-sm" onclick="showPage('alert-details')">Detail</button></td>
+        </tr>
+        <tr>
+          <td><input type="checkbox"></td>
+          <td class="col-link">19150108</td>
+          <td>2026-04-07 08:40 EDT</td><td>3465714</td><td>PN</td><td>TBNZ</td>
+          <td>trade to trade (without tick data)</td>
+          <td><span class="tag tag-processing">Processing</span></td><td>—</td>
+          <td style="background:#fffdf0"><span class="ai-score ai-score-mid">58</span></td>
+          <td>houyuexuan</td>
+          <td><button class="btn btn-sm">Detail</button></td>
+        </tr>
+        <tr>
+          <td><input type="checkbox"></td>
+          <td class="col-link">19150107</td>
+          <td>2026-04-07 08:40 EDT</td><td>5462118</td><td>FUBO</td><td>TBNZ</td>
+          <td>possible ramping (without tick data)</td>
+          <td><span class="tag tag-processing">Processing</span></td><td>—</td>
+          <td style="background:#fffdf0"><span class="ai-score ai-score-low">31</span></td>
+          <td>houyuexuan</td>
+          <td><button class="btn btn-sm">Detail</button></td>
+        </tr>
+        <tr>
+          <td><input type="checkbox"></td>
+          <td class="col-link">19150101</td>
+          <td>2026-04-06 20:44 EDT</td><td>2353510</td><td>NQ2606</td><td>TBNZ</td>
+          <td>possible wash trade (A to A)</td>
+          <td><span class="tag tag-processing">Processing</span></td><td>—</td>
+          <td style="background:#fffdf0"><span class="ai-score ai-score-high">79</span></td>
+          <td>houyuexuan</td>
+          <td><button class="btn btn-sm">Detail</button></td>
+        </tr>
+        <tr>
+          <td><input type="checkbox"></td>
+          <td class="col-link">19150096</td>
+          <td>2026-04-03 20:42 EDT</td><td>7526677</td><td>SOXL</td><td>TBNZ</td>
+          <td>possible ramping (without tick data)</td>
+          <td><span class="tag tag-processing">Processing</span></td><td>—</td>
+          <td style="background:#fffdf0"><span class="ai-score ai-score-mid">64</span></td>
+          <td>houyuexuan</td>
+          <td><button class="btn btn-sm">Detail</button></td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+  <div style="padding:10px 16px;background:#fff;border:1px solid var(--border);border-top:none;border-radius:0 0 6px 6px;font-size:12px;color:var(--text-hint);display:flex;align-items:center;justify-content:flex-end;gap:8px;">
+    <span>20 条/页</span><span>1 / 15</span>
+    <button class="btn btn-sm">‹</button><button class="btn btn-sm">›</button>
+  </div>
+</div>
+
+
+<!-- ══════════════════════════════════════════
+     PAGE: ALERT DETAILS
+══════════════════════════════════════════ -->
+<div class="page" id="page-alert-details">
+  <div class="breadcrumb"><a onclick="showPage('alert-viewer')">Alert Viewer</a> › Alert 19150109</div>
+  <div class="page-actions">
+    <button class="btn btn-sm" onclick="showPage('alert-viewer')">← Back</button>
+    <button class="btn btn-sm">Export</button>
+    <button class="btn btn-sm">Link to Case</button>
+    <button class="btn btn-primary btn-sm" style="margin-left:auto">Manage &gt;&gt;</button>
+  </div>
+
+  <!-- Meta -->
+  <div class="card">
+    <div class="meta-grid">
+      <div class="meta-item"><div class="meta-label">System Hit Time</div><div class="meta-val">2026-04-07 08:43:33 EDT</div></div>
+      <div class="meta-item"><div class="meta-label">Rule Name</div><div class="meta-val">pre-arranged trading (Profit)</div></div>
+      <div class="meta-item"><div class="meta-label">Alert Status</div><div class="meta-val"><span class="tag tag-processing">Processing</span></div></div>
+      <div class="meta-item"><div class="meta-label">Last Trigger Time</div><div class="meta-val">2026-04-06 11:50:10 EDT</div></div>
+      <div class="meta-item"><div class="meta-label">Account ID</div><div class="meta-val link" onclick="showPage('client-details')">3215451</div></div>
+      <div class="meta-item"><div class="meta-label">Symbol</div><div class="meta-val">SPXW 20260406 6615.0 C</div></div>
+      <div class="meta-item"><div class="meta-label">License</div><div class="meta-val">TBNZ</div></div>
+      <div class="meta-item"><div class="meta-label">Alert Owner</div><div class="meta-val">houyuexuan</div></div>
+      <div class="meta-item"><div class="meta-label">Alert Tag</div><div class="meta-val empty">—</div></div>
+      <div class="meta-item"><div class="meta-label">Client Tag</div><div class="meta-val empty">—</div></div>
+      <div class="meta-item"><div class="meta-label">Linked Case</div><div class="meta-val empty">—</div></div>
+      <div class="meta-item"><div class="meta-label">Risk Level</div><div class="meta-val empty">—</div></div>
     </div>
+  </div>
 
-
-    <!-- ═══════════════ ALERT DETAILS ═══════════════ -->
-    <div class="page" id="page-alert-details">
-      <div class="breadcrumb">
-        <a onclick="showPage('alert-viewer')">Alert Viewer</a> › Alert 19150109
-      </div>
-
-      <div style="display:flex;gap:8px;margin-bottom:12px;">
-        <button class="btn btn-sm" onclick="showPage('alert-viewer')">← Back</button>
-        <button class="btn btn-sm">Export</button>
-        <button class="btn btn-sm">Link to Case</button>
-        <button class="btn btn-primary btn-sm" style="margin-left:auto" onclick="showPage('alert-details')">Manage &gt;&gt;</button>
-      </div>
-
-      <!-- Meta -->
-      <div class="card" style="margin-bottom:12px;">
-        <div class="meta-grid">
-          <div class="meta-item"><div class="meta-label">System Hit Time</div><div class="meta-val">2026-04-07 08:43:33 EDT</div></div>
-          <div class="meta-item"><div class="meta-label">Rule Name</div><div class="meta-val">pre-arranged trading (Profit)</div></div>
-          <div class="meta-item"><div class="meta-label">Alert Status</div><div class="meta-val"><span class="tag tag-processing">Processing</span></div></div>
-          <div class="meta-item"><div class="meta-label">Last Trigger Time</div><div class="meta-val">2026-04-06 11:50:10 EDT</div></div>
-          <div class="meta-item"><div class="meta-label">Alert Owner</div><div class="meta-val">houyuexuan</div></div>
-          <div class="meta-item"><div class="meta-label">Symbol</div><div class="meta-val">SPXW 20260406 6615.0 C</div></div>
-          <div class="meta-item"><div class="meta-label">Account ID</div><div class="meta-val link">3215451</div></div>
-          <div class="meta-item"><div class="meta-label">License</div><div class="meta-val">TBNZ</div></div>
-          <div class="meta-item"><div class="meta-label">Alert Tag</div><div class="meta-val empty">—</div></div>
-          <div class="meta-item"><div class="meta-label">Client Tag</div><div class="meta-val empty">—</div></div>
-          <div class="meta-item"><div class="meta-label">Linked Case</div><div class="meta-val empty">—</div></div>
-          <div class="meta-item"><div class="meta-label">Risk Level</div><div class="meta-val empty">—</div></div>
+  <!-- ✦ AI Analysis Card ✦ -->
+  <div class="ai-card">
+    <div class="ai-card-head">
+      <div class="ai-card-title"><span class="ai-badge">AI</span> TS-AI 分析结果</div>
+      <span style="font-size:11px;color:var(--text-dis)">生成于 2026-04-07 09:02 · 模型 v2.4</span>
+    </div>
+    <div class="ai-card-body">
+      <div class="ai-score-row">
+        <div>
+          <div class="ai-score-big high">82</div>
+          <div style="font-size:11px;color:var(--text-hint);margin-top:3px;">风险评分 / 100</div>
+          <div style="font-size:11px;color:var(--text-hint);">置信度 74%</div>
         </div>
-      </div>
-
-      <!-- ✦ AI ANALYSIS CARD — NEW ✦ -->
-      <div class="ai-card">
-        <div class="ai-card-head">
-          <div class="ai-card-title">
-            <span class="ai-badge">AI</span>
-            TS-AI 分析结果
-          </div>
-          <span style="font-size:11px;color:rgba(0,0,0,.35)">生成于 2026-04-07 09:02 · 模型版本 v2.4</span>
+        <div>
+          <div style="font-size:11px;color:var(--text-hint);margin-bottom:4px;">处置建议</div>
+          <span class="ai-recommend ai-recommend-escalate">⬆ 建议 Escalate</span>
         </div>
-        <div class="ai-card-body">
-          <div class="ai-score-row">
-            <div>
-              <div class="ai-score-big high">82</div>
-              <div class="ai-meta" style="font-size:11px;color:rgba(0,0,0,.45);margin-top:3px;">风险评分 / 100</div>
-              <div class="ai-meta" style="font-size:11px;color:rgba(0,0,0,.45);">置信度 74%</div>
-            </div>
-            <div>
-              <div style="font-size:11px;color:rgba(0,0,0,.45);margin-bottom:4px;">处置建议</div>
-              <span class="ai-recommend ai-recommend-escalate">⬆ 建议 Escalate</span>
-            </div>
-            <div style="margin-left:auto;text-align:right;">
-              <div style="font-size:11px;color:rgba(0,0,0,.45);margin-bottom:4px;">客户画像标签</div>
-              <div style="display:flex;flex-wrap:wrap;gap:4px;justify-content:flex-end;">
-                <span class="tag" style="background:#fff2f0;color:#cf1322;border:1px solid #ffa39e;font-size:11px;">短期频繁开平仓</span>
-                <span class="tag" style="background:#fff7e6;color:#d46b08;border:1px solid #ffd591;font-size:11px;">期权集中交易</span>
-                <span class="tag" style="background:#f9f0ff;color:#531dab;border:1px solid #d3adf7;font-size:11px;">关联账户活跃</span>
-              </div>
-            </div>
-          </div>
-
-          <div class="ai-evidence">
-            <div class="ai-evidence-title">判定依据</div>
-            <ul>
-              <li>账户在 10:23 前后短时间内集中买入 SPXW，价格上涨后快速平仓，买卖价差模式与 pre-arranged trading 历史案例高度相似（相似度 87%）。</li>
-              <li>同一 IP（218.82.19.9）下存在 2 个关联账户（3215450、3215452），当日存在反向交易行为，可能构成对手方。</li>
-              <li>该账户近 6 个月内触发同类 Alert 3 次，其中 1 次升级为 Case，结论为 Further Action；当前账户无 Watchlist 标记。</li>
-            </ul>
-          </div>
-
-          <div class="ai-actions-row">
-            <button class="btn btn-ai btn-sm" onclick="sendChip('查关联账户')">查关联账户</button>
-            <button class="btn btn-ai btn-sm" onclick="sendChip('查历史 Alert')">查历史 Alert</button>
-            <button class="btn btn-ai btn-sm" onclick="sendChip('对比同类案例')">对比同类案例</button>
-            <button class="btn btn-ai btn-sm" onclick="sendChip('重新评估风险')">重新评估</button>
-            <div class="ai-divider"></div>
-            <button class="ask-ai-toggle" onclick="toggleAsk()">
-              <span id="ask-toggle-label">追问 AI ↓</span>
-            </button>
-          </div>
-
-          <!-- 追问 widget -->
-          <div class="ask-ai-section">
-            <div class="ask-ai-content" id="ask-ai-panel">
-              <div class="ai-messages" id="ai-messages">
-                <div class="ai-msg bot">
-                  <div class="ai-msg-icon bot">AI</div>
-                  <div class="ai-msg-bubble">你好，我已分析完 Alert 19150109。如有疑问，可以直接提问，或点击上方快捷按钮。</div>
-                </div>
-              </div>
-              <div class="chips-row" id="chips-row">
-                <span class="chip" onclick="sendChip('查关联账户')">查关联账户</span>
-                <span class="chip" onclick="sendChip('查历史 Alert')">查历史 Alert</span>
-                <span class="chip" onclick="sendChip('对比同类案例')">对比同类案例</span>
-                <span class="chip" onclick="sendChip('重新评估风险')">重新评估风险</span>
-              </div>
-              <div class="ask-input-row">
-                <input class="ask-input" id="ask-input" placeholder="输入问题，例如：这个账户的出入金记录有异常吗？" onkeydown="if(event.key==='Enter') sendMsg()">
-                <button class="btn btn-primary btn-sm" onclick="sendMsg()">发送</button>
-              </div>
-            </div>
+        <div style="margin-left:auto;">
+          <div style="font-size:11px;color:var(--text-hint);margin-bottom:4px;">客户行为标签</div>
+          <div style="display:flex;flex-wrap:wrap;gap:4px;">
+            <span class="tag tag-high">短期频繁开平仓</span>
+            <span class="tag tag-medium">期权集中交易</span>
+            <span class="tag tag-ai">关联账户活跃</span>
           </div>
         </div>
       </div>
-
-      <!-- Alert Detail (original) -->
-      <div class="card">
-        <div class="section-title">
-          Alert Detail
-          <span class="section-subtitle">订单触发摘要</span>
-        </div>
-        <div style="padding:0 16px;">
-          <table>
-            <thead>
-              <tr><th>Account</th><th>Symbol</th><th>Order Date</th><th>Order Count</th><th>Buy Trade Count</th><th>Sell Trade Count</th></tr>
-            </thead>
-            <tbody>
-              <tr><td>3215451</td><td>SPXW 20260406 6615.0 C</td><td>20260406</td><td>5</td><td>5</td><td>6</td></tr>
-            </tbody>
-          </table>
-        </div>
-
-        <!-- Tabs -->
-        <div class="tab-bar" style="margin-top:12px;">
-          <div class="tab active" onclick="switchTab(this,'tab-orders')">Orders</div>
-          <div class="tab" onclick="switchTab(this,'tab-trade')">Trade</div>
-          <div class="tab" onclick="switchTab(this,'tab-oplog')">Order Operation Log</div>
-        </div>
-
-        <div class="tab-pane active" id="tab-orders">
-          <table>
-            <thead>
-              <tr><th>Account ID</th><th>License</th><th>Symbol</th><th>Order ID</th><th>Type</th><th>Action</th><th>Open/Close</th><th>Total Qty</th><th>Filled Qty</th><th>Filled Amt</th><th>Realized PnL</th><th>IP Address</th><th>Device ID</th></tr>
-            </thead>
-            <tbody>
-              <tr><td>3215451</td><td>TBNZ</td><td>SPXW OPT</td><td>42806524</td><td>LMT</td><td>BUY</td><td>Open Long</td><td>2</td><td>—</td><td>1,400</td><td>0</td><td>218.82.19.9</td><td>F5F9...CE4A5</td></tr>
-              <tr><td>3215451</td><td>TBNZ</td><td>SPXW OPT</td><td>42806524</td><td>LMT</td><td>BUY</td><td>Open Long</td><td>7</td><td>—</td><td>4,900</td><td>0</td><td>218.82.19.9</td><td>F5F9...CE4A5</td></tr>
-              <tr><td>3215451</td><td>TBNZ</td><td>SPXW OPT</td><td>42806733</td><td>MKT</td><td>SELL</td><td>Close Long</td><td>10</td><td>—</td><td>7,400</td><td>376.75</td><td>218.82.19.9</td><td>F5F9...CE4A5</td></tr>
-              <tr><td>3215451</td><td>TBNZ</td><td>SPXW OPT</td><td>42806878</td><td>LMT</td><td>BUY</td><td>Open Long</td><td>15</td><td>—</td><td>6,300</td><td>0</td><td>218.82.19.9</td><td>F5F9...CE4A5</td></tr>
-              <tr><td>3215451</td><td>TBNZ</td><td>SPXW OPT</td><td>42806989</td><td>LMT</td><td>SELL</td><td>Close Long</td><td>15</td><td>—</td><td>7,650</td><td>1,314.78</td><td>218.82.19.9</td><td>F5F9...CE4A5</td></tr>
-            </tbody>
-          </table>
-        </div>
-        <div class="tab-pane" id="tab-trade">
-          <div class="empty-state">Trade 数据（同 Orders 格式，此处省略）</div>
-        </div>
-        <div class="tab-pane" id="tab-oplog">
-          <div class="empty-state">Order operation log 暂无</div>
-        </div>
-
-        <!-- Alert Operation Log -->
-        <div style="padding:0 16px 16px;">
-          <div style="font-size:13px;font-weight:600;margin:16px 0 8px;">Alert Operation Log</div>
-          <div class="log-item">
-            <div class="log-meta"><span>2026-04-08 07:18:59 GMT+8</span><span>·</span><span>wendy.wang</span><span><span class="log-op">Manage</span></span></div>
-            <div class="log-detail">Change Status: New → Processing<br>Add comment: Please obtain more information, thanks<br>Assign to: houyuexuan</div>
+      <div class="ai-evidence">
+        <div class="ai-evidence-title">判定依据</div>
+        <ul>
+          <li>账户在 10:23 前后短时间内集中买入 SPXW，价格上涨后快速平仓，买卖价差模式与 pre-arranged trading 历史案例高度相似（相似度 87%）。</li>
+          <li>同一 IP（218.82.19.9）下存在 2 个关联账户（3215450、3215452），当日存在反向交易行为，可能构成对手方。</li>
+          <li>该账户近 6 个月内触发同类 Alert 3 次，其中 1 次升级为 Case，结论为 Further Action；当前无 Watchlist 标记。</li>
+        </ul>
+      </div>
+      <div class="ai-actions-row">
+        <button class="btn btn-ai btn-sm" onclick="sendChip('查关联账户')">查关联账户</button>
+        <button class="btn btn-ai btn-sm" onclick="sendChip('查历史 Alert')">查历史 Alert</button>
+        <button class="btn btn-ai btn-sm" onclick="sendChip('对比同类案例')">对比同类案例</button>
+        <button class="btn btn-ai btn-sm" onclick="sendChip('重新评估风险')">重新评估</button>
+        <div style="flex:1"></div>
+        <button class="ask-ai-toggle" onclick="toggleAsk()"><span id="ask-toggle-label">追问 AI ↓</span></button>
+      </div>
+      <div class="ask-ai-section">
+        <div class="ask-ai-content" id="ask-ai-panel">
+          <div class="ai-messages" id="ai-messages">
+            <div class="ai-msg bot">
+              <div class="ai-msg-icon bot">AI</div>
+              <div class="ai-msg-bubble">已分析完 Alert 19150109。如有疑问，可以直接提问，或点击快捷按钮。</div>
+            </div>
+          </div>
+          <div class="chips-row">
+            <span class="chip" onclick="sendChip('查关联账户')">查关联账户</span>
+            <span class="chip" onclick="sendChip('查历史 Alert')">查历史 Alert</span>
+            <span class="chip" onclick="sendChip('对比同类案例')">对比同类案例</span>
+            <span class="chip" onclick="sendChip('重新评估风险')">重新评估风险</span>
+          </div>
+          <div class="ask-input-row">
+            <input class="ask-input" id="ask-input" placeholder="输入问题，例如：这个账户的出入金记录有异常吗？" onkeydown="if(event.key==='Enter')sendMsg()">
+            <button class="btn btn-primary btn-sm" onclick="sendMsg()">发送</button>
           </div>
         </div>
       </div>
     </div>
+  </div>
 
-
-    <!-- ═══════════════ CASE MANAGEMENT LIST ═══════════════ -->
-    <div class="page" id="page-case-management">
-      <div class="breadcrumb">Compliance Monitoring › Case Management</div>
-
-      <div class="filter-bar" style="margin-bottom:12px;">
-        <div class="filter-item"><span class="filter-label">Case Code</span><input class="filter-input" style="width:90px" placeholder="TS_xxx"></div>
-        <div class="filter-item"><span class="filter-label">Case Name</span><input class="filter-input" style="width:120px" placeholder="Search"></div>
-        <div class="filter-item"><span class="filter-label">Status</span>
-          <select class="filter-select"><option>All</option><option>New</option><option>Processing</option><option>Closed</option></select></div>
-        <div class="filter-item"><span class="filter-label">Case Owner</span><input class="filter-input" style="width:90px" placeholder="Username"></div>
-        <button class="btn btn-primary btn-sm">查询</button>
-        <button class="btn btn-sm">重置</button>
-        <button class="btn btn-primary btn-sm" style="margin-left:auto">+ Add New Case</button>
+  <!-- Alert Detail (原有) -->
+  <div class="card">
+    <div class="section-title">Alert Detail <span class="section-subtitle">订单触发摘要</span></div>
+    <div style="padding:0 16px 8px;">
+      <table>
+        <thead><tr><th>Account</th><th>Symbol</th><th>Order Date</th><th>Order Count</th><th>Buy Trade Count</th><th>Sell Trade Count</th></tr></thead>
+        <tbody><tr><td>3215451</td><td>SPXW 20260406 6615.0 C</td><td>20260406</td><td>5</td><td>5</td><td>6</td></tr></tbody>
+      </table>
+    </div>
+    <div class="tab-bar" style="margin-top:4px;">
+      <div class="tab active" onclick="switchTab(this,'tab-orders')">Orders</div>
+      <div class="tab" onclick="switchTab(this,'tab-trade')">Trade</div>
+      <div class="tab" onclick="switchTab(this,'tab-oplog')">Order Operation Log</div>
+    </div>
+    <div class="tab-pane active" id="tab-orders">
+      <table>
+        <thead><tr><th>Account ID</th><th>License</th><th>Symbol</th><th>Order ID</th><th>Type</th><th>Action</th><th>Open/Close</th><th>Total Qty</th><th>Filled Amt</th><th>Realized PnL</th><th>IP Address</th></tr></thead>
+        <tbody>
+          <tr><td>3215451</td><td>TBNZ</td><td>SPXW OPT</td><td>42806524</td><td>LMT</td><td>BUY</td><td>Open Long</td><td>2</td><td>1,400</td><td>0</td><td>218.82.19.9</td></tr>
+          <tr><td>3215451</td><td>TBNZ</td><td>SPXW OPT</td><td>42806524</td><td>LMT</td><td>BUY</td><td>Open Long</td><td>7</td><td>4,900</td><td>0</td><td>218.82.19.9</td></tr>
+          <tr><td>3215451</td><td>TBNZ</td><td>SPXW OPT</td><td>42806733</td><td>MKT</td><td>SELL</td><td>Close Long</td><td>10</td><td>7,400</td><td>376.75</td><td>218.82.19.9</td></tr>
+          <tr><td>3215451</td><td>TBNZ</td><td>SPXW OPT</td><td>42806989</td><td>LMT</td><td>SELL</td><td>Close Long</td><td>15</td><td>7,650</td><td>1,314.78</td><td>218.82.19.9</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="tab-pane" id="tab-trade"><div class="empty">Trade 数据（同 Orders 格式）</div></div>
+    <div class="tab-pane" id="tab-oplog"><div class="empty">Order operation log 暂无</div></div>
+    <div style="padding:8px 16px 16px;">
+      <div style="font-size:13px;font-weight:600;margin:12px 0 8px;">Alert Operation Log</div>
+      <div class="log-item">
+        <div class="log-meta"><span>2026-04-08 07:18:59 GMT+8</span>·<span>wendy.wang</span><span class="log-op">Manage</span></div>
+        <div class="log-detail">Change Status: New → Processing · Add comment: Please obtain more information, thanks · Assign to: houyuexuan</div>
       </div>
+    </div>
+  </div>
+</div>
 
-      <div style="display:flex;gap:8px;margin-bottom:8px;border-bottom:1px solid #f0f0f0;padding-bottom:8px;">
-        <button class="btn btn-sm" style="border-bottom:2px solid #1677ff;color:#1677ff;">TS Case</button>
-        <button class="btn btn-sm">TM Case</button>
-        <button class="btn btn-sm">My Case</button>
-        <button class="btn btn-sm">All Case</button>
+
+<!-- ══════════════════════════════════════════
+     PAGE: CASE MANAGEMENT
+══════════════════════════════════════════ -->
+<div class="page" id="page-case-management">
+  <div class="breadcrumb"><span>Compliance Monitoring</span> › <span>Case Management</span></div>
+
+  <div class="filter-bar">
+    <span class="filter-label">Case Code</span><input class="filter-input" style="width:80px" placeholder="TS_xxx">
+    <span class="filter-label">Case Name</span><input class="filter-input" style="width:120px">
+    <span class="filter-label">Status</span>
+    <select class="filter-select"><option>All</option><option>New</option><option>Processing</option><option>Closed</option></select>
+    <span class="filter-label">Owner</span><input class="filter-input" style="width:90px">
+    <button class="btn btn-primary btn-sm">查询</button>
+    <button class="btn btn-sm">重置</button>
+    <button class="btn btn-primary btn-sm" style="margin-left:auto">+ Add New Case</button>
+  </div>
+
+  <div style="display:flex;gap:6px;margin-bottom:12px;border-bottom:1px solid var(--border);padding-bottom:0;">
+    <div class="tab active" style="margin-bottom:-1px;">TS Case</div>
+    <div class="tab">TM Case</div>
+    <div class="tab">My Case</div>
+    <div class="tab">All Case</div>
+  </div>
+
+  <div class="case-card" onclick="showPage('case-details')">
+    <div><div class="case-card-code">TS_824</div><div class="case-card-name">1277792-BQ</div>
+    <div class="case-card-meta"><span>Account: 1277792</span><span>Symbol: BQ</span><span>Owner: mayimeng</span><span>Updated: 2026-02-02</span><span>Alerts: —</span></div></div>
+    <div style="display:flex;flex-direction:column;align-items:flex-end;gap:6px;"><span class="tag tag-processing">Processing</span><button class="btn btn-sm" onclick="event.stopPropagation();showPage('case-details')">Detail</button></div>
+  </div>
+  <div class="case-card" onclick="showPage('case-details')">
+    <div><div class="case-card-code">TS_814</div><div class="case-card-name">SPXW Option - 4183296</div>
+    <div class="case-card-meta"><span>Account: 4183296</span><span>Symbol: SPXW (8 contracts)</span><span>Owner: mayimeng</span><span>Data: 2025-05-10 ~ 2025-07-14</span><span>Alerts: 8</span></div></div>
+    <div style="display:flex;flex-direction:column;align-items:flex-end;gap:6px;"><span class="tag tag-closed">Closed · No Further Action</span><button class="btn btn-sm" onclick="event.stopPropagation();showPage('case-details')">Detail</button></div>
+  </div>
+  <div class="case-card">
+    <div><div class="case-card-code">TS_817</div><div class="case-card-name">RAPP ASMB - 1441692</div>
+    <div class="case-card-meta"><span>Account: 1441692</span><span>Symbol: RAPP, ASMB, CAMP</span><span>Owner: mayimeng</span><span>Data: 2025-08-07 ~ 2025-08-29</span></div></div>
+    <div style="display:flex;flex-direction:column;align-items:flex-end;gap:6px;"><span class="tag tag-closed">Closed · Further Action</span><button class="btn btn-sm">Detail</button></div>
+  </div>
+</div>
+
+
+<!-- ══════════════════════════════════════════
+     PAGE: CASE DETAILS
+══════════════════════════════════════════ -->
+<div class="page" id="page-case-details">
+  <div class="breadcrumb"><a onclick="showPage('case-management')">Case Management</a> › TS_814</div>
+  <div class="page-actions"><button class="btn btn-sm" onclick="showPage('case-management')">← 返回</button></div>
+
+  <div class="card">
+    <div class="meta-grid">
+      <div class="meta-item"><div class="meta-label">Case Name</div><div class="meta-val">SPXW Option - 4183296</div></div>
+      <div class="meta-item"><div class="meta-label">Case Code</div><div class="meta-val">TS_814</div></div>
+      <div class="meta-item"><div class="meta-label">Case Owner</div><div class="meta-val">mayimeng</div></div>
+      <div class="meta-item"><div class="meta-label">Case Status</div><div class="meta-val"><span class="tag tag-closed">Closed</span></div></div>
+      <div class="meta-item"><div class="meta-label">Account ID</div><div class="meta-val link" onclick="showPage('client-details')">4183296</div></div>
+      <div class="meta-item"><div class="meta-label">Symbol</div><div class="meta-val">SPXW (8 contracts)</div></div>
+      <div class="meta-item"><div class="meta-label">Case Source</div><div class="meta-val">CMP</div></div>
+      <div class="meta-item"><div class="meta-label">Number of Alerts</div><div class="meta-val">8</div></div>
+      <div class="meta-item span2"><div class="meta-label">Data Period</div><div class="meta-val">2025-05-10 ~ 2025-07-14</div></div>
+      <div class="meta-item"><div class="meta-label">Case Tag</div><div class="meta-val"><span class="tag tag-cleared">No Further Action</span></div></div>
+      <div class="meta-item"><div class="meta-label">Created Time</div><div class="meta-val">2025-09-19 17:42 GMT+8</div></div>
+    </div>
+  </div>
+
+  <!-- ✦ Investigation Notes ✦ -->
+  <div class="notes-card">
+    <div class="notes-head">
+      <div class="notes-title">📋 调查底稿 <span style="font-size:11px;font-weight:400;color:#7c4a00aa;">· 可编辑</span></div>
+      <button class="btn-draft" onclick="fillDraft()">✦ AI 生成草稿</button>
+    </div>
+    <textarea class="notes-textarea" id="draft-textarea" placeholder="在此处记录调查过程与结论..."></textarea>
+    <div class="notes-footer">
+      <span style="font-size:11px;color:var(--text-dis)" id="draft-status">尚未保存</span>
+      <button class="btn btn-primary btn-sm" onclick="saveDraft()">保存草稿</button>
+      <button class="btn btn-sm">导出</button>
+    </div>
+  </div>
+
+  <!-- Linked Alerts -->
+  <div class="card">
+    <div class="section-title">关联 Alerts <span class="section-subtitle">8 条 · 全部 Closed</span>
+      <button class="btn btn-sm" style="margin-left:auto;font-size:11px">前往 Alert Viewer 关联</button>
+    </div>
+    <table>
+      <thead><tr><th>ID</th><th>Hit Time</th><th>Symbol</th><th>Rule Name</th><th>Status</th><th>Owner</th><th>Conclusion</th><th>Operation</th></tr></thead>
+      <tbody>
+        <tr><td class="col-link">19141761</td><td>2025-07-15</td><td>SPXW 20250714 6235.0 P</td><td>pre-arranged trading (Profit)</td><td><span class="tag tag-closed">Closed</span></td><td>zengyuxiang</td><td><span class="tag tag-cleared">Cleared</span></td><td><button class="btn btn-sm">Detail</button></td></tr>
+        <tr><td class="col-link">19141760</td><td>2025-07-15</td><td>SPXW 20250714 6255.0 P</td><td>pre-arranged trading (Profit)</td><td><span class="tag tag-closed">Closed</span></td><td>houyuexuan</td><td><span class="tag tag-cleared">Cleared</span></td><td><button class="btn btn-sm">Detail</button></td></tr>
+        <tr><td class="col-link">19141753</td><td>2025-07-14</td><td>SPXW 20250711 6260.0 C</td><td>pre-arranged trading (Profit)</td><td><span class="tag tag-closed">Closed</span></td><td>zengyuxiang</td><td><span class="tag tag-cleared">Cleared</span></td><td><button class="btn btn-sm">Detail</button></td></tr>
+        <tr><td colspan="8" style="text-align:center;padding:8px;color:var(--text-dis);font-size:12px">+ 5 more alerts</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="card">
+    <div class="section-title">Case Operation Log</div>
+    <div style="padding:0 16px 8px;">
+      <div class="log-item">
+        <div class="log-meta"><span>2025-09-19 17:44 GMT+8</span>·<span>mayimeng</span><span class="log-op">Manage Task</span></div>
+        <div class="log-detail">Add comment: The client was triggered by CMP for potential pre-arranged trading activities. Most trades showed short-term spread capturing, profiting from buying low and selling high. No transactions were identified at prices significantly deviating from the prevailing market. Recommended to clear.<br>Change stage: Processing → Escalated</div>
       </div>
+    </div>
+  </div>
+</div>
 
-      <div class="case-card-list">
-        <div class="case-card" onclick="showPage('case-details')">
-          <div class="case-card-left">
-            <div class="case-card-code">TS_824</div>
-            <div class="case-card-name">1277792-BQ</div>
-            <div class="case-card-meta">
-              <span>Account: 1277792</span>
-              <span>Symbol: BQ</span>
-              <span>Owner: mayimeng</span>
-              <span>Updated: 2026-02-02</span>
-              <span>Alerts: —</span>
-            </div>
+
+<!-- ══════════════════════════════════════════
+     PAGE: CLIENT MANAGEMENT
+══════════════════════════════════════════ -->
+<div class="page" id="page-client-management">
+  <div class="breadcrumb"><span>Compliance Monitoring</span> › <span>Client Management</span></div>
+
+  <div class="filter-bar">
+    <span class="filter-label">Account ID</span><input class="filter-input" style="width:90px" placeholder="Account ID">
+    <span class="filter-label">License</span>
+    <select class="filter-select"><option>All</option><option>TBNZ</option><option>TBHK</option><option>TBSG</option></select>
+    <span class="filter-label">Watchlist</span>
+    <select class="filter-select"><option>All</option><option>On Watchlist</option><option>Not on Watchlist</option></select>
+    <span class="filter-label" style="color:var(--ai-color);font-weight:500">AI Risk ≥</span>
+    <select class="filter-select" style="width:64px;border-color:var(--ai-border)"><option>—</option><option>50</option><option>70</option><option>85</option></select>
+    <button class="btn btn-primary btn-sm">查询</button>
+    <button class="btn btn-sm">重置</button>
+    <button class="btn btn-sm" style="margin-left:auto">Export</button>
+  </div>
+
+  <div class="table-bar">
+    <span><strong>1,842</strong> clients in total</span>
+  </div>
+  <div class="table-wrap">
+    <table>
+      <thead>
+        <tr>
+          <th>Account ID</th><th>License</th><th>Registration</th><th>Status</th>
+          <th>Watchlist</th><th>Total Alerts</th><th>Open Cases</th><th>Last Alert</th>
+          <th class="ai-col" style="color:var(--ai-dark)">AI 风险 <span class="tag tag-ai">AI</span></th>
+          <th>Operation</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td class="col-link" onclick="showPage('client-details')">3215451</td>
+          <td>TBNZ</td><td>2023-08-12</td><td><span class="tag tag-cleared">Active</span></td>
+          <td><span class="tag tag-watchlist">On Watchlist</span></td>
+          <td>4</td><td>1</td><td>2026-04-07</td>
+          <td style="background:#fffdf0"><span class="ai-score ai-score-high">82</span></td>
+          <td><button class="btn btn-sm" onclick="showPage('client-details')">Detail</button></td>
+        </tr>
+        <tr>
+          <td class="col-link">2353510</td>
+          <td>TBNZ</td><td>2022-03-05</td><td><span class="tag tag-cleared">Active</span></td>
+          <td><span class="tag tag-closed">—</span></td>
+          <td>3</td><td>0</td><td>2026-04-06</td>
+          <td style="background:#fffdf0"><span class="ai-score ai-score-mid">67</span></td>
+          <td><button class="btn btn-sm">Detail</button></td>
+        </tr>
+        <tr>
+          <td class="col-link">4183296</td>
+          <td>TBNZ</td><td>2021-11-20</td><td><span class="tag tag-cleared">Active</span></td>
+          <td><span class="tag tag-closed">—</span></td>
+          <td>8</td><td>0</td><td>2025-07-15</td>
+          <td style="background:#fffdf0"><span class="ai-score ai-score-mid">55</span></td>
+          <td><button class="btn btn-sm">Detail</button></td>
+        </tr>
+        <tr>
+          <td class="col-link">1441692</td>
+          <td>TBNZ</td><td>2020-06-18</td><td><span class="tag" style="background:#fff2f0;color:#cf1322;border:1px solid #ffa39e">Restricted</span></td>
+          <td><span class="tag tag-watchlist">On Watchlist</span></td>
+          <td>12</td><td>0</td><td>2025-08-29</td>
+          <td style="background:#fffdf0"><span class="ai-score ai-score-high">91</span></td>
+          <td><button class="btn btn-sm">Detail</button></td>
+        </tr>
+        <tr>
+          <td class="col-link">7526677</td>
+          <td>TBNZ</td><td>2024-01-09</td><td><span class="tag tag-cleared">Active</span></td>
+          <td><span class="tag tag-closed">—</span></td>
+          <td>2</td><td>1</td><td>2026-04-03</td>
+          <td style="background:#fffdf0"><span class="ai-score ai-score-mid">48</span></td>
+          <td><button class="btn btn-sm">Detail</button></td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+  <div style="padding:10px 16px;background:#fff;border:1px solid var(--border);border-top:none;border-radius:0 0 6px 6px;font-size:12px;color:var(--text-hint);display:flex;justify-content:flex-end;gap:8px;">
+    <span>20 条/页</span><span>1 / 93</span>
+    <button class="btn btn-sm">‹</button><button class="btn btn-sm">›</button>
+  </div>
+</div>
+
+
+<!-- ══════════════════════════════════════════
+     PAGE: CLIENT DETAILS
+══════════════════════════════════════════ -->
+<div class="page" id="page-client-details">
+  <div class="breadcrumb"><a onclick="showPage('client-management')">Client Management</a> › Account 3215451</div>
+  <div class="page-actions">
+    <button class="btn btn-sm" onclick="showPage('client-management')">← Back</button>
+    <button class="btn btn-sm">Add to Watchlist</button>
+    <button class="btn btn-sm">Send Inquiry</button>
+    <button class="btn btn-sm" style="color:#cf1322;border-color:#ffa39e">Request Restriction</button>
+  </div>
+
+  <!-- Client Meta -->
+  <div class="card">
+    <div class="meta-grid">
+      <div class="meta-item"><div class="meta-label">Account ID</div><div class="meta-val">3215451</div></div>
+      <div class="meta-item"><div class="meta-label">License</div><div class="meta-val">TBNZ</div></div>
+      <div class="meta-item"><div class="meta-label">Registration Date</div><div class="meta-val">2023-08-12</div></div>
+      <div class="meta-item"><div class="meta-label">Account Status</div><div class="meta-val"><span class="tag tag-cleared">Active</span></div></div>
+      <div class="meta-item"><div class="meta-label">Watchlist</div><div class="meta-val"><span class="tag tag-watchlist">On Watchlist</span></div></div>
+      <div class="meta-item"><div class="meta-label">Watchlist Added</div><div class="meta-val">2025-12-02</div></div>
+      <div class="meta-item"><div class="meta-label">Total Alerts</div><div class="meta-val">4</div></div>
+      <div class="meta-item"><div class="meta-label">Total Cases</div><div class="meta-val">1</div></div>
+    </div>
+  </div>
+
+  <!-- AI Portrait + Lifecycle -->
+  <div class="profile-section">
+
+    <!-- AI 风险画像 -->
+    <div class="ai-card" style="margin-bottom:0">
+      <div class="ai-card-head">
+        <div class="ai-card-title"><span class="ai-badge">AI</span> 客户风险画像</div>
+        <span style="font-size:11px;color:var(--text-dis)">更新于 2026-04-07</span>
+      </div>
+      <div class="ai-card-body">
+        <!-- Score -->
+        <div style="display:flex;align-items:flex-end;gap:12px;margin-bottom:12px;padding-bottom:12px;border-bottom:1px solid #e9d8fd;">
+          <div>
+            <div class="ai-score-big high">82</div>
+            <div style="font-size:11px;color:var(--text-hint);margin-top:2px;">综合风险评分</div>
           </div>
-          <div style="display:flex;flex-direction:column;align-items:flex-end;gap:6px;">
-            <span class="tag tag-processing">Processing</span>
-            <button class="btn btn-sm" onclick="event.stopPropagation();showPage('case-details')">Detail</button>
+          <div style="flex:1">
+            <div class="gauge-wrap"><div class="gauge-fill high" style="width:82%"></div></div>
+            <div style="font-size:11px;color:var(--text-hint);">置信度 74% · <span style="color:#cf1322">High Risk</span></div>
           </div>
         </div>
-
-        <div class="case-card" onclick="showPage('case-details')">
-          <div class="case-card-left">
-            <div class="case-card-code">TS_814</div>
-            <div class="case-card-name">SPXW Option - 4183296</div>
-            <div class="case-card-meta">
-              <span>Account: 4183296</span>
-              <span>Symbol: SPXW (8 contracts)</span>
-              <span>Owner: mayimeng</span>
-              <span>Data Period: 2025-05-10 ~ 2025-07-14</span>
-              <span>Alerts: 8</span>
-            </div>
-          </div>
-          <div style="display:flex;flex-direction:column;align-items:flex-end;gap:6px;">
-            <span class="tag tag-closed">Closed · No Further Action</span>
-            <button class="btn btn-sm" onclick="event.stopPropagation();showPage('case-details')">Detail</button>
-          </div>
+        <!-- Dimensions -->
+        <div class="ai-evidence-title" style="margin-bottom:8px;">风险维度分解</div>
+        <div class="dim-row"><span class="dim-label">交易行为异常度</span><div style="flex:1;margin:0 8px"><div class="gauge-wrap"><div class="gauge-fill high" style="width:88%"></div></div></div><span class="dim-score" style="color:#cf1322">88</span></div>
+        <div class="dim-row"><span class="dim-label">账户关联网络风险</span><div style="flex:1;margin:0 8px"><div class="gauge-wrap"><div class="gauge-fill high" style="width:75%"></div></div></div><span class="dim-score" style="color:#d46b08">75</span></div>
+        <div class="dim-row"><span class="dim-label">历史违规倾向</span><div style="flex:1;margin:0 8px"><div class="gauge-wrap"><div class="gauge-fill medium" style="width:62%"></div></div></div><span class="dim-score" style="color:#d46b08">62</span></div>
+        <div class="dim-row"><span class="dim-label">资金流动异常</span><div style="flex:1;margin:0 8px"><div class="gauge-wrap"><div class="gauge-fill low" style="width:35%"></div></div></div><span class="dim-score" style="color:#389e0d">35</span></div>
+        <div class="divider"></div>
+        <!-- Behavior tags -->
+        <div class="ai-evidence-title" style="margin-bottom:6px;">行为特征标签</div>
+        <div style="display:flex;flex-wrap:wrap;gap:4px;margin-bottom:12px;">
+          <span class="tag tag-high">短期频繁开平仓</span>
+          <span class="tag tag-medium">期权集中交易</span>
+          <span class="tag tag-ai">关联账户活跃</span>
+          <span class="tag tag-low">出入金正常</span>
+          <span class="tag tag-medium">日内波段操作</span>
         </div>
-
-        <div class="case-card">
-          <div class="case-card-left">
-            <div class="case-card-code">TS_817</div>
-            <div class="case-card-name">RAPP ASMB - 1441692</div>
-            <div class="case-card-meta">
-              <span>Account: 1441692</span>
-              <span>Symbol: RAPP, ASMB, CAMP</span>
-              <span>Owner: mayimeng</span>
-              <span>Data Period: 2025-08-07 ~ 2025-08-29</span>
-              <span>Alerts: —</span>
-            </div>
-          </div>
-          <div style="display:flex;flex-direction:column;align-items:flex-end;gap:6px;">
-            <span class="tag tag-closed">Closed · Further Action</span>
-            <button class="btn btn-sm">Detail</button>
-          </div>
+        <!-- Key observations -->
+        <div class="ai-evidence">
+          <div class="ai-evidence-title">关键风险观察</div>
+          <ul>
+            <li>账户自 2025 年 Q4 起交易频率明显上升，尤其集中于临近到期的 SPXW 期权。</li>
+            <li>同 IP 关联账户在多次 Alert 触发时存在同步反向操作，构成对手方嫌疑。</li>
+            <li>近 6 个月内有 1 次 Further Action 历史记录（Case TS_798），当前无主动披露。</li>
+          </ul>
+        </div>
+        <div style="display:flex;gap:6px;">
+          <button class="btn btn-ai btn-sm" onclick="sendChipClient('查完整关联图谱')">查关联图谱</button>
+          <button class="btn btn-ai btn-sm" onclick="sendChipClient('分析资金流向')">分析资金流向</button>
+          <button class="btn btn-ai btn-sm" onclick="sendChipClient('对比同类客户')">对比同类客户</button>
         </div>
       </div>
     </div>
 
-
-    <!-- ═══════════════ CASE DETAILS ═══════════════ -->
-    <div class="page" id="page-case-details">
-      <div class="breadcrumb">
-        <a onclick="showPage('case-management')">Case Management</a> › TS_814
+    <!-- 生命周期 -->
+    <div class="card" style="margin-bottom:0">
+      <div class="card-head">
+        🕐 客户风险生命周期
+        <span style="font-size:11px;font-weight:400;color:var(--text-hint);margin-left:4px">共 7 个事件</span>
       </div>
-
-      <div style="display:flex;gap:8px;margin-bottom:12px;">
-        <button class="btn btn-sm" onclick="showPage('case-management')">← 返回</button>
-      </div>
-
-      <!-- Case Meta -->
-      <div class="card" style="margin-bottom:12px;">
-        <div class="meta-grid">
-          <div class="meta-item"><div class="meta-label">Case Name</div><div class="meta-val">SPXW Option - 4183296</div></div>
-          <div class="meta-item"><div class="meta-label">Case Code</div><div class="meta-val">TS_814</div></div>
-          <div class="meta-item"><div class="meta-label">Case Owner</div><div class="meta-val">mayimeng</div></div>
-          <div class="meta-item"><div class="meta-label">Case Status</div><div class="meta-val"><span class="tag tag-closed">Closed</span></div></div>
-          <div class="meta-item"><div class="meta-label">Account ID</div><div class="meta-val link">4183296</div></div>
-          <div class="meta-item"><div class="meta-label">Symbol</div><div class="meta-val">SPXW (8 contracts)</div></div>
-          <div class="meta-item"><div class="meta-label">Case Source</div><div class="meta-val">CMP</div></div>
-          <div class="meta-item"><div class="meta-label">Number of Alerts</div><div class="meta-val">8</div></div>
-          <div class="meta-item" style="grid-column:span 2"><div class="meta-label">Data Period</div><div class="meta-val">2025-05-10 ~ 2025-07-14</div></div>
-          <div class="meta-item"><div class="meta-label">Case Tag</div><div class="meta-val"><span class="tag tag-cleared">No Further Action</span></div></div>
-          <div class="meta-item"><div class="meta-label">Created Time</div><div class="meta-val">2025-09-19 17:42:23 GMT+8</div></div>
-        </div>
-      </div>
-
-      <!-- ✦ INVESTIGATION NOTES — NEW ✦ -->
-      <div class="notes-card">
-        <div class="notes-head">
-          <div class="notes-title">
-            <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M2 2h10v10H2z" stroke="#7c4a00" stroke-width="1.2" fill="none" rx="1"/><path d="M4 5h6M4 7h6M4 9h4" stroke="#7c4a00" stroke-width="1.2" stroke-linecap="round"/></svg>
-            调查底稿
-            <span style="font-size:11px;font-weight:400;color:#7c4a00cc;">· 可编辑，保存后存入 Case Operation Log</span>
+      <div style="padding:16px;">
+        <div class="timeline">
+          <div class="tl-item">
+            <div class="tl-dot gray"></div>
+            <div class="tl-date">2023-08-12</div>
+            <div class="tl-title">账户注册</div>
+            <div class="tl-desc">TBNZ 牌照，个人投资者</div>
           </div>
-          <button class="btn-draft" onclick="fillDraft()">✦ AI 生成草稿</button>
-        </div>
-        <textarea class="notes-textarea" id="draft-textarea" placeholder="在此处记录调查过程与结论，例如：&#10;&#10;本案涉及账户 4183296 在 2025-05 至 2025-07 期间对多支 SPXW 期权的交易行为...&#10;&#10;建议结论："></textarea>
-        <div class="notes-footer">
-          <span style="font-size:11px;color:rgba(0,0,0,.35);" id="draft-status">尚未保存</span>
-          <button class="btn btn-primary btn-sm" onclick="saveDraft()">保存草稿</button>
-          <button class="btn btn-sm">导出</button>
-        </div>
-      </div>
-
-      <!-- Linked Alerts -->
-      <div class="card" style="margin-bottom:12px;">
-        <div class="section-title">
-          关联 Alerts
-          <span class="section-subtitle">8 条 · 全部 Closed</span>
-          <button class="btn btn-sm" style="margin-left:auto;font-size:11px;">前往 Alert Viewer 关联</button>
-        </div>
-        <table>
-          <thead>
-            <tr>
-              <th>ID</th><th>Hit Time</th><th>Symbol</th><th>Rule Name</th><th>Status</th><th>Alert Owner</th><th>Conclusion</th><th>Operation</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr>
-              <td class="col-id">19141761</td>
-              <td>2025-07-15</td>
-              <td>SPXW 20250714 6235.0 P</td>
-              <td>pre-arranged trading (Profit)</td>
-              <td><span class="tag tag-closed">Closed</span></td>
-              <td>zengyuxiang</td>
-              <td><span class="tag tag-cleared">Cleared</span></td>
-              <td><button class="btn btn-sm">Detail</button></td>
-            </tr>
-            <tr>
-              <td class="col-id">19141760</td>
-              <td>2025-07-15</td>
-              <td>SPXW 20250714 6255.0 P</td>
-              <td>pre-arranged trading (Profit)</td>
-              <td><span class="tag tag-closed">Closed</span></td>
-              <td>houyuexuan</td>
-              <td><span class="tag tag-cleared">Cleared</span></td>
-              <td><button class="btn btn-sm">Detail</button></td>
-            </tr>
-            <tr>
-              <td class="col-id">19141753</td>
-              <td>2025-07-14</td>
-              <td>SPXW 20250711 6260.0 C</td>
-              <td>pre-arranged trading (Profit)</td>
-              <td><span class="tag tag-closed">Closed</span></td>
-              <td>zengyuxiang</td>
-              <td><span class="tag tag-cleared">Cleared</span></td>
-              <td><button class="btn btn-sm">Detail</button></td>
-            </tr>
-            <tr>
-              <td colspan="8" style="text-align:center;padding:8px;color:rgba(0,0,0,.35);font-size:12px;">+ 5 more alerts (collapsed)</td>
-            </tr>
-          </tbody>
-        </table>
-      </div>
-
-      <!-- Case Operation Log -->
-      <div class="card">
-        <div class="section-title">Case Operation Log</div>
-        <div style="padding:0 16px 8px;">
-          <div class="log-item">
-            <div class="log-meta">
-              <span>2025-09-19 17:44:18 GMT+8</span>
-              <span>·</span><span>mayimeng</span>
-              <span><span class="log-op">Manage Task</span></span>
-            </div>
-            <div class="log-detail">Add comment: The client was triggered by CMP for potential pre-arranged trading activities, involving both profits and losses. Most of the client's trades showed short-term spread capturing, profiting from buying low and selling high. A review of order data showed that during the period from order placement to execution, the market remained relatively active and no transactions were identified at prices significantly deviating from the prevailing market. It is recommended to clear.<br>Change stage: Processing → Escalated</div>
+          <div class="tl-item">
+            <div class="tl-dot yellow"></div>
+            <div class="tl-date">2025-08-03</div>
+            <div class="tl-title">首次触发 Alert</div>
+            <div class="tl-desc">规则：possible ramping (without tick data)，状态 Processing → Cleared</div>
+          </div>
+          <div class="tl-item">
+            <div class="tl-dot red"></div>
+            <div class="tl-date">2025-11-02</div>
+            <div class="tl-title">Case TS_798 立案</div>
+            <div class="tl-desc">涉及 possible wash trade，由 mayimeng 负责调查</div>
+          </div>
+          <div class="tl-item">
+            <div class="tl-dot green"></div>
+            <div class="tl-date">2025-11-28</div>
+            <div class="tl-title">Case TS_798 结案</div>
+            <div class="tl-desc">结论：Further Action，已上报监管</div>
+          </div>
+          <div class="tl-item">
+            <div class="tl-dot yellow"></div>
+            <div class="tl-date">2025-12-02</div>
+            <div class="tl-title">加入 Watchlist</div>
+            <div class="tl-desc">风险级别：Medium，到期日：2026-06-02，由 houyuexuan 添加</div>
+          </div>
+          <div class="tl-item">
+            <div class="tl-dot yellow"></div>
+            <div class="tl-date">2025-12-18</div>
+            <div class="tl-title">Alert 19149230 触发</div>
+            <div class="tl-desc">pre-arranged trading → Processing → Cleared</div>
+          </div>
+          <div class="tl-item">
+            <div class="tl-dot red"></div>
+            <div class="tl-date">2026-04-07 <span style="background:var(--primary);color:rgba(0,0,0,.85);font-size:10px;padding:1px 5px;border-radius:3px;margin-left:4px">今日</span></div>
+            <div class="tl-title">Alert 19150109 触发（当前）</div>
+            <div class="tl-desc">pre-arranged trading (Profit) · AI 评分 82 · 建议 Escalate · 处理中</div>
           </div>
         </div>
       </div>
     </div>
+  </div>
+
+  <!-- Tabs: Alert History / Watchlist / Inquiries -->
+  <div class="card" style="margin-top:12px">
+    <div class="tab-bar">
+      <div class="tab active" onclick="switchTab(this,'ct-alerts')">Alert 历史 <span style="background:#fff2f0;color:#cf1322;border:1px solid #ffa39e;border-radius:10px;padding:0 5px;font-size:10px;margin-left:3px">4</span></div>
+      <div class="tab" onclick="switchTab(this,'ct-watchlist')">Watchlist 记录</div>
+      <div class="tab" onclick="switchTab(this,'ct-inquiry')">问询记录</div>
+    </div>
+    <div class="tab-pane active" id="ct-alerts">
+      <table>
+        <thead><tr><th>Alert ID</th><th>Hit Time</th><th>Symbol</th><th>Rule</th><th>Status</th><th>Conclusion</th><th class="ai-col" style="color:var(--ai-dark)">AI 评分</th><th>Case</th></tr></thead>
+        <tbody>
+          <tr><td class="col-link" onclick="showPage('alert-details')">19150109</td><td>2026-04-07</td><td>SPXW 20260406 6615.0 C</td><td>pre-arranged trading (Profit)</td><td><span class="tag tag-processing">Processing</span></td><td>—</td><td style="background:#fffdf0"><span class="ai-score ai-score-high">82</span></td><td>—</td></tr>
+          <tr><td class="col-link">19149230</td><td>2025-12-18</td><td>SPXW 20251217 5800.0 C</td><td>pre-arranged trading (Profit)</td><td><span class="tag tag-closed">Closed</span></td><td><span class="tag tag-cleared">Cleared</span></td><td style="background:#fffdf0"><span class="ai-score ai-score-mid">51</span></td><td>—</td></tr>
+          <tr><td class="col-link">19147810</td><td>2025-11-02</td><td>NQ2511</td><td>possible wash trade (A to A)</td><td><span class="tag tag-closed">Closed</span></td><td><span class="tag tag-escalated">Further Action</span></td><td style="background:#fffdf0"><span class="ai-score ai-score-high">78</span></td><td><span class="col-link">TS_798</span></td></tr>
+          <tr><td class="col-link">19143201</td><td>2025-08-03</td><td>FUBO</td><td>possible ramping (without tick data)</td><td><span class="tag tag-closed">Closed</span></td><td><span class="tag tag-cleared">Cleared</span></td><td style="background:#fffdf0"><span class="ai-score ai-score-low">29</span></td><td>—</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="tab-pane" id="ct-watchlist">
+      <table>
+        <thead><tr><th>Added Date</th><th>Added By</th><th>Risk Level</th><th>Expiry</th><th>Reason</th><th>Status</th></tr></thead>
+        <tbody>
+          <tr><td>2025-12-02</td><td>houyuexuan</td><td><span class="tag tag-medium">Medium</span></td><td>2026-06-02</td><td>Case TS_798 Further Action 后续监控</td><td><span class="tag tag-watchlist">Active</span></td></tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="tab-pane" id="ct-inquiry">
+      <div class="empty">暂无问询记录</div>
+    </div>
+  </div>
+</div>
 
   </div><!-- /content -->
 </div><!-- /layout -->
@@ -718,55 +882,37 @@ tbody tr.selected td { background: #e6f4ff; }
 function showPage(name) {
   document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
   document.getElementById('page-' + name).classList.add('active');
-  // Update sidebar
   document.querySelectorAll('.sidebar-item').forEach(s => s.classList.remove('active'));
-  if (name === 'alert-viewer' || name === 'alert-details') {
-    document.querySelectorAll('.sidebar-item')[0].classList.add('active');
-  } else if (name === 'case-management' || name === 'case-details') {
-    document.querySelectorAll('.sidebar-item')[1].classList.add('active');
-  }
-  window.scrollTo(0,0);
+  const map = { 'alert-viewer': 0, 'alert-details': 0, 'case-management': 1, 'case-details': 1, 'client-management': 2, 'client-details': 2 };
+  const idx = map[name];
+  if (idx !== undefined) document.querySelectorAll('.sidebar-item')[idx].classList.add('active');
+  window.scrollTo(0, 0);
 }
 
 // ── Tab switching ──
 function switchTab(el, paneId) {
-  const tabs = el.parentElement.querySelectorAll('.tab');
-  const panes = el.closest('.card').querySelectorAll('.tab-pane');
-  tabs.forEach(t => t.classList.remove('active'));
-  panes.forEach(p => p.classList.remove('active'));
+  const bar = el.closest('.tab-bar');
+  bar.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
   el.classList.add('active');
+  const card = el.closest('.card');
+  card.querySelectorAll('.tab-pane').forEach(p => p.classList.remove('active'));
   document.getElementById(paneId).classList.add('active');
 }
 
-// ── Ask AI ──
+// ── Ask AI (Alert Details) ──
 let askOpen = false;
 function toggleAsk() {
   askOpen = !askOpen;
   document.getElementById('ask-ai-panel').classList.toggle('open', askOpen);
   document.getElementById('ask-toggle-label').textContent = askOpen ? '收起 ↑' : '追问 AI ↓';
 }
-
 const AI_REPLIES = {
-  '查关联账户': '发现 2 个同 IP（218.82.19.9）关联账户：<br>• <strong>3215450</strong>：同日对 SPXW 进行反向交易，卖出方向，成交量 12，PnL -240；<br>• <strong>3215452</strong>：同日买入方向，成交量 8，注册时间较近（距本账户 3 天）。<br>建议重点核查 3215450 是否为对手方。',
-  '查历史 Alert': '账户 3215451 近 6 个月触发 Alert <strong>3 次</strong>：<br>• 19149230（2025-12-18）：pre-arranged trading → Closed / Cleared<br>• 19147810（2025-11-02）：possible wash trade → Case TS_798 → Further Action<br>• 本次 19150109（2026-04-07）：In Progress<br>历史结案率 100%，但曾有 Further Action 记录，风险信号有持续性。',
-  '对比同类案例': '与本案高度相似的历史案例（相似度 ≥ 80%）共 <strong>4 例</strong>：<br>• TS_798（账户 3215451）：同标的 SPXW，Eventually Further Action；<br>• TS_781（账户 2987631）：同规则，8 个交易日内集中操作，Closed Cleared；<br>• TS_756（账户 4412089）：跨账户反向，升级监管上报。<br>建议参考 TS_798 的处置路径。',
-  '重新评估风险': '已重新评估（纳入关联账户信息）：<br>原评分 <strong>82</strong> → 更新为 <strong>88</strong>（置信度 81%）<br>主要变化：关联账户 3215450 的反向交易模式确认，构成潜在对手方，将异常度权重上调。<br>建议维持 <strong>Escalate</strong> 建议。',
-  'default': '已理解你的问题，正在查询相关数据…<br><em>（这是一个静态 Prototype，实际接入 TS-AI 后将返回真实结果）</em>'
+  '查关联账户': '发现 2 个同 IP 关联账户：<br>• <strong>3215450</strong>：同日 SPXW 反向卖出，成交量 12，PnL −240<br>• <strong>3215452</strong>：同日买入方向，注册距本账户 3 天<br>建议重点核查 3215450 是否为对手方。',
+  '查历史 Alert': '账户 3215451 近 6 个月触发 Alert <strong>3 次</strong>：<br>• 19149230（2025-12-18）→ Cleared<br>• 19147810（2025-11-02）→ Case TS_798 → Further Action<br>• 19150109（2026-04-07）→ 当前处理中<br>历史有持续性风险信号。',
+  '对比同类案例': '相似度 ≥ 80% 的历史案例共 <strong>4 例</strong>：<br>• TS_798（本账户）：同标的 SPXW → Further Action<br>• TS_781（2987631）：同规则 8 日集中操作 → Cleared<br>• TS_756（4412089）：跨账户反向 → 监管上报<br>建议参考 TS_798 处置路径。',
+  '重新评估风险': '纳入关联账户信息后，评分更新：<br>原评分 <strong>82</strong> → <strong>88</strong>（置信度 81%）<br>关联账户 3215450 反向交易模式确认，异常度权重上调。<br>建议维持 <strong>Escalate</strong>。',
+  'default': '已理解你的问题，正在查询相关数据…<br><em>（Static prototype — 接入 TS-AI 后返回真实结果）</em>'
 };
-
-function sendChip(text) {
-  if (!askOpen) {
-    askOpen = true;
-    document.getElementById('ask-ai-panel').classList.add('open');
-    document.getElementById('ask-toggle-label').textContent = '收起 ↑';
-  }
-  appendMessage(text, 'user');
-  setTimeout(() => {
-    const reply = AI_REPLIES[text] || AI_REPLIES['default'];
-    appendMessage(reply, 'bot');
-  }, 600);
-}
-
 function sendMsg() {
   const input = document.getElementById('ask-input');
   const text = input.value.trim();
@@ -774,17 +920,23 @@ function sendMsg() {
   input.value = '';
   sendChip(text);
 }
-
-function appendMessage(text, role) {
-  const container = document.getElementById('ai-messages');
+function sendChip(text) {
+  if (!askOpen) { askOpen = true; document.getElementById('ask-ai-panel').classList.add('open'); document.getElementById('ask-toggle-label').textContent = '收起 ↑'; }
+  appendMsg('ai-messages', text, 'user');
+  setTimeout(() => appendMsg('ai-messages', AI_REPLIES[text] || AI_REPLIES['default'], 'bot'), 600);
+}
+function appendMsg(containerId, text, role) {
+  const c = document.getElementById(containerId);
   const div = document.createElement('div');
-  div.className = 'ai-msg ' + (role === 'bot' ? 'bot' : 'user');
-  div.innerHTML = `
-    <div class="ai-msg-icon ${role}">${role === 'bot' ? 'AI' : 'U'}</div>
-    <div class="ai-msg-bubble">${text}</div>
-  `;
-  container.appendChild(div);
-  container.scrollTop = container.scrollHeight;
+  div.className = 'ai-msg ' + role;
+  div.innerHTML = `<div class="ai-msg-icon ${role}">${role === 'bot' ? 'AI' : 'U'}</div><div class="ai-msg-bubble">${text}</div>`;
+  c.appendChild(div);
+  c.scrollTop = c.scrollHeight;
+}
+
+// ── Client AI query (placeholder) ──
+function sendChipClient(text) {
+  alert('TS-AI 正在处理查询：「' + text + '」\n\n（Static prototype — 接入后将展示真实结果）');
 }
 
 // ── Investigation Draft ──
@@ -799,11 +951,8 @@ const DRAFT_TEXT = `【调查底稿 · AI 草稿 · 待人工核对】
 三、关联账户核查
 Inquire 查询显示同 IP 及同设备关联账户共 2 个，未发现明确的对手方交易模式，亦无反向开平仓记录。
 
-四、客户背景
-账户 4183296 注册时间较长，历史无重大违规记录，本次为近 12 个月内首次进入 Case 阶段调查。
-
-五、结论与建议
-综合以上分析，本次交易行为属于正常的短线投机操作，未发现涉嫌预谋或共谋的证据。建议结案，结论为：No Further Action。
+四、结论与建议
+综合以上分析，本次交易行为属于正常短线投机操作，未发现涉嫌预谋或共谋的证据。建议结案，结论为：No Further Action。
 
 ※ 本草稿由 TS-AI 根据系统数据自动生成，请合规人员核对后修改确认。`;
 
@@ -811,15 +960,12 @@ function fillDraft() {
   const ta = document.getElementById('draft-textarea');
   ta.value = '';
   let i = 0;
-  const interval = setInterval(() => {
-    ta.value += DRAFT_TEXT[i];
+  const iv = setInterval(() => {
+    ta.value += DRAFT_TEXT[i++];
     ta.scrollTop = ta.scrollHeight;
-    i++;
-    if (i >= DRAFT_TEXT.length) clearInterval(interval);
+    if (i >= DRAFT_TEXT.length) { clearInterval(iv); document.getElementById('draft-status').textContent = '草稿已生成，待确认'; }
   }, 8);
-  document.getElementById('draft-status').textContent = '草稿已生成，待确认…';
 }
-
 function saveDraft() {
   document.getElementById('draft-status').textContent = '已保存 · ' + new Date().toLocaleTimeString('zh-CN');
 }

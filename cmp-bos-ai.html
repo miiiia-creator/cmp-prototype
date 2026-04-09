@@ -425,10 +425,10 @@ tbody tr:hover td { background: #fffdf0; }
   <!-- Main 2-col -->
   <div class="dash-cols">
 
-    <!-- Left -->
+    <!-- Left: monitoring charts -->
     <div style="display:flex;flex-direction:column;gap:12px">
 
-      <!-- Trend Chart -->
+      <!-- Alert Trend -->
       <div class="card">
         <div class="card-head">Alert 趋势（近 7 天）
           <span id="trend-legend" style="margin-left:auto;display:flex;gap:10px;font-size:11px;font-weight:400;color:var(--text-hint);align-items:center">
@@ -436,7 +436,20 @@ tbody tr:hover td { background: #fffdf0; }
           </span>
         </div>
         <div style="padding:8px 16px 14px">
-          <canvas id="dash-trend-canvas" height="160" style="width:100%;display:block"></canvas>
+          <canvas id="dash-trend-canvas" height="140" style="width:100%;display:block"></canvas>
+        </div>
+      </div>
+
+      <!-- Accuracy Trend -->
+      <div class="card">
+        <div class="card-head">精确率趋势（近 8 周）
+          <span style="margin-left:auto;display:flex;gap:12px;font-size:11px;font-weight:400;color:var(--text-hint);align-items:center">
+            <span style="display:inline-flex;align-items:center;gap:4px"><span style="width:10px;height:10px;background:#7c3aed;border-radius:2px;display:inline-block"></span>AI 精确率</span>
+            <span style="display:inline-flex;align-items:center;gap:4px"><span style="width:10px;height:2px;background:#d1d5db;display:inline-block"></span>整体精准率</span>
+          </span>
+        </div>
+        <div style="padding:8px 16px 14px">
+          <canvas id="dash-acc-canvas" height="120" style="width:100%;display:block"></canvas>
         </div>
       </div>
 
@@ -474,98 +487,23 @@ tbody tr:hover td { background: #fffdf0; }
         </div>
       </div>
 
-    </div><!-- /left -->
-
-    <!-- Right -->
-    <div style="display:flex;flex-direction:column;gap:12px">
-
-      <!-- Priority Queue -->
-      <div class="card">
-        <div class="card-head">高优处理队列 <span class="section-subtitle">按 AI 评分排序</span></div>
-        <div style="padding:0 16px 8px">
-          <div class="queue-row">
-            <div>
-              <div style="display:flex;align-items:center;gap:6px">
-                <span class="queue-id" onclick="showPage('alert-details')">Alert 19150109</span>
-                <span class="tag tag-processing" style="font-size:10px">Processing</span>
-              </div>
-              <div style="color:var(--text-hint);margin-top:2px">3215451 · SPXW · 今日</div>
-            </div>
-            <div style="margin-left:auto"><span class="ai-score ai-score-high">82</span></div>
-          </div>
-          <div class="queue-row">
-            <div>
-              <div style="display:flex;align-items:center;gap:6px">
-                <span class="queue-id">Alert 19150107</span>
-                <span class="tag" style="background:#fff7e6;color:#d46b08;border:1px solid #ffd591;font-size:10px">New</span>
-              </div>
-              <div style="color:var(--text-hint);margin-top:2px">2353510 · TSLA OPT · 今日</div>
-            </div>
-            <div style="margin-left:auto"><span class="ai-score ai-score-high">71</span></div>
-          </div>
-          <div class="queue-row">
-            <div>
-              <div style="display:flex;align-items:center;gap:6px">
-                <span class="queue-id" onclick="showPage('case-details')">Case TS_824</span>
-                <span class="tag tag-processing" style="font-size:10px">Processing</span>
-              </div>
-              <div style="color:var(--text-hint);margin-top:2px">1277792 · BQ · <span style="color:#cf1322">67天未结</span></div>
-            </div>
-            <div style="margin-left:auto"><span style="font-size:11px;color:var(--text-hint)">—</span></div>
-          </div>
-          <div class="queue-row">
-            <div>
-              <div style="display:flex;align-items:center;gap:6px">
-                <span class="queue-id">Alert 19149981</span>
-                <span class="tag" style="background:#fff7e6;color:#d46b08;border:1px solid #ffd591;font-size:10px">New</span>
-              </div>
-              <div style="color:var(--text-hint);margin-top:2px">7526677 · NQ2506 · 3天前</div>
-            </div>
-            <div style="margin-left:auto"><span class="ai-score ai-score-mid">67</span></div>
-          </div>
-          <div class="queue-row">
-            <div>
-              <div style="display:flex;align-items:center;gap:6px">
-                <span class="queue-id">Alert 19149970</span>
-                <span class="tag" style="background:#fff2f0;color:#cf1322;border:1px solid #ffa39e;font-size:10px">SLA !</span>
-              </div>
-              <div style="color:var(--text-hint);margin-top:2px">1441692 · AAPL · <span style="color:#cf1322">超时 2天</span></div>
-            </div>
-            <div style="margin-left:auto"><span class="ai-score ai-score-high">79</span></div>
-          </div>
-        </div>
-      </div>
-
       <!-- TS-AI Module Status -->
       <div class="card">
         <div class="card-head"><span class="ai-badge">AI</span> TS-AI 模块状态</div>
         <div style="padding:0 16px 8px">
-          <div class="ai-mod-row">
-            <span>① 风险识别补召</span>
-            <span style="display:flex;align-items:center;gap:5px;color:#52c41a"><span class="dot-ok"></span>正常运行</span>
-          </div>
-          <div class="ai-mod-row">
-            <span>② 关联关系分析</span>
-            <span style="display:flex;align-items:center;gap:5px;color:#52c41a"><span class="dot-ok"></span>正常运行</span>
-          </div>
-          <div class="ai-mod-row">
-            <span>③ 客户画像生成</span>
-            <span style="display:flex;align-items:center;gap:5px;color:#52c41a"><span class="dot-ok"></span>正常运行</span>
-          </div>
-          <div class="ai-mod-row">
-            <span>④ 异常判定</span>
-            <span style="display:flex;align-items:center;gap:5px;color:#52c41a"><span class="dot-ok"></span>正常运行</span>
-          </div>
-          <div class="ai-mod-row">
-            <span>⑤ 风险评分</span>
-            <span style="display:flex;align-items:center;gap:5px;color:#fa8c16"><span class="dot-warn"></span>延迟 ~3min</span>
-          </div>
-          <div class="ai-mod-row">
-            <span>⑥ 报告草稿生成</span>
-            <span style="display:flex;align-items:center;gap:5px;color:#52c41a"><span class="dot-ok"></span>正常运行</span>
-          </div>
+          <div class="ai-mod-row"><span>① 风险识别补召</span><span style="display:flex;align-items:center;gap:5px;color:#52c41a"><span class="dot-ok"></span>正常运行</span></div>
+          <div class="ai-mod-row"><span>② 关联关系分析</span><span style="display:flex;align-items:center;gap:5px;color:#52c41a"><span class="dot-ok"></span>正常运行</span></div>
+          <div class="ai-mod-row"><span>③ 客户画像生成</span><span style="display:flex;align-items:center;gap:5px;color:#52c41a"><span class="dot-ok"></span>正常运行</span></div>
+          <div class="ai-mod-row"><span>④ 异常判定</span><span style="display:flex;align-items:center;gap:5px;color:#52c41a"><span class="dot-ok"></span>正常运行</span></div>
+          <div class="ai-mod-row"><span>⑤ 风险评分</span><span style="display:flex;align-items:center;gap:5px;color:#fa8c16"><span class="dot-warn"></span>延迟 ~3min</span></div>
+          <div class="ai-mod-row"><span>⑥ 报告草稿生成</span><span style="display:flex;align-items:center;gap:5px;color:#52c41a"><span class="dot-ok"></span>正常运行</span></div>
         </div>
       </div>
+
+    </div><!-- /left -->
+
+    <!-- Right: task modules -->
+    <div style="display:flex;flex-direction:column;gap:12px">
 
       <!-- Real-time Rule Alerts -->
       <div class="card">
@@ -627,6 +565,63 @@ tbody tr:hover td { background: #fffdf0; }
           </div>
           <div style="text-align:center;padding:6px 0 2px">
             <span onclick="showPage('alert-viewer')" style="font-size:11px;color:var(--text-hint);cursor:pointer">查看全部 284 条 →</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Priority Queue -->
+      <div class="card">
+        <div class="card-head">高优处理队列 <span class="section-subtitle">按 AI 评分排序</span></div>
+        <div style="padding:0 16px 8px">
+          <div class="queue-row">
+            <div>
+              <div style="display:flex;align-items:center;gap:6px">
+                <span class="queue-id" onclick="showPage('alert-details')">Alert 19150109</span>
+                <span class="tag tag-processing" style="font-size:10px">Processing</span>
+              </div>
+              <div style="color:var(--text-hint);margin-top:2px">3215451 · SPXW · 今日</div>
+            </div>
+            <div style="margin-left:auto"><span class="ai-score ai-score-high">82</span></div>
+          </div>
+          <div class="queue-row">
+            <div>
+              <div style="display:flex;align-items:center;gap:6px">
+                <span class="queue-id">Alert 19150107</span>
+                <span class="tag" style="background:#fff7e6;color:#d46b08;border:1px solid #ffd591;font-size:10px">New</span>
+              </div>
+              <div style="color:var(--text-hint);margin-top:2px">2353510 · TSLA OPT · 今日</div>
+            </div>
+            <div style="margin-left:auto"><span class="ai-score ai-score-high">71</span></div>
+          </div>
+          <div class="queue-row">
+            <div>
+              <div style="display:flex;align-items:center;gap:6px">
+                <span class="queue-id" onclick="showPage('case-details')">Case TS_824</span>
+                <span class="tag tag-processing" style="font-size:10px">Processing</span>
+              </div>
+              <div style="color:var(--text-hint);margin-top:2px">1277792 · BQ · <span style="color:#cf1322">67天未结</span></div>
+            </div>
+            <div style="margin-left:auto"><span style="font-size:11px;color:var(--text-hint)">—</span></div>
+          </div>
+          <div class="queue-row">
+            <div>
+              <div style="display:flex;align-items:center;gap:6px">
+                <span class="queue-id">Alert 19149981</span>
+                <span class="tag" style="background:#fff7e6;color:#d46b08;border:1px solid #ffd591;font-size:10px">New</span>
+              </div>
+              <div style="color:var(--text-hint);margin-top:2px">7526677 · NQ2506 · 3天前</div>
+            </div>
+            <div style="margin-left:auto"><span class="ai-score ai-score-mid">67</span></div>
+          </div>
+          <div class="queue-row">
+            <div>
+              <div style="display:flex;align-items:center;gap:6px">
+                <span class="queue-id">Alert 19149970</span>
+                <span class="tag" style="background:#fff2f0;color:#cf1322;border:1px solid #ffa39e;font-size:10px">SLA !</span>
+              </div>
+              <div style="color:var(--text-hint);margin-top:2px">1441692 · AAPL · <span style="color:#cf1322">超时 2天</span></div>
+            </div>
+            <div style="margin-left:auto"><span class="ai-score ai-score-high">79</span></div>
           </div>
         </div>
       </div>
@@ -2042,7 +2037,7 @@ function showPage(name) {
   const idx = map[name];
   if (idx !== undefined) document.querySelectorAll('.sidebar-item')[idx].classList.add('active');
   window.scrollTo(0, 0);
-  if (name === 'dashboard') setTimeout(drawDashTrend, 0);
+  if (name === 'dashboard') { setTimeout(drawDashTrend, 0); setTimeout(drawAccuracyTrend, 0); }
   if (name === 'alert-details') setTimeout(() => drawSpread('alert'), 50);
   else if (name === 'case-details') setTimeout(() => drawSpread('case'), 50);
   else if (name === 'client-details') setTimeout(() => drawSpread('client'), 50);
@@ -2111,6 +2106,79 @@ function drawDashTrend() {
     ctx.font = '10px system-ui,sans-serif';
     ctx.fillText(d.v, x + barW / 2, baseY - bh - 4);
   });
+}
+
+function drawAccuracyTrend() {
+  const canvas = document.getElementById('dash-acc-canvas');
+  if (!canvas) return;
+  const dpr = window.devicePixelRatio || 1;
+  const cssW = canvas.offsetWidth || 500;
+  const cssH = 120;
+  canvas.width = Math.round(cssW * dpr);
+  canvas.height = Math.round(cssH * dpr);
+  const ctx = canvas.getContext('2d');
+  ctx.scale(dpr, dpr);
+
+  const W = cssW, H = cssH;
+  const PAD_L = 36, PAD_R = 12, PAD_T = 12, PAD_B = 22;
+  const chartW = W - PAD_L - PAD_R;
+  const chartH = H - PAD_T - PAD_B;
+
+  // Data: 8 weeks, AI precision (purple) vs overall precision (gray)
+  const weeks = ['W1','W2','W3','W4','W5','W6','W7','W8'];
+  const aiData    = [0.58, 0.61, 0.64, 0.67, 0.70, 0.72, 0.74, 0.77];
+  const overallData = [0.30, 0.31, 0.33, 0.34, 0.34, 0.35, 0.36, 0.37];
+
+  const minV = 0.25, maxV = 0.85;
+  const toY = v => PAD_T + chartH - ((v - minV) / (maxV - minV)) * chartH;
+  const toX = i => PAD_L + (i / (weeks.length - 1)) * chartW;
+
+  // Grid lines
+  [0.3, 0.5, 0.7].forEach(v => {
+    const y = toY(v);
+    ctx.beginPath();
+    ctx.strokeStyle = '#f0f0f0';
+    ctx.lineWidth = 1;
+    ctx.moveTo(PAD_L, y);
+    ctx.lineTo(PAD_L + chartW, y);
+    ctx.stroke();
+    ctx.fillStyle = '#9ca3af';
+    ctx.font = '9px system-ui,sans-serif';
+    ctx.textAlign = 'right';
+    ctx.fillText((v * 100).toFixed(0) + '%', PAD_L - 4, y + 3);
+  });
+
+  // Draw line helper
+  function drawLine(data, color, dashed) {
+    ctx.beginPath();
+    ctx.strokeStyle = color;
+    ctx.lineWidth = 2;
+    if (dashed) ctx.setLineDash([4, 3]);
+    else ctx.setLineDash([]);
+    data.forEach((v, i) => {
+      const x = toX(i), y = toY(v);
+      i === 0 ? ctx.moveTo(x, y) : ctx.lineTo(x, y);
+    });
+    ctx.stroke();
+    ctx.setLineDash([]);
+    // Dots
+    data.forEach((v, i) => {
+      const x = toX(i), y = toY(v);
+      ctx.beginPath();
+      ctx.arc(x, y, 3, 0, Math.PI * 2);
+      ctx.fillStyle = color;
+      ctx.fill();
+    });
+  }
+
+  drawLine(overallData, '#d1d5db', true);
+  drawLine(aiData, '#7c3aed', false);
+
+  // X-axis labels
+  ctx.fillStyle = '#9ca3af';
+  ctx.font = '9px system-ui,sans-serif';
+  ctx.textAlign = 'center';
+  weeks.forEach((w, i) => ctx.fillText(w, toX(i), H - PAD_B + 13));
 }
 
 // ── TS/TM context toggle ──
@@ -2468,7 +2536,7 @@ function saveDraft() {
   document.getElementById('draft-status').textContent = '已保存 · ' + new Date().toLocaleTimeString('zh-CN');
 }
 
-window.addEventListener('load', () => setTimeout(drawDashTrend, 50));
+window.addEventListener('load', () => { setTimeout(drawDashTrend, 50); setTimeout(drawAccuracyTrend, 80); });
 
 // ── Rule Management ──
 function showRuleDetail(ruleId, tab) {

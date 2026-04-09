@@ -376,7 +376,7 @@ tbody tr:hover td { background: #fffdf0; }
     <div class="sidebar-item" onclick="showPage('alert-viewer')">Alert Viewer</div>
     <div class="sidebar-item" onclick="showPage('case-management')">Case Management</div>
     <div class="sidebar-item" onclick="showPage('client-management')">Client Management <span class="new-badge">NEW</span></div>
-    <div class="sidebar-item" onclick="showPage('rule-management')">Rule Management <span class="new-badge">NEW</span></div>
+    <div class="sidebar-item" onclick="showPage('rule-management')">Rule Management</div>
   </div>
 
   <div class="content">
@@ -443,7 +443,7 @@ tbody tr:hover td { background: #fffdf0; }
 
       <!-- Accuracy Trend -->
       <div class="card">
-        <div class="card-head">精确率趋势（近 8 周）<span class="new-badge">NEW</span>
+        <div class="card-head">精确率趋势（近 8 周）
           <span style="margin-left:auto;display:flex;gap:12px;font-size:11px;font-weight:400;color:var(--text-hint);align-items:center">
             <span style="display:inline-flex;align-items:center;gap:4px"><span style="width:10px;height:10px;background:#7c3aed;border-radius:2px;display:inline-block"></span>AI 精确率</span>
             <span style="display:inline-flex;align-items:center;gap:4px"><span style="width:10px;height:2px;background:#d1d5db;display:inline-block"></span>整体精准率</span>
@@ -490,7 +490,7 @@ tbody tr:hover td { background: #fffdf0; }
 
       <!-- TS-AI Module Status -->
       <div class="card">
-        <div class="card-head"><span class="ai-badge">AI</span> TS-AI 模块状态 <span class="new-badge">NEW</span></div>
+        <div class="card-head"><span class="ai-badge">AI</span> TS-AI 模块状态</div>
         <div style="padding:0 16px 8px">
           <div class="ai-mod-row"><span>① 风险识别补召</span><span style="display:flex;align-items:center;gap:5px;color:#52c41a"><span class="dot-ok"></span>正常运行</span></div>
           <div class="ai-mod-row"><span>② 关联关系分析</span><span style="display:flex;align-items:center;gap:5px;color:#52c41a"><span class="dot-ok"></span>正常运行</span></div>
@@ -572,7 +572,7 @@ tbody tr:hover td { background: #fffdf0; }
 
       <!-- Priority Queue -->
       <div class="card">
-        <div class="card-head">高优处理队列 <span class="section-subtitle">按 AI 评分排序</span> <span class="new-badge">NEW</span></div>
+        <div class="card-head">高优处理队列 <span class="section-subtitle">按 AI 评分排序</span></div>
         <div style="padding:0 16px 8px">
           <div class="queue-row">
             <div>
@@ -751,23 +751,23 @@ tbody tr:hover td { background: #fffdf0; }
   </div>
 
   <!-- Alert Status Stepper -->
-  <div class="status-stepper">
-    <div class="sf-step done">
+  <div class="status-stepper" id="alert-stepper">
+    <div class="sf-step done" onclick="setStepperStatus('alert-stepper',0)" style="cursor:pointer">
       <div class="sf-dot done"></div>
       <div class="sf-label done">New</div>
       <div class="sf-date">2026-04-07</div>
     </div>
-    <div class="sf-step current">
+    <div class="sf-step current" onclick="setStepperStatus('alert-stepper',1)" style="cursor:pointer">
       <div class="sf-dot current"></div>
       <div class="sf-label current">Processing</div>
       <div class="sf-date">2026-04-08</div>
     </div>
-    <div class="sf-step">
+    <div class="sf-step" onclick="setStepperStatus('alert-stepper',2)" style="cursor:pointer">
       <div class="sf-dot"></div>
       <div class="sf-label">Pending</div>
       <div class="sf-date">—</div>
     </div>
-    <div class="sf-step">
+    <div class="sf-step" onclick="setStepperStatus('alert-stepper',3)" style="cursor:pointer">
       <div class="sf-dot"></div>
       <div class="sf-label">Closed</div>
       <div class="sf-date">—</div>
@@ -895,7 +895,7 @@ tbody tr:hover td { background: #fffdf0; }
 
   <!-- Investigation Tools -->
   <div class="card">
-    <div class="card-head">Investigation Tools</div>
+    <div class="card-head">Investigation Tools <span class="new-badge">NEW</span></div>
     <div class="tab-bar">
       <div class="tab active" onclick="switchInvTab(this,'inv-spread-alert','alert','spread')">Spread Analysis</div>
       <div class="tab" onclick="switchInvTab(this,'inv-graph-alert','alert','graph')">关联图谱</div>
@@ -1054,28 +1054,28 @@ tbody tr:hover td { background: #fffdf0; }
   <div class="page-actions"><button class="btn btn-sm" onclick="showPage('case-management')">← 返回</button></div>
 
   <!-- Case Status Stepper -->
-  <div class="status-stepper">
-    <div class="sf-step done">
+  <div class="status-stepper" id="case-stepper">
+    <div class="sf-step done" onclick="setStepperStatus('case-stepper',0)" style="cursor:pointer">
       <div class="sf-dot done"></div>
       <div class="sf-label done">Created</div>
       <div class="sf-date">2025-09-19</div>
     </div>
-    <div class="sf-step done">
+    <div class="sf-step done" onclick="setStepperStatus('case-stepper',1)" style="cursor:pointer">
       <div class="sf-dot done"></div>
       <div class="sf-label done">Processing</div>
       <div class="sf-date">2025-09-19</div>
     </div>
-    <div class="sf-step done">
+    <div class="sf-step done" onclick="setStepperStatus('case-stepper',2)" style="cursor:pointer">
       <div class="sf-dot done"></div>
       <div class="sf-label done">Escalated</div>
       <div class="sf-date">2025-09-19</div>
     </div>
-    <div class="sf-step done">
+    <div class="sf-step done" onclick="setStepperStatus('case-stepper',3)" style="cursor:pointer">
       <div class="sf-dot done"></div>
       <div class="sf-label done">Pending Review</div>
       <div class="sf-date">2025-09-19</div>
     </div>
-    <div class="sf-step current">
+    <div class="sf-step current" onclick="setStepperStatus('case-stepper',4)" style="cursor:pointer">
       <div class="sf-dot done" style="background:#52c41a;border-color:#52c41a"></div>
       <div class="sf-label current" style="color:#389e0d">Closed</div>
       <div class="sf-date">2025-09-19</div>
@@ -1101,7 +1101,7 @@ tbody tr:hover td { background: #fffdf0; }
   <!-- ✦ Investigation Notes ✦ -->
   <div class="notes-card">
     <div class="notes-head">
-      <div class="notes-title">📋 调查底稿 <span style="font-size:11px;font-weight:400;color:#7c4a00aa;">· 可编辑</span></div>
+      <div class="notes-title">📋 调查底稿 <span class="new-badge">NEW</span> <span style="font-size:11px;font-weight:400;color:#7c4a00aa;">· 可编辑</span></div>
       <button class="btn-draft" onclick="fillDraft()">✦ AI 生成草稿</button>
     </div>
     <textarea class="notes-textarea" id="draft-textarea" placeholder="在此处记录调查过程与结论..."></textarea>
@@ -1140,7 +1140,7 @@ tbody tr:hover td { background: #fffdf0; }
 
   <!-- Investigation Tools -->
   <div class="card">
-    <div class="card-head">Investigation Tools</div>
+    <div class="card-head">Investigation Tools <span class="new-badge">NEW</span></div>
     <div class="tab-bar">
       <div class="tab active" onclick="switchInvTab(this,'inv-spread-case','case','spread')">Spread Analysis</div>
       <div class="tab" onclick="switchInvTab(this,'inv-graph-case','case','graph')">关联图谱</div>
@@ -1355,7 +1355,7 @@ tbody tr:hover td { background: #fffdf0; }
     <!-- AI 风险画像 -->
     <div class="ai-card" style="margin-bottom:0">
       <div class="ai-card-head">
-        <div class="ai-card-title"><span class="ai-badge">AI</span> 客户风险画像 <span class="new-badge">NEW</span></div>
+        <div class="ai-card-title"><span class="ai-badge">AI</span> 客户风险画像</div>
         <span style="font-size:11px;color:var(--text-dis)">更新于 2026-04-07</span>
       </div>
       <div class="ai-card-body">
@@ -1540,7 +1540,7 @@ tbody tr:hover td { background: #fffdf0; }
 
   <!-- Investigation Tools -->
   <div class="card" style="margin-top:12px">
-    <div class="card-head">Investigation Tools</div>
+    <div class="card-head">Investigation Tools <span class="new-badge">NEW</span></div>
     <div class="tab-bar">
       <div class="tab active" onclick="switchInvTab(this,'inv-spread-client','client','spread')">Spread Analysis</div>
       <div class="tab" onclick="switchInvTab(this,'inv-graph-client','client','graph')">关联图谱</div>
@@ -2559,6 +2559,37 @@ function markChanged(input, originalVal) {
   if (label) label.textContent = hasChanges
     ? `${document.querySelectorAll('#rd-ab .param-input.changed').length} parameter(s) modified`
     : 'Version B 参数尚未修改';
+}
+
+function setStepperStatus(stepperId, idx) {
+  const stepper = document.getElementById(stepperId);
+  if (!stepper) return;
+  const steps = stepper.querySelectorAll('.sf-step');
+  const today = new Date().toISOString().slice(0,10);
+  steps.forEach((step, i) => {
+    const dot = step.querySelector('.sf-dot');
+    const label = step.querySelector('.sf-label');
+    step.classList.remove('done','current');
+    dot.classList.remove('done','current');
+    label.classList.remove('done','current');
+    // Reset inline styles on dot/label
+    dot.style.background = ''; dot.style.borderColor = '';
+    label.style.color = '';
+    const dateEl = step.querySelector('.sf-date');
+    if (i < idx) {
+      step.classList.add('done');
+      dot.classList.add('done');
+      label.classList.add('done');
+      if (!dateEl.textContent || dateEl.textContent === '—') dateEl.textContent = today;
+    } else if (i === idx) {
+      step.classList.add('current');
+      dot.classList.add('current');
+      label.classList.add('current');
+      if (!dateEl.textContent || dateEl.textContent === '—') dateEl.textContent = today;
+    } else {
+      dateEl.textContent = '—';
+    }
+  });
 }
 
 function runABTest() {

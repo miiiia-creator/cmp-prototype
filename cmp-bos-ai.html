@@ -298,7 +298,6 @@ tbody tr:hover td { background: #fffdf0; }
     <div class="sidebar-item" onclick="showPage('case-management')">Case Management</div>
     <div class="sidebar-item" onclick="showPage('client-management')">Client Management</div>
     <div class="sidebar-item">Rule Testing</div>
-    <div class="sidebar-item">Inquire</div>
   </div>
 
   <div class="content">
@@ -547,6 +546,21 @@ tbody tr:hover td { background: #fffdf0; }
 <div class="page" id="page-case-management">
   <div class="breadcrumb"><span>Compliance Monitoring</span> › <span>Case Management</span></div>
 
+  <div class="stats-bar">
+    <div class="stat-card" onclick="setCaseFilter('Processing')" style="cursor:pointer">
+      <div class="stat-num orange">5</div><div class="stat-label">Processing</div>
+    </div>
+    <div class="stat-card" onclick="setCaseFilter('Escalated')" style="cursor:pointer">
+      <div class="stat-num" style="color:#cf1322">2</div><div class="stat-label">Escalated</div>
+    </div>
+    <div class="stat-card" onclick="setCaseFilter('Pending Review')" style="cursor:pointer">
+      <div class="stat-num" style="color:rgba(0,0,0,.85)">4</div><div class="stat-label">Pending Review</div>
+    </div>
+    <div class="stat-card" onclick="setCaseFilter('Closed')" style="cursor:pointer">
+      <div class="stat-num dim">138</div><div class="stat-label">Closed</div>
+    </div>
+  </div>
+
   <div class="filter-bar">
     <span class="filter-label">Case Code</span><input class="filter-input" style="width:80px" placeholder="TS_xxx">
     <span class="filter-label">Case Name</span><input class="filter-input" style="width:120px">
@@ -654,12 +668,33 @@ tbody tr:hover td { background: #fffdf0; }
 <div class="page" id="page-client-management">
   <div class="breadcrumb"><span>Compliance Monitoring</span> › <span>Client Management</span></div>
 
+  <div class="stats-bar">
+    <div class="stat-card" onclick="setClientFilter('Detected')" style="cursor:pointer">
+      <div class="stat-num orange">12</div><div class="stat-label">Detected</div>
+    </div>
+    <div class="stat-card" onclick="setClientFilter('Investigating')" style="cursor:pointer">
+      <div class="stat-num" style="color:rgba(0,0,0,.85)">8</div><div class="stat-label">Investigating</div>
+    </div>
+    <div class="stat-card" onclick="setClientFilter('Inquire')" style="cursor:pointer">
+      <div class="stat-num" style="color:#d46b08">3</div><div class="stat-label">Inquire</div>
+    </div>
+    <div class="stat-card" onclick="setClientFilter('Report')" style="cursor:pointer">
+      <div class="stat-num" style="color:#cf1322">1</div><div class="stat-label">Report</div>
+    </div>
+    <div class="stat-card" onclick="setClientFilter('Watchlist')" style="cursor:pointer">
+      <div class="stat-num" style="color:#531dab">6</div><div class="stat-label">Watchlist</div>
+    </div>
+    <div class="stat-card" onclick="setClientFilter('Cleared')" style="cursor:pointer">
+      <div class="stat-num dim">247</div><div class="stat-label">Cleared</div>
+    </div>
+  </div>
+
   <div class="filter-bar">
     <span class="filter-label">Account ID</span><input class="filter-input" style="width:90px" placeholder="Account ID">
     <span class="filter-label">License</span>
     <select class="filter-select"><option>All</option><option>TBNZ</option><option>TBHK</option><option>TBSG</option></select>
     <span class="filter-label">Compliance Status</span>
-    <select class="filter-select"><option>All</option><option>Active</option><option>On Watchlist</option><option>Investigating</option><option>Inquiry Sent</option><option>Escalated</option><option>Restricted</option><option>Cleared</option></select>
+    <select class="filter-select" id="client-status-filter"><option>All</option><option>Detected</option><option>Investigating</option><option>Inquire</option><option>Report</option><option>Watchlist</option><option>Cleared</option><option>Restricted</option></select>
     <span class="filter-label" style="color:var(--ai-color);font-weight:500">AI Risk ≥</span>
     <select class="filter-select" style="width:64px;border-color:var(--ai-border)"><option>—</option><option>50</option><option>70</option><option>85</option></select>
     <button class="btn btn-primary btn-sm">查询</button>
@@ -684,7 +719,7 @@ tbody tr:hover td { background: #fffdf0; }
         <tr>
           <td class="col-link" onclick="showPage('client-details')">3215451</td>
           <td>TBNZ</td><td>2023-08-12</td>
-          <td><span class="tag tag-watchlist">On Watchlist</span></td>
+          <td><span class="tag tag-watchlist">Watchlist</span></td>
           <td>4</td><td>1</td><td>2026-04-07</td>
           <td style="background:#fffdf0"><span class="ai-score ai-score-high">82</span></td>
           <td><button class="btn btn-sm" onclick="showPage('client-details')">Detail</button></td>
@@ -747,32 +782,27 @@ tbody tr:hover td { background: #fffdf0; }
   <div class="status-stepper">
     <div class="sf-step done">
       <div class="sf-dot done"></div>
-      <div class="sf-label">Active</div>
-      <div class="sf-date">2023-08-12</div>
+      <div class="sf-label">Detected</div>
+      <div class="sf-date">2025-08-03</div>
+    </div>
+    <div class="sf-step done">
+      <div class="sf-dot done"></div>
+      <div class="sf-label">Investigating</div>
+      <div class="sf-date">2025-11-02</div>
     </div>
     <div class="sf-step current">
       <div class="sf-dot current"></div>
-      <div class="sf-label current">On Watchlist</div>
+      <div class="sf-label current">Watchlist</div>
       <div class="sf-date">2025-12-02</div>
     </div>
     <div class="sf-step">
       <div class="sf-dot"></div>
-      <div class="sf-label">Investigating</div>
+      <div class="sf-label">Inquire</div>
       <div class="sf-date">—</div>
     </div>
     <div class="sf-step">
       <div class="sf-dot"></div>
-      <div class="sf-label">Inquiry Sent</div>
-      <div class="sf-date">—</div>
-    </div>
-    <div class="sf-step">
-      <div class="sf-dot"></div>
-      <div class="sf-label">Escalated</div>
-      <div class="sf-date">—</div>
-    </div>
-    <div class="sf-step">
-      <div class="sf-dot"></div>
-      <div class="sf-label">Restricted / Cleared</div>
+      <div class="sf-label">Report</div>
       <div class="sf-date">—</div>
     </div>
   </div>
@@ -783,7 +813,7 @@ tbody tr:hover td { background: #fffdf0; }
       <div class="meta-item"><div class="meta-label">Account ID</div><div class="meta-val">3215451</div></div>
       <div class="meta-item"><div class="meta-label">License</div><div class="meta-val">TBNZ</div></div>
       <div class="meta-item"><div class="meta-label">Registration Date</div><div class="meta-val">2023-08-12</div></div>
-      <div class="meta-item"><div class="meta-label">Compliance Status</div><div class="meta-val"><span class="tag tag-watchlist">On Watchlist</span></div></div>
+      <div class="meta-item"><div class="meta-label">Compliance Status</div><div class="meta-val"><span class="tag tag-watchlist">Watchlist</span></div></div>
       <div class="meta-item"><div class="meta-label">Watchlist Since</div><div class="meta-val">2025-12-02</div></div>
       <div class="meta-item"><div class="meta-label">Watchlist Expiry</div><div class="meta-val">2026-06-02</div></div>
       <div class="meta-item"><div class="meta-label">Total Alerts</div><div class="meta-val">4</div></div>
@@ -994,6 +1024,18 @@ function showPage(name) {
   const idx = map[name];
   if (idx !== undefined) document.querySelectorAll('.sidebar-item')[idx].classList.add('active');
   window.scrollTo(0, 0);
+}
+
+// ── Stats bar click-to-filter ──
+function setCaseFilter(status) {
+  showPage('case-management');
+  const sel = document.querySelector('#page-case-management .filter-select');
+  if (sel) { sel.value = status; }
+}
+function setClientFilter(status) {
+  showPage('client-management');
+  const sel = document.getElementById('client-status-filter');
+  if (sel) { sel.value = status; }
 }
 
 // ── Tab switching ──

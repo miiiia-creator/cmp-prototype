@@ -125,6 +125,7 @@ tbody tr:hover td { background: #fffdf0; }
 .ai-card-head { background: var(--ai-bg); padding: 10px 16px; display: flex; align-items: center; justify-content: space-between; border-bottom: 1px solid var(--ai-border); }
 .ai-card-title { font-weight: 600; font-size: 13px; color: var(--ai-dark); display: flex; align-items: center; gap: 6px; }
 .ai-badge { background: var(--ai-color); color: #fff; font-size: 10px; font-weight: 700; padding: 1px 5px; border-radius: 3px; letter-spacing: .3px; }
+.new-badge { background: #ff4d4f; color: #fff; font-size: 9px; font-weight: 700; padding: 1px 5px; border-radius: 8px; letter-spacing: .3px; vertical-align: middle; margin-left: 5px; line-height: 1.6; display: inline-block; }
 .ai-card-body { padding: 14px 16px; }
 .ai-score-row { display: flex; align-items: flex-start; gap: 24px; margin-bottom: 12px; padding-bottom: 12px; border-bottom: 1px solid #e9d8fd; flex-wrap: wrap; }
 .ai-score-big { font-size: 36px; font-weight: 700; line-height: 1; }
@@ -371,11 +372,11 @@ tbody tr:hover td { background: #fffdf0; }
   <!-- ── Sidebar ── -->
   <div class="sidebar">
     <div class="sidebar-group">Compliance Monitoring</div>
-    <div class="sidebar-item active" onclick="showPage('dashboard')">Dashboard</div>
+    <div class="sidebar-item active" onclick="showPage('dashboard')">Dashboard <span class="new-badge">NEW</span></div>
     <div class="sidebar-item" onclick="showPage('alert-viewer')">Alert Viewer</div>
     <div class="sidebar-item" onclick="showPage('case-management')">Case Management</div>
-    <div class="sidebar-item" onclick="showPage('client-management')">Client Management</div>
-    <div class="sidebar-item" onclick="showPage('rule-management')">Rule Management</div>
+    <div class="sidebar-item" onclick="showPage('client-management')">Client Management <span class="new-badge">NEW</span></div>
+    <div class="sidebar-item" onclick="showPage('rule-management')">Rule Management <span class="new-badge">NEW</span></div>
   </div>
 
   <div class="content">
@@ -442,7 +443,7 @@ tbody tr:hover td { background: #fffdf0; }
 
       <!-- Accuracy Trend -->
       <div class="card">
-        <div class="card-head">精确率趋势（近 8 周）
+        <div class="card-head">精确率趋势（近 8 周）<span class="new-badge">NEW</span>
           <span style="margin-left:auto;display:flex;gap:12px;font-size:11px;font-weight:400;color:var(--text-hint);align-items:center">
             <span style="display:inline-flex;align-items:center;gap:4px"><span style="width:10px;height:10px;background:#7c3aed;border-radius:2px;display:inline-block"></span>AI 精确率</span>
             <span style="display:inline-flex;align-items:center;gap:4px"><span style="width:10px;height:2px;background:#d1d5db;display:inline-block"></span>整体精准率</span>
@@ -489,7 +490,7 @@ tbody tr:hover td { background: #fffdf0; }
 
       <!-- TS-AI Module Status -->
       <div class="card">
-        <div class="card-head"><span class="ai-badge">AI</span> TS-AI 模块状态</div>
+        <div class="card-head"><span class="ai-badge">AI</span> TS-AI 模块状态 <span class="new-badge">NEW</span></div>
         <div style="padding:0 16px 8px">
           <div class="ai-mod-row"><span>① 风险识别补召</span><span style="display:flex;align-items:center;gap:5px;color:#52c41a"><span class="dot-ok"></span>正常运行</span></div>
           <div class="ai-mod-row"><span>② 关联关系分析</span><span style="display:flex;align-items:center;gap:5px;color:#52c41a"><span class="dot-ok"></span>正常运行</span></div>
@@ -571,7 +572,7 @@ tbody tr:hover td { background: #fffdf0; }
 
       <!-- Priority Queue -->
       <div class="card">
-        <div class="card-head">高优处理队列 <span class="section-subtitle">按 AI 评分排序</span></div>
+        <div class="card-head">高优处理队列 <span class="section-subtitle">按 AI 评分排序</span> <span class="new-badge">NEW</span></div>
         <div style="padding:0 16px 8px">
           <div class="queue-row">
             <div>
@@ -794,7 +795,7 @@ tbody tr:hover td { background: #fffdf0; }
   <!-- ✦ AI Analysis Card ✦ -->
   <div class="ai-card">
     <div class="ai-card-head">
-      <div class="ai-card-title"><span class="ai-badge">AI</span> TS-AI 分析结果</div>
+      <div class="ai-card-title"><span class="ai-badge">AI</span> TS-AI 分析结果 <span class="new-badge">NEW</span></div>
       <span style="font-size:11px;color:var(--text-dis)">生成于 2026-04-07 09:02 · 模型 v2.4</span>
     </div>
     <div class="ai-card-body">
@@ -1354,7 +1355,7 @@ tbody tr:hover td { background: #fffdf0; }
     <!-- AI 风险画像 -->
     <div class="ai-card" style="margin-bottom:0">
       <div class="ai-card-head">
-        <div class="ai-card-title"><span class="ai-badge">AI</span> 客户风险画像</div>
+        <div class="ai-card-title"><span class="ai-badge">AI</span> 客户风险画像 <span class="new-badge">NEW</span></div>
         <span style="font-size:11px;color:var(--text-dis)">更新于 2026-04-07</span>
       </div>
       <div class="ai-card-body">
@@ -1755,7 +1756,7 @@ tbody tr:hover td { background: #fffdf0; }
     <div class="tab-bar">
       <div class="tab active" onclick="switchTab(this,'rd-info')">Rule Info</div>
       <div class="tab" onclick="switchTab(this,'rd-params')">Parameters</div>
-      <div class="tab" id="rd-tab-ab" onclick="switchTab(this,'rd-ab')">A/B Test</div>
+      <div class="tab" id="rd-tab-ab" onclick="switchTab(this,'rd-ab')">A/B Test <span class="new-badge">NEW</span></div>
       <div class="tab" onclick="switchTab(this,'rd-changelog')">Change Log</div>
     </div>
 

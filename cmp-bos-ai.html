@@ -261,6 +261,33 @@ tbody tr:hover td { background: #fffdf0; }
 .wl-rules-label { color: var(--text-hint); font-size: 11px; margin-bottom: 4px; }
 .wl-rule-tag { display: inline-flex; padding: 1px 7px; background: #fffbe6; border: 1px solid #ffe58f; border-radius: 3px; font-size: 11px; color: #7c4a00; margin: 2px 3px 2px 0; }
 
+/* ── Dashboard ── */
+.kpi-row { display:flex; gap:10px; margin-bottom:12px; }
+.kpi-card { flex:1; background:#fff; border:1px solid var(--border); border-radius:6px; padding:14px 16px; min-width:0; cursor:default; }
+.kpi-card.clickable:hover { border-color:var(--primary); }
+.kpi-num { font-size:26px; font-weight:700; line-height:1.1; }
+.kpi-num.orange { color:#d97706; }
+.kpi-num.red { color:#cf1322; }
+.kpi-num.purple { color:#531dab; }
+.kpi-num.green { color:#389e0d; }
+.kpi-label { font-size:11px; color:var(--text-hint); margin-top:4px; }
+.kpi-trend { font-size:11px; margin-top:5px; }
+.kpi-trend-up { color:#cf1322; }
+.kpi-trend-down { color:#389e0d; }
+.kpi-trend-neu { color:var(--text-hint); }
+.dash-cols { display:grid; grid-template-columns:3fr 2fr; gap:12px; }
+@media(max-width:1100px){ .dash-cols { grid-template-columns:1fr; } }
+.queue-row { display:flex; align-items:center; gap:8px; padding:8px 0; border-bottom:1px solid var(--border); font-size:12px; }
+.queue-row:last-child { border-bottom:none; }
+.queue-id { color:var(--link); font-weight:500; min-width:78px; cursor:pointer; }
+.queue-id:hover { text-decoration:underline; }
+.ai-mod-row { display:flex; align-items:center; justify-content:space-between; padding:6px 0; font-size:12px; border-bottom:1px solid #f5f5f5; }
+.ai-mod-row:last-child { border-bottom:none; }
+.dot-ok  { width:7px; height:7px; border-radius:50%; background:#52c41a; display:inline-block; flex-shrink:0; }
+.dot-warn{ width:7px; height:7px; border-radius:50%; background:#fa8c16; display:inline-block; flex-shrink:0; }
+.fp-bar-bg { height:5px; background:#f0f0f0; border-radius:3px; flex:1; overflow:hidden; }
+.fp-bar-fill { height:100%; border-radius:3px; }
+
 /* ── Misc ── */
 .page-actions { display: flex; gap: 8px; margin-bottom: 12px; align-items: center; }
 .divider { height: 1px; background: var(--border); margin: 12px 0; }
@@ -294,7 +321,8 @@ tbody tr:hover td { background: #fffdf0; }
   <!-- ── Sidebar ── -->
   <div class="sidebar">
     <div class="sidebar-group">Compliance Monitoring</div>
-    <div class="sidebar-item active" onclick="showPage('alert-viewer')">Alert Viewer</div>
+    <div class="sidebar-item active" onclick="showPage('dashboard')">Dashboard</div>
+    <div class="sidebar-item" onclick="showPage('alert-viewer')">Alert Viewer</div>
     <div class="sidebar-item" onclick="showPage('case-management')">Case Management</div>
     <div class="sidebar-item" onclick="showPage('client-management')">Client Management</div>
     <div class="sidebar-item">Rule Testing</div>
@@ -303,9 +331,202 @@ tbody tr:hover td { background: #fffdf0; }
   <div class="content">
 
 <!-- ══════════════════════════════════════════
+     PAGE: DASHBOARD
+══════════════════════════════════════════ -->
+<div class="page active" id="page-dashboard">
+  <div class="breadcrumb"><span>Compliance Monitoring</span> › <span>Dashboard</span>
+    <span style="margin-left:auto;font-size:11px;color:var(--text-hint)">2026-04-09 &nbsp;·&nbsp; TBNZ</span>
+  </div>
+
+  <!-- KPI Row -->
+  <div class="kpi-row">
+    <div class="kpi-card clickable" onclick="showPage('alert-viewer')">
+      <div class="kpi-num orange">21</div>
+      <div class="kpi-label">今日新增 Alerts</div>
+      <div class="kpi-trend kpi-trend-up">↑ 8 vs 昨日 (13)</div>
+    </div>
+    <div class="kpi-card clickable" onclick="showPage('alert-viewer')">
+      <div class="kpi-num" style="color:rgba(0,0,0,.85)">284</div>
+      <div class="kpi-label">待处理 Alerts</div>
+      <div class="kpi-trend kpi-trend-neu">含 3 条 New · 未领取</div>
+    </div>
+    <div class="kpi-card clickable" onclick="showPage('case-management')">
+      <div class="kpi-num orange">5</div>
+      <div class="kpi-label">进行中 Cases</div>
+      <div class="kpi-trend kpi-trend-up">2 条已 Escalated</div>
+    </div>
+    <div class="kpi-card clickable" onclick="showPage('client-management')">
+      <div class="kpi-num purple">6</div>
+      <div class="kpi-label">Watchlist 监控中</div>
+      <div class="kpi-trend kpi-trend-neu">1 条本周到期</div>
+    </div>
+    <div class="kpi-card">
+      <div class="kpi-num green">68%</div>
+      <div class="kpi-label">AI 本周精准率</div>
+      <div class="kpi-trend kpi-trend-down">↑ 5pp vs 上周 (63%)</div>
+    </div>
+    <div class="kpi-card">
+      <div class="kpi-num red">3</div>
+      <div class="kpi-label">SLA 超时 Alerts</div>
+      <div class="kpi-trend kpi-trend-up">需立即处理</div>
+    </div>
+  </div>
+
+  <!-- Main 2-col -->
+  <div class="dash-cols">
+
+    <!-- Left -->
+    <div style="display:flex;flex-direction:column;gap:12px">
+
+      <!-- Trend Chart -->
+      <div class="card">
+        <div class="card-head">Alert 趋势（近 7 天）
+          <span style="margin-left:auto;display:flex;gap:10px;font-size:11px;font-weight:400;color:var(--text-hint);align-items:center">
+            <span style="display:inline-flex;align-items:center;gap:4px"><span style="width:10px;height:10px;background:#2563eb;border-radius:2px;display:inline-block"></span>TS Alert</span>
+            <span style="display:inline-flex;align-items:center;gap:4px"><span style="width:10px;height:10px;background:#7c3aed;border-radius:2px;display:inline-block"></span>TM Alert</span>
+          </span>
+        </div>
+        <div style="padding:8px 16px 14px">
+          <canvas id="dash-trend-canvas" height="160" style="width:100%;display:block"></canvas>
+        </div>
+      </div>
+
+      <!-- Rule Health -->
+      <div class="card">
+        <div class="card-head">规则健康度 <span class="section-subtitle">本周 FP 率 Top 4</span></div>
+        <div style="padding:0 16px 8px">
+          <div style="display:grid;grid-template-columns:1fr auto 100px auto;gap:6px 10px;align-items:center;font-size:12px;color:var(--text-hint);padding:6px 0;border-bottom:1px solid var(--border)">
+            <span>规则名称</span><span>本周命中</span><span></span><span>FP 率</span>
+          </div>
+          <div style="display:grid;grid-template-columns:1fr auto 100px auto;gap:6px 10px;align-items:center;font-size:12px;padding:8px 0;border-bottom:1px solid #f5f5f5">
+            <span>pre-arranged trading (Profit)</span>
+            <span style="color:var(--text-hint)">47</span>
+            <div class="fp-bar-bg"><div class="fp-bar-fill" style="width:58%;background:#fa8c16"></div></div>
+            <span style="color:#fa8c16;font-weight:500">58%</span>
+          </div>
+          <div style="display:grid;grid-template-columns:1fr auto 100px auto;gap:6px 10px;align-items:center;font-size:12px;padding:8px 0;border-bottom:1px solid #f5f5f5">
+            <span>possible ramping (without tick data)</span>
+            <span style="color:var(--text-hint)">28</span>
+            <div class="fp-bar-bg"><div class="fp-bar-fill" style="width:72%;background:#cf1322"></div></div>
+            <span style="color:#cf1322;font-weight:500">72%</span>
+          </div>
+          <div style="display:grid;grid-template-columns:1fr auto 100px auto;gap:6px 10px;align-items:center;font-size:12px;padding:8px 0;border-bottom:1px solid #f5f5f5">
+            <span>possible wash trade (A to A)</span>
+            <span style="color:var(--text-hint)">19</span>
+            <div class="fp-bar-bg"><div class="fp-bar-fill" style="width:45%;background:#d97706"></div></div>
+            <span style="color:#d97706;font-weight:500">45%</span>
+          </div>
+          <div style="display:grid;grid-template-columns:1fr auto 100px auto;gap:6px 10px;align-items:center;font-size:12px;padding:8px 0">
+            <span>large single trade alert</span>
+            <span style="color:var(--text-hint)">11</span>
+            <div class="fp-bar-bg"><div class="fp-bar-fill" style="width:36%;background:#52c41a"></div></div>
+            <span style="color:#52c41a;font-weight:500">36%</span>
+          </div>
+        </div>
+      </div>
+
+    </div><!-- /left -->
+
+    <!-- Right -->
+    <div style="display:flex;flex-direction:column;gap:12px">
+
+      <!-- Priority Queue -->
+      <div class="card">
+        <div class="card-head">高优处理队列 <span class="section-subtitle">按 AI 评分排序</span></div>
+        <div style="padding:0 16px 8px">
+          <div class="queue-row">
+            <div>
+              <div style="display:flex;align-items:center;gap:6px">
+                <span class="queue-id" onclick="showPage('alert-details')">Alert 19150109</span>
+                <span class="tag tag-processing" style="font-size:10px">Processing</span>
+              </div>
+              <div style="color:var(--text-hint);margin-top:2px">3215451 · SPXW · 今日</div>
+            </div>
+            <div style="margin-left:auto"><span class="ai-score ai-score-high">82</span></div>
+          </div>
+          <div class="queue-row">
+            <div>
+              <div style="display:flex;align-items:center;gap:6px">
+                <span class="queue-id">Alert 19150107</span>
+                <span class="tag" style="background:#fff7e6;color:#d46b08;border:1px solid #ffd591;font-size:10px">New</span>
+              </div>
+              <div style="color:var(--text-hint);margin-top:2px">2353510 · TSLA OPT · 今日</div>
+            </div>
+            <div style="margin-left:auto"><span class="ai-score ai-score-high">71</span></div>
+          </div>
+          <div class="queue-row">
+            <div>
+              <div style="display:flex;align-items:center;gap:6px">
+                <span class="queue-id" onclick="showPage('case-details')">Case TS_824</span>
+                <span class="tag tag-processing" style="font-size:10px">Processing</span>
+              </div>
+              <div style="color:var(--text-hint);margin-top:2px">1277792 · BQ · <span style="color:#cf1322">67天未结</span></div>
+            </div>
+            <div style="margin-left:auto"><span style="font-size:11px;color:var(--text-hint)">—</span></div>
+          </div>
+          <div class="queue-row">
+            <div>
+              <div style="display:flex;align-items:center;gap:6px">
+                <span class="queue-id">Alert 19149981</span>
+                <span class="tag" style="background:#fff7e6;color:#d46b08;border:1px solid #ffd591;font-size:10px">New</span>
+              </div>
+              <div style="color:var(--text-hint);margin-top:2px">7526677 · NQ2506 · 3天前</div>
+            </div>
+            <div style="margin-left:auto"><span class="ai-score ai-score-mid">67</span></div>
+          </div>
+          <div class="queue-row">
+            <div>
+              <div style="display:flex;align-items:center;gap:6px">
+                <span class="queue-id">Alert 19149970</span>
+                <span class="tag" style="background:#fff2f0;color:#cf1322;border:1px solid #ffa39e;font-size:10px">SLA !</span>
+              </div>
+              <div style="color:var(--text-hint);margin-top:2px">1441692 · AAPL · <span style="color:#cf1322">超时 2天</span></div>
+            </div>
+            <div style="margin-left:auto"><span class="ai-score ai-score-high">79</span></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- TS-AI Module Status -->
+      <div class="card">
+        <div class="card-head"><span class="ai-badge">AI</span> TS-AI 模块状态</div>
+        <div style="padding:0 16px 8px">
+          <div class="ai-mod-row">
+            <span>① 风险识别补召</span>
+            <span style="display:flex;align-items:center;gap:5px;color:#52c41a"><span class="dot-ok"></span>正常运行</span>
+          </div>
+          <div class="ai-mod-row">
+            <span>② 关联关系分析</span>
+            <span style="display:flex;align-items:center;gap:5px;color:#52c41a"><span class="dot-ok"></span>正常运行</span>
+          </div>
+          <div class="ai-mod-row">
+            <span>③ 客户画像生成</span>
+            <span style="display:flex;align-items:center;gap:5px;color:#52c41a"><span class="dot-ok"></span>正常运行</span>
+          </div>
+          <div class="ai-mod-row">
+            <span>④ 异常判定</span>
+            <span style="display:flex;align-items:center;gap:5px;color:#52c41a"><span class="dot-ok"></span>正常运行</span>
+          </div>
+          <div class="ai-mod-row">
+            <span>⑤ 风险评分</span>
+            <span style="display:flex;align-items:center;gap:5px;color:#fa8c16"><span class="dot-warn"></span>延迟 ~3min</span>
+          </div>
+          <div class="ai-mod-row">
+            <span>⑥ 报告草稿生成</span>
+            <span style="display:flex;align-items:center;gap:5px;color:#52c41a"><span class="dot-ok"></span>正常运行</span>
+          </div>
+        </div>
+      </div>
+
+    </div><!-- /right -->
+  </div><!-- /dash-cols -->
+</div>
+
+
+<!-- ══════════════════════════════════════════
      PAGE: ALERT VIEWER
 ══════════════════════════════════════════ -->
-<div class="page active" id="page-alert-viewer">
+<div class="page" id="page-alert-viewer">
   <div class="breadcrumb"><span>Compliance Monitoring</span> › <span>Alert Viewer</span></div>
 
   <div class="stats-bar">
@@ -1068,10 +1289,84 @@ function showPage(name) {
   document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
   document.getElementById('page-' + name).classList.add('active');
   document.querySelectorAll('.sidebar-item').forEach(s => s.classList.remove('active'));
-  const map = { 'alert-viewer': 0, 'alert-details': 0, 'case-management': 1, 'case-details': 1, 'client-management': 2, 'client-details': 2 };
+  const map = { 'dashboard': 0, 'alert-viewer': 1, 'alert-details': 1, 'case-management': 2, 'case-details': 2, 'client-management': 3, 'client-details': 3 };
   const idx = map[name];
   if (idx !== undefined) document.querySelectorAll('.sidebar-item')[idx].classList.add('active');
   window.scrollTo(0, 0);
+  if (name === 'dashboard') setTimeout(drawDashTrend, 0);
+}
+
+function drawDashTrend() {
+  const canvas = document.getElementById('dash-trend-canvas');
+  if (!canvas) return;
+  const dpr = window.devicePixelRatio || 1;
+  const cssW = canvas.offsetWidth || 500;
+  const cssH = 160;
+  canvas.width = Math.round(cssW * dpr);
+  canvas.height = Math.round(cssH * dpr);
+  const ctx = canvas.getContext('2d');
+  ctx.scale(dpr, dpr);
+
+  const W = cssW, H = cssH;
+  const PAD_L = 32, PAD_R = 12, PAD_T = 12, PAD_B = 24;
+  const chartW = W - PAD_L - PAD_R;
+  const chartH = H - PAD_T - PAD_B;
+
+  const data = [
+    {day:'4/3', ts:18, tm:7},
+    {day:'4/4', ts:21, tm:8},
+    {day:'4/5', ts:9,  tm:3},
+    {day:'4/6', ts:7,  tm:2},
+    {day:'4/7', ts:24, tm:10},
+    {day:'4/8', ts:19, tm:7},
+    {day:'4/9', ts:15, tm:6},
+  ];
+  const maxTotal = Math.max(...data.map(d => d.ts + d.tm));
+  const n = data.length;
+  const barW = (chartW / n) * 0.5;
+  const gap  = chartW / n;
+
+  ctx.clearRect(0, 0, W, H);
+  ctx.fillStyle = '#fff';
+  ctx.fillRect(0, 0, W, H);
+
+  // H grid lines
+  [0, 10, 20, 30, 40].forEach(v => {
+    if (v > maxTotal + 5) return;
+    const y = PAD_T + chartH - (v / (maxTotal + 4)) * chartH;
+    ctx.strokeStyle = '#f3f4f6'; ctx.lineWidth = 1;
+    ctx.beginPath(); ctx.moveTo(PAD_L, y); ctx.lineTo(W - PAD_R, y); ctx.stroke();
+    ctx.fillStyle = '#9ca3af'; ctx.font = '10px system-ui,sans-serif'; ctx.textAlign = 'right';
+    ctx.fillText(v, PAD_L - 4, y + 3.5);
+  });
+
+  // Bars
+  data.forEach((d, i) => {
+    const x = PAD_L + i * gap + gap / 2 - barW / 2;
+    const isToday = i === data.length - 1;
+    const totalH = ((d.ts + d.tm) / (maxTotal + 4)) * chartH;
+    const tsH = (d.ts / (maxTotal + 4)) * chartH;
+    const tmH = (d.tm / (maxTotal + 4)) * chartH;
+    const baseY = PAD_T + chartH;
+
+    // TM on top
+    ctx.fillStyle = isToday ? '#7c3aed' : 'rgba(124,58,237,0.55)';
+    ctx.fillRect(x, baseY - totalH, barW, tmH);
+    // TS bottom
+    ctx.fillStyle = isToday ? '#2563eb' : 'rgba(37,99,235,0.55)';
+    ctx.fillRect(x, baseY - tsH, barW, tsH);
+
+    // Day label
+    ctx.fillStyle = isToday ? 'rgba(0,0,0,.85)' : '#9ca3af';
+    ctx.font = isToday ? 'bold 10px system-ui,sans-serif' : '10px system-ui,sans-serif';
+    ctx.textAlign = 'center';
+    ctx.fillText(d.day, x + barW / 2, H - PAD_B + 13);
+
+    // Total label above bar
+    ctx.fillStyle = isToday ? 'rgba(0,0,0,.7)' : '#9ca3af';
+    ctx.font = '10px system-ui,sans-serif';
+    ctx.fillText(d.ts + d.tm, x + barW / 2, baseY - totalH - 4);
+  });
 }
 
 // ── Stats bar click-to-filter ──
@@ -1325,6 +1620,8 @@ function fillDraft() {
 function saveDraft() {
   document.getElementById('draft-status').textContent = '已保存 · ' + new Date().toLocaleTimeString('zh-CN');
 }
+
+window.addEventListener('load', () => setTimeout(drawDashTrend, 50));
 </script>
 </body>
 </html>

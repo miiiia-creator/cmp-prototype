@@ -290,9 +290,12 @@ tbody tr:hover td { background: #fffdf0; }
 
 /* ── TS/TM Context Bar ── */
 .ctx-bar { background:#fff; border-bottom:1px solid var(--border); height:38px; display:flex; align-items:center; padding:0 20px; gap:16px; position:fixed; top:48px; left:0; right:0; z-index:99; }
-.ctx-toggle { display:flex; background:#f5f5f5; border-radius:4px; padding:2px; gap:2px; }
-.ctx-btn { padding:3px 16px; border-radius:3px; border:none; background:transparent; font-size:12px; font-weight:500; cursor:pointer; color:var(--text-hint); line-height:1.6; }
-.ctx-btn.active { background:#fff; color:rgba(0,0,0,.85); box-shadow:0 1px 3px rgba(0,0,0,.12); }
+.ctx-toggle { display:flex; gap:0; }
+.ctx-btn { padding:4px 20px; border:1px solid var(--border-base); background:#fff; font-size:12px; font-weight:500; cursor:pointer; color:var(--text-hint); transition:all .15s; line-height:1.6; }
+.ctx-btn:first-child { border-radius:4px 0 0 4px; }
+.ctx-btn:last-child { border-radius:0 4px 4px 0; border-left:none; }
+.ctx-btn.active { background:#001529; color:#ffe100; border-color:#001529; }
+.ctx-btn:not(.active):hover { background:#fafafa; color:var(--text); }
 .ctx-meta { font-size:12px; color:var(--text-hint); margin-left:auto; }
 
 
@@ -534,6 +537,70 @@ tbody tr:hover td { background: #fffdf0; }
         </div>
       </div>
 
+      <!-- Real-time Rule Alerts -->
+      <div class="card">
+        <div class="card-head">实时规则告警
+          <span style="display:flex;align-items:center;gap:5px;margin-left:auto;font-size:11px;font-weight:400;color:#52c41a"><span class="dot-ok"></span>实时同步</span>
+        </div>
+        <div style="padding:0 16px 8px">
+          <div class="queue-row">
+            <div style="flex:1;min-width:0">
+              <div style="display:flex;align-items:center;gap:6px">
+                <span class="queue-id" onclick="showPage('alert-details')">Alert 19150109</span>
+                <span class="tag tag-high" style="font-size:10px">High</span>
+              </div>
+              <div style="color:var(--text-hint);font-size:11px;margin-top:2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">pre-arranged trading (Profit) · 3215451</div>
+            </div>
+            <div style="text-align:right;flex-shrink:0;margin-left:8px">
+              <div style="font-size:11px;color:rgba(0,0,0,.85)">08:43 EDT</div>
+              <span class="ai-score ai-score-high" style="margin-top:2px">82</span>
+            </div>
+          </div>
+          <div class="queue-row">
+            <div style="flex:1;min-width:0">
+              <div style="display:flex;align-items:center;gap:6px">
+                <span class="queue-id">Alert 19150107</span>
+                <span class="tag tag-medium" style="font-size:10px">Med</span>
+              </div>
+              <div style="color:var(--text-hint);font-size:11px;margin-top:2px">possible ramping (without tick data) · 5462118</div>
+            </div>
+            <div style="text-align:right;flex-shrink:0;margin-left:8px">
+              <div style="font-size:11px;color:rgba(0,0,0,.85)">08:40 EDT</div>
+              <span class="ai-score ai-score-low" style="margin-top:2px">31</span>
+            </div>
+          </div>
+          <div class="queue-row">
+            <div style="flex:1;min-width:0">
+              <div style="display:flex;align-items:center;gap:6px">
+                <span class="queue-id">Alert 19150101</span>
+                <span class="tag tag-medium" style="font-size:10px">Med</span>
+              </div>
+              <div style="color:var(--text-hint);font-size:11px;margin-top:2px">possible wash trade (A to A) · 2353510</div>
+            </div>
+            <div style="text-align:right;flex-shrink:0;margin-left:8px">
+              <div style="font-size:11px;color:rgba(0,0,0,.85)">昨日 20:44</div>
+              <span class="ai-score ai-score-high" style="margin-top:2px">79</span>
+            </div>
+          </div>
+          <div class="queue-row">
+            <div style="flex:1;min-width:0">
+              <div style="display:flex;align-items:center;gap:6px">
+                <span class="queue-id">Alert 19150096</span>
+                <span class="tag tag-low" style="font-size:10px">Low</span>
+              </div>
+              <div style="color:var(--text-hint);font-size:11px;margin-top:2px">possible ramping (without tick data) · 7526677</div>
+            </div>
+            <div style="text-align:right;flex-shrink:0;margin-left:8px">
+              <div style="font-size:11px;color:rgba(0,0,0,.85)">4/3 20:42</div>
+              <span class="ai-score ai-score-mid" style="margin-top:2px">64</span>
+            </div>
+          </div>
+          <div style="text-align:center;padding:6px 0 2px">
+            <span onclick="showPage('alert-viewer')" style="font-size:11px;color:var(--text-hint);cursor:pointer">查看全部 284 条 →</span>
+          </div>
+        </div>
+      </div>
+
     </div><!-- /right -->
   </div><!-- /dash-cols -->
 </div>
@@ -655,6 +722,30 @@ tbody tr:hover td { background: #fffdf0; }
     <button class="btn btn-sm">Export</button>
     <button class="btn btn-sm">Link to Case</button>
     <button class="btn btn-primary btn-sm" style="margin-left:auto">Manage &gt;&gt;</button>
+  </div>
+
+  <!-- Alert Status Stepper -->
+  <div class="status-stepper">
+    <div class="sf-step done">
+      <div class="sf-dot done"></div>
+      <div class="sf-label done">New</div>
+      <div class="sf-date">2026-04-07</div>
+    </div>
+    <div class="sf-step current">
+      <div class="sf-dot current"></div>
+      <div class="sf-label current">Processing</div>
+      <div class="sf-date">2026-04-08</div>
+    </div>
+    <div class="sf-step">
+      <div class="sf-dot"></div>
+      <div class="sf-label">Pending</div>
+      <div class="sf-date">—</div>
+    </div>
+    <div class="sf-step">
+      <div class="sf-dot"></div>
+      <div class="sf-label">Closed</div>
+      <div class="sf-date">—</div>
+    </div>
   </div>
 
   <!-- Meta -->
@@ -935,6 +1026,35 @@ tbody tr:hover td { background: #fffdf0; }
 <div class="page" id="page-case-details">
   <div class="breadcrumb"><a onclick="showPage('case-management')">Case Management</a> › TS_814</div>
   <div class="page-actions"><button class="btn btn-sm" onclick="showPage('case-management')">← 返回</button></div>
+
+  <!-- Case Status Stepper -->
+  <div class="status-stepper">
+    <div class="sf-step done">
+      <div class="sf-dot done"></div>
+      <div class="sf-label done">Created</div>
+      <div class="sf-date">2025-09-19</div>
+    </div>
+    <div class="sf-step done">
+      <div class="sf-dot done"></div>
+      <div class="sf-label done">Processing</div>
+      <div class="sf-date">2025-09-19</div>
+    </div>
+    <div class="sf-step done">
+      <div class="sf-dot done"></div>
+      <div class="sf-label done">Escalated</div>
+      <div class="sf-date">2025-09-19</div>
+    </div>
+    <div class="sf-step done">
+      <div class="sf-dot done"></div>
+      <div class="sf-label done">Pending Review</div>
+      <div class="sf-date">2025-09-19</div>
+    </div>
+    <div class="sf-step current">
+      <div class="sf-dot done" style="background:#52c41a;border-color:#52c41a"></div>
+      <div class="sf-label current" style="color:#389e0d">Closed</div>
+      <div class="sf-date">2025-09-19</div>
+    </div>
+  </div>
 
   <div class="card">
     <div class="meta-grid">
@@ -1525,7 +1645,6 @@ function setContext(ctx) {
   document.getElementById('ctx-ts').classList.toggle('active', ctx === 'TS');
   document.getElementById('ctx-tm').classList.toggle('active', ctx === 'TM');
   document.getElementById('ctx-meta').textContent = `TBNZ · ${ctx} · 2026-04-09`;
-  document.querySelector('.sidebar-group').textContent = `${ctx} · Compliance Monitoring`;
   const legend = document.getElementById('trend-legend');
   if (legend) legend.innerHTML = ctx === 'TS'
     ? '<span style="display:inline-flex;align-items:center;gap:4px"><span style="width:10px;height:10px;background:#2563eb;border-radius:2px;display:inline-block"></span>TS Alert</span>'

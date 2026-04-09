@@ -295,24 +295,6 @@ tbody tr:hover td { background: #fffdf0; }
 .ctx-btn.active { background:#fff; color:rgba(0,0,0,.85); box-shadow:0 1px 3px rgba(0,0,0,.12); }
 .ctx-meta { font-size:12px; color:var(--text-hint); margin-left:auto; }
 
-/* ── Investigation Panel ── */
-.inv-panel { position:fixed; right:0; top:86px; bottom:0; width:380px; background:#fff; border-left:1px solid var(--border); display:none; flex-direction:column; z-index:50; transition:width .18s ease; }
-.inv-panel.open { display:flex; }
-.inv-panel.collapsed { width:36px; overflow:hidden; }
-.inv-header { display:flex; align-items:center; border-bottom:1px solid var(--border); height:40px; flex-shrink:0; gap:0; }
-.inv-toggle { width:36px; height:40px; border:none; background:none; cursor:pointer; font-size:14px; color:var(--text-hint); flex-shrink:0; }
-.inv-toggle:hover { background:var(--primary-bg); }
-.inv-tab-row { display:flex; flex:1; height:100%; }
-.inv-tab { flex:1; font-size:12px; text-align:center; cursor:pointer; color:var(--text-hint); border-bottom:2px solid transparent; display:flex; align-items:center; justify-content:center; }
-.inv-tab.active { color:rgba(0,0,0,.85); border-bottom-color:#7c4a00; font-weight:500; }
-.inv-body { flex:1; overflow-y:auto; padding:12px; }
-.inv-pane { display:none; }
-.inv-pane.active { display:block; }
-.inv-ctx { font-size:11px; color:var(--text-hint); background:#fafafa; border:1px solid var(--border); border-radius:4px; padding:5px 8px; margin-bottom:10px; }
-.inv-collapsed-hint { writing-mode:vertical-rl; transform:rotate(180deg); font-size:11px; color:var(--text-hint); white-space:nowrap; margin:auto; letter-spacing:.5px; display:none; }
-.inv-panel.collapsed .inv-collapsed-hint { display:block; }
-.inv-panel.collapsed .inv-tab-row { display:none; }
-.content.panel-open { padding-right:396px; }
 
 /* ── Misc ── */
 .page-actions { display: flex; gap: 8px; margin-bottom: 12px; align-items: center; }
@@ -794,6 +776,47 @@ tbody tr:hover td { background: #fffdf0; }
     </div>
   </div>
 
+  <!-- Investigation Tools -->
+  <div class="card">
+    <div class="card-head">Investigation Tools</div>
+    <div class="tab-bar">
+      <div class="tab active" onclick="switchInvTab(this,'inv-spread-alert','alert','spread')">Spread Analysis</div>
+      <div class="tab" onclick="switchInvTab(this,'inv-graph-alert','alert','graph')">关联图谱</div>
+    </div>
+    <div class="tab-pane active" id="inv-spread-alert" style="padding:12px 16px">
+      <div style="font-size:11px;color:var(--text-hint);background:#fafafa;border:1px solid var(--border);border-radius:4px;padding:5px 8px;margin-bottom:10px">SPXW 20260406 6615.0 C &nbsp;·&nbsp; Account 3215451 &nbsp;·&nbsp; Alert 19150109</div>
+      <div style="display:flex;flex-wrap:wrap;gap:8px;margin-bottom:8px;font-size:12px">
+        <div style="display:flex;align-items:center;gap:4px">
+          <span style="width:10px;height:10px;border-radius:50%;background:#d97706;display:inline-block"></span>
+          3215451 <input type="checkbox" checked disabled style="margin-left:2px">
+        </div>
+        <div style="display:flex;align-items:center;gap:4px">
+          <span style="width:10px;height:10px;border-radius:50%;background:#7c3aed;display:inline-block"></span>
+          3215450 <input type="checkbox" id="related-toggle-alert" onchange="drawSpread('alert')" style="margin-left:2px">
+          <span style="color:var(--text-hint);font-size:11px">同IP</span>
+        </div>
+      </div>
+      <div style="background:#fff2f0;border:1px solid #ffccc7;border-radius:4px;padding:6px 8px;font-size:11px;color:#cf1322;margin-bottom:8px">
+        <strong>⚠</strong> 08:38–08:49 EDT 可疑窗口 · 3215450 反向操作
+      </div>
+      <canvas id="spread-canvas-alert" height="300" style="width:100%;display:block;border:1px solid var(--border);border-radius:4px"></canvas>
+      <div style="display:flex;flex-wrap:wrap;gap:8px;font-size:11px;color:var(--text-hint);margin-top:6px;justify-content:center">
+        <span>● 买入</span><span>○ 卖出</span>
+        <span style="display:inline-flex;align-items:center;gap:3px"><span style="width:14px;height:2px;background:#ef4444;display:inline-block"></span>Hit time</span>
+      </div>
+    </div>
+    <div class="tab-pane" id="inv-graph-alert" style="padding:12px 16px">
+      <div style="font-size:11px;color:var(--text-hint);background:#fafafa;border:1px solid var(--border);border-radius:4px;padding:5px 8px;margin-bottom:10px">Account 3215451 &nbsp;·&nbsp; 共 3 个关联账户</div>
+      <div style="display:flex;flex-wrap:wrap;gap:8px;margin-bottom:8px;font-size:11px;color:var(--text-hint)">
+        <span style="display:flex;align-items:center;gap:3px"><span style="width:9px;height:9px;border-radius:50%;background:#d97706;display:inline-block"></span>主体</span>
+        <span style="display:flex;align-items:center;gap:3px"><span style="width:9px;height:9px;border-radius:50%;background:#7c3aed;display:inline-block"></span>关联账户</span>
+        <span style="display:flex;align-items:center;gap:3px"><span style="width:9px;height:9px;border-radius:50%;background:#fff;border:1.5px solid #9ca3af;display:inline-block"></span>扩展</span>
+        <span style="margin-left:auto;color:var(--ai-color);cursor:pointer;font-size:11px" onclick="sendChip('查完整关联图谱')"><span class="ai-badge" style="font-size:10px">AI</span> 深度扩展</span>
+      </div>
+      <canvas id="assoc-canvas-alert" height="320" style="width:100%;display:block;border:1px solid var(--border);border-radius:4px"></canvas>
+    </div>
+  </div>
+
 </div>
 
 
@@ -966,6 +989,44 @@ tbody tr:hover td { background: #fffdf0; }
         <div class="log-meta"><span>2025-09-19 17:44 GMT+8</span>·<span>mayimeng</span><span class="log-op">Manage Task</span></div>
         <div class="log-detail">Add comment: The client was triggered by CMP for potential pre-arranged trading activities. Most trades showed short-term spread capturing, profiting from buying low and selling high. No transactions were identified at prices significantly deviating from the prevailing market. Recommended to clear.<br>Change stage: Processing → Escalated</div>
       </div>
+    </div>
+  </div>
+
+  <!-- Investigation Tools -->
+  <div class="card">
+    <div class="card-head">Investigation Tools</div>
+    <div class="tab-bar">
+      <div class="tab active" onclick="switchInvTab(this,'inv-spread-case','case','spread')">Spread Analysis</div>
+      <div class="tab" onclick="switchInvTab(this,'inv-graph-case','case','graph')">关联图谱</div>
+    </div>
+    <div class="tab-pane active" id="inv-spread-case" style="padding:12px 16px">
+      <div style="font-size:11px;color:var(--text-hint);background:#fafafa;border:1px solid var(--border);border-radius:4px;padding:5px 8px;margin-bottom:10px">SPXW Option · Account 4183296 · Case TS_814</div>
+      <div style="display:flex;flex-wrap:wrap;gap:8px;margin-bottom:8px;font-size:12px">
+        <div style="display:flex;align-items:center;gap:4px">
+          <span style="width:10px;height:10px;border-radius:50%;background:#d97706;display:inline-block"></span>
+          4183296 <input type="checkbox" checked disabled style="margin-left:2px">
+        </div>
+        <div style="display:flex;align-items:center;gap:4px">
+          <span style="width:10px;height:10px;border-radius:50%;background:#7c3aed;display:inline-block"></span>
+          4183297 <input type="checkbox" id="related-toggle-case" onchange="drawSpread('case')" style="margin-left:2px">
+          <span style="color:var(--text-hint);font-size:11px">同IP</span>
+        </div>
+      </div>
+      <canvas id="spread-canvas-case" height="300" style="width:100%;display:block;border:1px solid var(--border);border-radius:4px"></canvas>
+      <div style="display:flex;flex-wrap:wrap;gap:8px;font-size:11px;color:var(--text-hint);margin-top:6px;justify-content:center">
+        <span>● 买入</span><span>○ 卖出</span>
+        <span style="display:inline-flex;align-items:center;gap:3px"><span style="width:14px;height:2px;background:#ef4444;display:inline-block"></span>Hit time</span>
+      </div>
+    </div>
+    <div class="tab-pane" id="inv-graph-case" style="padding:12px 16px">
+      <div style="font-size:11px;color:var(--text-hint);background:#fafafa;border:1px solid var(--border);border-radius:4px;padding:5px 8px;margin-bottom:10px">Account 4183296 · Case TS_814 · 共 2 个关联账户</div>
+      <div style="display:flex;flex-wrap:wrap;gap:8px;margin-bottom:8px;font-size:11px;color:var(--text-hint)">
+        <span style="display:flex;align-items:center;gap:3px"><span style="width:9px;height:9px;border-radius:50%;background:#d97706;display:inline-block"></span>主体</span>
+        <span style="display:flex;align-items:center;gap:3px"><span style="width:9px;height:9px;border-radius:50%;background:#7c3aed;display:inline-block"></span>关联账户</span>
+        <span style="display:flex;align-items:center;gap:3px"><span style="width:9px;height:9px;border-radius:50%;background:#fff;border:1.5px solid #9ca3af;display:inline-block"></span>扩展</span>
+        <span style="margin-left:auto;color:var(--ai-color);cursor:pointer;font-size:11px"><span class="ai-badge" style="font-size:10px">AI</span> 深度扩展</span>
+      </div>
+      <canvas id="assoc-canvas-case" height="320" style="width:100%;display:block;border:1px solid var(--border);border-radius:4px"></canvas>
     </div>
   </div>
 </div>
@@ -1330,6 +1391,47 @@ tbody tr:hover td { background: #fffdf0; }
       <div class="empty">暂无问询记录</div>
     </div>
   </div>
+
+  <!-- Investigation Tools -->
+  <div class="card" style="margin-top:12px">
+    <div class="card-head">Investigation Tools</div>
+    <div class="tab-bar">
+      <div class="tab active" onclick="switchInvTab(this,'inv-spread-client','client','spread')">Spread Analysis</div>
+      <div class="tab" onclick="switchInvTab(this,'inv-graph-client','client','graph')">关联图谱</div>
+    </div>
+    <div class="tab-pane active" id="inv-spread-client" style="padding:12px 16px">
+      <div style="font-size:11px;color:var(--text-hint);background:#fafafa;border:1px solid var(--border);border-radius:4px;padding:5px 8px;margin-bottom:10px">Account 3215451 · 最近活跃 SPXW 20260406 6615.0 C</div>
+      <div style="display:flex;flex-wrap:wrap;gap:8px;margin-bottom:8px;font-size:12px">
+        <div style="display:flex;align-items:center;gap:4px">
+          <span style="width:10px;height:10px;border-radius:50%;background:#d97706;display:inline-block"></span>
+          3215451 <input type="checkbox" checked disabled style="margin-left:2px">
+        </div>
+        <div style="display:flex;align-items:center;gap:4px">
+          <span style="width:10px;height:10px;border-radius:50%;background:#7c3aed;display:inline-block"></span>
+          3215450 <input type="checkbox" id="related-toggle-client" onchange="drawSpread('client')" style="margin-left:2px">
+          <span style="color:var(--text-hint);font-size:11px">同IP</span>
+        </div>
+      </div>
+      <div style="background:#fff2f0;border:1px solid #ffccc7;border-radius:4px;padding:6px 8px;font-size:11px;color:#cf1322;margin-bottom:8px">
+        <strong>⚠</strong> 08:38–08:49 EDT 可疑窗口 · 3215450 反向操作
+      </div>
+      <canvas id="spread-canvas-client" height="300" style="width:100%;display:block;border:1px solid var(--border);border-radius:4px"></canvas>
+      <div style="display:flex;flex-wrap:wrap;gap:8px;font-size:11px;color:var(--text-hint);margin-top:6px;justify-content:center">
+        <span>● 买入</span><span>○ 卖出</span>
+        <span style="display:inline-flex;align-items:center;gap:3px"><span style="width:14px;height:2px;background:#ef4444;display:inline-block"></span>Hit time</span>
+      </div>
+    </div>
+    <div class="tab-pane" id="inv-graph-client" style="padding:12px 16px">
+      <div style="font-size:11px;color:var(--text-hint);background:#fafafa;border:1px solid var(--border);border-radius:4px;padding:5px 8px;margin-bottom:10px">Account 3215451 &nbsp;·&nbsp; 共 3 个关联账户</div>
+      <div style="display:flex;flex-wrap:wrap;gap:8px;margin-bottom:8px;font-size:11px;color:var(--text-hint)">
+        <span style="display:flex;align-items:center;gap:3px"><span style="width:9px;height:9px;border-radius:50%;background:#d97706;display:inline-block"></span>主体</span>
+        <span style="display:flex;align-items:center;gap:3px"><span style="width:9px;height:9px;border-radius:50%;background:#7c3aed;display:inline-block"></span>关联账户</span>
+        <span style="display:flex;align-items:center;gap:3px"><span style="width:9px;height:9px;border-radius:50%;background:#fff;border:1.5px solid #9ca3af;display:inline-block"></span>扩展</span>
+        <span style="margin-left:auto;color:var(--ai-color);cursor:pointer;font-size:11px" onclick="sendChipClient('查完整关联图谱')"><span class="ai-badge" style="font-size:10px">AI</span> 深度扩展</span>
+      </div>
+      <canvas id="assoc-canvas-client" height="320" style="width:100%;display:block;border:1px solid var(--border);border-radius:4px"></canvas>
+    </div>
+  </div>
 </div>
 
   </div><!-- /content -->
@@ -1346,7 +1448,9 @@ function showPage(name) {
   if (idx !== undefined) document.querySelectorAll('.sidebar-item')[idx].classList.add('active');
   window.scrollTo(0, 0);
   if (name === 'dashboard') setTimeout(drawDashTrend, 0);
-  showInvPanel(detailPages.includes(name));
+  if (name === 'alert-details') setTimeout(() => drawSpread('alert'), 50);
+  else if (name === 'case-details') setTimeout(() => drawSpread('case'), 50);
+  else if (name === 'client-details') setTimeout(() => drawSpread('client'), 50);
 }
 
 function drawDashTrend() {
@@ -1453,38 +1557,20 @@ function setClientFilter(status) {
   filterClientTable(status);
 }
 
-// ── Investigation Panel ──
-let invCollapsed = false;
-let currentInvTab = 'spread';
-const detailPages = ['alert-details', 'case-details', 'client-details'];
-
-function toggleInvPanel() {
-  invCollapsed = !invCollapsed;
-  const panel = document.getElementById('inv-panel');
-  panel.classList.toggle('collapsed', invCollapsed);
-  document.getElementById('inv-toggle-btn').textContent = invCollapsed ? '▶' : '◀';
-  if (!invCollapsed) setTimeout(() => { currentInvTab === 'spread' ? drawSpread() : drawAssocGraph(); }, 0);
+// ── Investigation Tools (inline) ──
+function switchInvTab(el, paneId, suffix, type) {
+  const bar = el.closest('.tab-bar');
+  bar.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+  el.classList.add('active');
+  const card = el.closest('.card');
+  card.querySelectorAll('.tab-pane').forEach(p => p.classList.remove('active'));
+  document.getElementById(paneId).classList.add('active');
+  setTimeout(() => type === 'spread' ? drawSpread(suffix) : drawAssocGraph(suffix), 0);
 }
 
-function switchInvTab(tab) {
-  currentInvTab = tab;
-  document.getElementById('inv-tab-spread').classList.toggle('active', tab === 'spread');
-  document.getElementById('inv-tab-graph').classList.toggle('active', tab === 'graph');
-  document.getElementById('inv-pane-spread').classList.toggle('active', tab === 'spread');
-  document.getElementById('inv-pane-graph').classList.toggle('active', tab === 'graph');
-  setTimeout(() => { tab === 'spread' ? drawSpread() : drawAssocGraph(); }, 0);
-}
-
-function showInvPanel(show) {
-  const panel = document.getElementById('inv-panel');
-  const content = document.querySelector('.content');
-  panel.classList.toggle('open', show);
-  content.classList.toggle('panel-open', show && !invCollapsed);
-  if (show && !invCollapsed) setTimeout(() => { currentInvTab === 'spread' ? drawSpread() : drawAssocGraph(); }, 50);
-}
-
-function drawSpread() {
-  const canvas = document.getElementById('spread-canvas');
+function drawSpread(suffix) {
+  suffix = suffix || 'alert';
+  const canvas = document.getElementById('spread-canvas-' + suffix);
   if (!canvas) return;
   const dpr = window.devicePixelRatio || 1;
   const cssW = canvas.offsetWidth || 640;
@@ -1623,7 +1709,7 @@ function drawSpread() {
   }
 
   T1.forEach(d => bubble(d.t, d.p, d.vol, d.s, '#d97706', d.hit));
-  if (document.getElementById('related-toggle')?.checked) {
+  if (document.getElementById('related-toggle-' + suffix)?.checked) {
     T2.forEach(d => bubble(d.t, d.p, d.vol, d.s, '#7c3aed', d.hit));
   }
 
@@ -1634,8 +1720,9 @@ function drawSpread() {
 }
 
 
-function drawAssocGraph() {
-  const canvas = document.getElementById('assoc-canvas');
+function drawAssocGraph(suffix) {
+  suffix = suffix || 'alert';
+  const canvas = document.getElementById('assoc-canvas-' + suffix);
   if (!canvas) return;
   const dpr = window.devicePixelRatio || 1;
   const cssW = canvas.offsetWidth || 560;
@@ -1814,61 +1901,6 @@ function submitWLModal() {
 }
 </script>
 
-<!-- ══════════════════════════════════════════
-     INVESTIGATION PANEL (persistent right panel)
-══════════════════════════════════════════ -->
-<div class="inv-panel" id="inv-panel">
-  <!-- Header -->
-  <div class="inv-header">
-    <button class="inv-toggle" id="inv-toggle-btn" onclick="toggleInvPanel()" title="收起">◀</button>
-    <div class="inv-tab-row">
-      <div class="inv-tab active" id="inv-tab-spread" onclick="switchInvTab('spread')">Spread Analysis</div>
-      <div class="inv-tab" id="inv-tab-graph" onclick="switchInvTab('graph')">关联图谱</div>
-    </div>
-  </div>
-  <div class="inv-collapsed-hint">Investigation Tools</div>
-
-  <!-- Body -->
-  <div class="inv-body">
-
-    <!-- Spread Analysis pane -->
-    <div class="inv-pane active" id="inv-pane-spread">
-      <div class="inv-ctx" id="inv-spread-ctx">SPXW 20260406 6615.0 C &nbsp;·&nbsp; Account 3215451 &nbsp;·&nbsp; Alert 19150109</div>
-      <div style="display:flex;flex-wrap:wrap;gap:8px;margin-bottom:8px;font-size:12px">
-        <div style="display:flex;align-items:center;gap:4px">
-          <span style="width:10px;height:10px;border-radius:50%;background:#d97706;display:inline-block"></span>
-          3215451 <input type="checkbox" checked disabled style="margin-left:2px">
-        </div>
-        <div style="display:flex;align-items:center;gap:4px">
-          <span style="width:10px;height:10px;border-radius:50%;background:#7c3aed;display:inline-block"></span>
-          3215450 <input type="checkbox" id="related-toggle" onchange="drawSpread()" style="margin-left:2px">
-          <span style="color:var(--text-hint);font-size:11px">同IP</span>
-        </div>
-      </div>
-      <div style="background:#fff2f0;border:1px solid #ffccc7;border-radius:4px;padding:6px 8px;font-size:11px;color:#cf1322;margin-bottom:8px">
-        <strong>⚠</strong> 08:38–08:49 EDT 可疑窗口 · 3215450 反向操作
-      </div>
-      <canvas id="spread-canvas" height="240" style="width:100%;display:block;border:1px solid var(--border);border-radius:4px"></canvas>
-      <div style="display:flex;flex-wrap:wrap;gap:8px;font-size:11px;color:var(--text-hint);margin-top:6px;justify-content:center">
-        <span>● 买入</span><span>○ 卖出</span>
-        <span style="display:inline-flex;align-items:center;gap:3px"><span style="width:14px;height:2px;background:#ef4444;display:inline-block"></span>Hit time</span>
-      </div>
-    </div>
-
-    <!-- Association Graph pane -->
-    <div class="inv-pane" id="inv-pane-graph">
-      <div class="inv-ctx" id="inv-graph-ctx">Account 3215451 &nbsp;·&nbsp; 共 3 个关联账户</div>
-      <div style="display:flex;flex-wrap:wrap;gap:8px;margin-bottom:8px;font-size:11px;color:var(--text-hint)">
-        <span style="display:flex;align-items:center;gap:3px"><span style="width:9px;height:9px;border-radius:50%;background:#d97706;display:inline-block"></span>主体</span>
-        <span style="display:flex;align-items:center;gap:3px"><span style="width:9px;height:9px;border-radius:50%;background:#7c3aed;display:inline-block"></span>关联账户</span>
-        <span style="display:flex;align-items:center;gap:3px"><span style="width:9px;height:9px;border-radius:50%;background:#fff;border:1.5px solid #9ca3af;display:inline-block"></span>扩展</span>
-        <span style="margin-left:auto;color:var(--ai-color);cursor:pointer;font-size:11px" onclick="sendChip('查完整关联图谱')"><span class="ai-badge" style="font-size:10px">AI</span> 深度扩展</span>
-      </div>
-      <canvas id="assoc-canvas" height="300" style="width:100%;display:block;border:1px solid var(--border);border-radius:4px"></canvas>
-    </div>
-
-  </div>
-</div>
 
 <!-- ── Add to Watchlist Modal ── -->
 <div id="wl-modal-overlay" onclick="if(event.target===this)closeWLModal()" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,.45);z-index:1000;align-items:center;justify-content:center">

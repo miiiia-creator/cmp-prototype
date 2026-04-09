@@ -397,9 +397,8 @@ tbody tr:hover td { background: #fffdf0; }
       <!-- Trend Chart -->
       <div class="card">
         <div class="card-head">Alert 趋势（近 7 天）
-          <span style="margin-left:auto;display:flex;gap:10px;font-size:11px;font-weight:400;color:var(--text-hint);align-items:center">
+          <span id="trend-legend" style="margin-left:auto;display:flex;gap:10px;font-size:11px;font-weight:400;color:var(--text-hint);align-items:center">
             <span style="display:inline-flex;align-items:center;gap:4px"><span style="width:10px;height:10px;background:#2563eb;border-radius:2px;display:inline-block"></span>TS Alert</span>
-            <span style="display:inline-flex;align-items:center;gap:4px"><span style="width:10px;height:10px;background:#7c3aed;border-radius:2px;display:inline-block"></span>TM Alert</span>
           </span>
         </div>
         <div style="padding:8px 16px 14px">
@@ -781,9 +780,9 @@ tbody tr:hover td { background: #fffdf0; }
     <div class="section-title" style="cursor:pointer;user-select:none" onclick="toggleSpread()">
       Spread Analysis
       <span style="font-size:11px;color:var(--text-hint);font-weight:400;margin-left:6px">SPXW 20260406 6615.0 C &nbsp;·&nbsp; 2026-04-07 EDT</span>
-      <span id="spread-toggle-btn" style="margin-left:auto;font-size:12px;color:var(--primary-dark);font-weight:400">展开 ▼</span>
+      <span id="spread-toggle-btn" style="margin-left:auto;font-size:12px;color:var(--primary-dark);font-weight:400">收起 ▲</span>
     </div>
-    <div id="spread-body" style="display:none;padding:12px 16px 16px">
+    <div id="spread-body" style="display:block;padding:12px 16px 16px">
 
       <!-- Account toggles -->
       <div style="display:flex;align-items:center;gap:16px;margin-bottom:10px;flex-wrap:wrap;font-size:12px">
@@ -821,6 +820,24 @@ tbody tr:hover td { background: #fffdf0; }
         </span>
         <span style="color:#d1d5db">— 市场中间价</span>
       </div>
+    </div>
+  </div>
+
+  <!-- ── Account Association Graph ── -->
+  <div class="card" style="margin-top:12px">
+    <div class="section-title" style="cursor:pointer;user-select:none" onclick="toggleAssoc()">
+      账户关联图谱
+      <span style="font-size:11px;color:var(--text-hint);font-weight:400;margin-left:6px">Account 3215451 · 共发现 3 个关联账户</span>
+      <span id="assoc-toggle-btn" style="margin-left:auto;font-size:12px;color:var(--primary-dark);font-weight:400">展开 ▼</span>
+    </div>
+    <div id="assoc-body" style="display:none;padding:12px 16px 16px">
+      <div style="display:flex;align-items:center;gap:16px;margin-bottom:10px;font-size:12px;flex-wrap:wrap">
+        <span style="display:flex;align-items:center;gap:5px"><span style="width:11px;height:11px;border-radius:50%;background:#d97706;display:inline-block"></span>当前账户（触发 Alert）</span>
+        <span style="display:flex;align-items:center;gap:5px"><span style="width:11px;height:11px;border-radius:50%;background:#7c3aed;display:inline-block"></span>关联账户（同IP / 同设备）</span>
+        <span style="display:flex;align-items:center;gap:5px"><span style="width:11px;height:11px;border-radius:50%;background:#fff;border:2px solid #9ca3af;display:inline-block"></span>扩展关联</span>
+        <span style="margin-left:auto;font-size:11px;color:var(--ai-color);cursor:pointer" onclick="sendChip('查完整关联图谱')"><span class="ai-badge" style="font-size:10px">AI</span> 深度扩展</span>
+      </div>
+      <canvas id="assoc-canvas" height="260" style="width:100%;display:block;border:1px solid var(--border);border-radius:4px"></canvas>
     </div>
   </div>
 </div>
@@ -1375,6 +1392,7 @@ function showPage(name) {
   if (idx !== undefined) document.querySelectorAll('.sidebar-item')[idx].classList.add('active');
   window.scrollTo(0, 0);
   if (name === 'dashboard') setTimeout(drawDashTrend, 0);
+  if (name === 'alert-details') setTimeout(() => { drawSpread(); if (assocOpen) drawAssocGraph(); }, 0);
 }
 
 function drawDashTrend() {
@@ -1393,16 +1411,14 @@ function drawDashTrend() {
   const chartW = W - PAD_L - PAD_R;
   const chartH = H - PAD_T - PAD_B;
 
-  const data = [
-    {day:'4/3', ts:18, tm:7},
-    {day:'4/4', ts:21, tm:8},
-    {day:'4/5', ts:9,  tm:3},
-    {day:'4/6', ts:7,  tm:2},
-    {day:'4/7', ts:24, tm:10},
-    {day:'4/8', ts:19, tm:7},
-    {day:'4/9', ts:15, tm:6},
-  ];
-  const maxTotal = Math.max(...data.map(d => d.ts + d.tm));
+  const isTM = currentCtx === 'TM';
+  const allData = {
+    TS: [{day:'4/3',v:18},{day:'4/4',v:21},{day:'4/5',v:9},{day:'4/6',v:7},{day:'4/7',v:24},{day:'4/8',v:19},{day:'4/9',v:15}],
+    TM: [{day:'4/3',v:7}, {day:'4/4',v:8}, {day:'4/5',v:3},{day:'4/6',v:2},{day:'4/7',v:10},{day:'4/8',v:7}, {day:'4/9',v:6}],
+  };
+  const data = allData[currentCtx];
+  const barColor = isTM ? '#7c3aed' : '#2563eb';
+  const maxTotal = Math.max(...data.map(d => d.v));
   const n = data.length;
   const barW = (chartW / n) * 0.5;
   const gap  = chartW / n;
@@ -1425,17 +1441,11 @@ function drawDashTrend() {
   data.forEach((d, i) => {
     const x = PAD_L + i * gap + gap / 2 - barW / 2;
     const isToday = i === data.length - 1;
-    const totalH = ((d.ts + d.tm) / (maxTotal + 4)) * chartH;
-    const tsH = (d.ts / (maxTotal + 4)) * chartH;
-    const tmH = (d.tm / (maxTotal + 4)) * chartH;
+    const bh = (d.v / (maxTotal + 3)) * chartH;
     const baseY = PAD_T + chartH;
 
-    // TM on top
-    ctx.fillStyle = isToday ? '#7c3aed' : 'rgba(124,58,237,0.55)';
-    ctx.fillRect(x, baseY - totalH, barW, tmH);
-    // TS bottom
-    ctx.fillStyle = isToday ? '#2563eb' : 'rgba(37,99,235,0.55)';
-    ctx.fillRect(x, baseY - tsH, barW, tsH);
+    ctx.fillStyle = isToday ? barColor : barColor + '88';
+    ctx.fillRect(x, baseY - bh, barW, bh);
 
     // Day label
     ctx.fillStyle = isToday ? 'rgba(0,0,0,.85)' : '#9ca3af';
@@ -1443,21 +1453,26 @@ function drawDashTrend() {
     ctx.textAlign = 'center';
     ctx.fillText(d.day, x + barW / 2, H - PAD_B + 13);
 
-    // Total label above bar
+    // Value label above bar
     ctx.fillStyle = isToday ? 'rgba(0,0,0,.7)' : '#9ca3af';
     ctx.font = '10px system-ui,sans-serif';
-    ctx.fillText(d.ts + d.tm, x + barW / 2, baseY - totalH - 4);
+    ctx.fillText(d.v, x + barW / 2, baseY - bh - 4);
   });
 }
 
 // ── TS/TM context toggle ──
+let currentCtx = 'TS';
 function setContext(ctx) {
+  currentCtx = ctx;
   document.getElementById('ctx-ts').classList.toggle('active', ctx === 'TS');
   document.getElementById('ctx-tm').classList.toggle('active', ctx === 'TM');
-  const prefix = ctx === 'TS' ? 'TS' : 'TM';
-  document.getElementById('ctx-meta').textContent = `TBNZ · ${prefix} · 2026-04-09`;
-  // Update sidebar group label
-  document.querySelector('.sidebar-group').textContent = `${prefix} · Compliance Monitoring`;
+  document.getElementById('ctx-meta').textContent = `TBNZ · ${ctx} · 2026-04-09`;
+  document.querySelector('.sidebar-group').textContent = `${ctx} · Compliance Monitoring`;
+  const legend = document.getElementById('trend-legend');
+  if (legend) legend.innerHTML = ctx === 'TS'
+    ? '<span style="display:inline-flex;align-items:center;gap:4px"><span style="width:10px;height:10px;background:#2563eb;border-radius:2px;display:inline-block"></span>TS Alert</span>'
+    : '<span style="display:inline-flex;align-items:center;gap:4px"><span style="width:10px;height:10px;background:#7c3aed;border-radius:2px;display:inline-block"></span>TM Alert</span>';
+  drawDashTrend();
 }
 
 // ── Stats bar click-to-filter ──
@@ -1485,7 +1500,7 @@ function setClientFilter(status) {
 }
 
 // ── Spread Analysis ──
-let spreadOpen = false;
+let spreadOpen = true;
 function toggleSpread() {
   spreadOpen = !spreadOpen;
   document.getElementById('spread-body').style.display = spreadOpen ? 'block' : 'none';
@@ -1641,6 +1656,87 @@ function drawSpread() {
   ctx.strokeStyle = '#e5e7eb'; ctx.lineWidth = 1;
   ctx.strokeRect(PAD_L, priceTop, chartW, priceH);
   ctx.strokeRect(PAD_L, volTop, chartW, volBot - volTop);
+}
+
+// ── Account Association Graph ──
+let assocOpen = false;
+function toggleAssoc() {
+  assocOpen = !assocOpen;
+  document.getElementById('assoc-body').style.display = assocOpen ? 'block' : 'none';
+  document.getElementById('assoc-toggle-btn').textContent = assocOpen ? '收起 ▲' : '展开 ▼';
+  if (assocOpen) setTimeout(drawAssocGraph, 0);
+}
+
+function drawAssocGraph() {
+  const canvas = document.getElementById('assoc-canvas');
+  if (!canvas) return;
+  const dpr = window.devicePixelRatio || 1;
+  const cssW = canvas.offsetWidth || 560;
+  const cssH = 260;
+  canvas.width = Math.round(cssW * dpr);
+  canvas.height = Math.round(cssH * dpr);
+  const ctx = canvas.getContext('2d');
+  ctx.scale(dpr, dpr);
+  const W = cssW, H = cssH;
+
+  // Node definitions
+  const nodes = [
+    { id:'3215451', sub:'主体 · AI 82 · Alert', x:W*0.5,  y:H*0.5,  r:32, bg:'#d97706', fg:'#fff', alert:true  },
+    { id:'3215450', sub:'同IP · 反向交易',       x:W*0.2,  y:H*0.25, r:26, bg:'#7c3aed', fg:'#fff', alert:false },
+    { id:'3215452', sub:'同IP · 注册相近',       x:W*0.78, y:H*0.25, r:22, bg:'#7c3aed', fg:'#fff', alert:false },
+    { id:'5509871', sub:'同设备',               x:W*0.15, y:H*0.78, r:19, bg:'#fff',    fg:'#9ca3af', border:'#9ca3af', alert:false },
+    { id:'6614220', sub:'同IP',                 x:W*0.82, y:H*0.75, r:17, bg:'#fff',    fg:'#9ca3af', border:'#9ca3af', alert:false },
+  ];
+
+  const edges = [
+    { a:0, b:1, label:'Same IP', sub:'218.82.19.9', color:'#7c3aed' },
+    { a:0, b:2, label:'Same IP', sub:'218.82.19.9', color:'#7c3aed' },
+    { a:1, b:3, label:'Same Device', color:'#d1d5db' },
+    { a:2, b:4, label:'Same IP', sub:'61.49.207.4', color:'#d1d5db' },
+  ];
+
+  ctx.clearRect(0, 0, W, H);
+  ctx.fillStyle = '#fafafa';
+  ctx.fillRect(0, 0, W, H);
+
+  // Edges
+  edges.forEach(e => {
+    const n1 = nodes[e.a], n2 = nodes[e.b];
+    const mx = (n1.x + n2.x) / 2, my = (n1.y + n2.y) / 2;
+    ctx.strokeStyle = e.color; ctx.lineWidth = e.color === '#d1d5db' ? 1 : 1.5;
+    ctx.setLineDash(e.color === '#d1d5db' ? [4,3] : []);
+    ctx.beginPath(); ctx.moveTo(n1.x, n1.y); ctx.lineTo(n2.x, n2.y); ctx.stroke();
+    ctx.setLineDash([]);
+    // Edge label
+    ctx.fillStyle = '#9ca3af'; ctx.font = '10px system-ui,sans-serif'; ctx.textAlign = 'center';
+    ctx.fillText(e.label, mx, my - 5);
+    if (e.sub) { ctx.font = '9px system-ui,sans-serif'; ctx.fillStyle = '#c4c4c4'; ctx.fillText(e.sub, mx, my + 6); }
+  });
+
+  // Nodes
+  nodes.forEach(n => {
+    ctx.shadowColor = 'rgba(0,0,0,.12)'; ctx.shadowBlur = 8; ctx.shadowOffsetY = 2;
+    ctx.beginPath(); ctx.arc(n.x, n.y, n.r, 0, Math.PI * 2);
+    ctx.fillStyle = n.bg; ctx.fill();
+    if (n.border) { ctx.strokeStyle = n.border; ctx.lineWidth = 2; ctx.stroke(); }
+    ctx.shadowColor = 'transparent';
+
+    // Alert badge
+    if (n.alert) {
+      ctx.beginPath(); ctx.arc(n.x + n.r - 5, n.y - n.r + 5, 9, 0, Math.PI * 2);
+      ctx.fillStyle = '#ef4444'; ctx.fill();
+      ctx.fillStyle = '#fff'; ctx.font = 'bold 9px system-ui,sans-serif'; ctx.textAlign = 'center';
+      ctx.fillText('!', n.x + n.r - 5, n.y - n.r + 8);
+    }
+
+    // ID label inside node
+    ctx.fillStyle = n.fg; ctx.font = `bold ${n.r > 25 ? 11 : 10}px system-ui,sans-serif`; ctx.textAlign = 'center';
+    ctx.fillText(n.id, n.x, n.y + 4);
+
+    // Sub-label below
+    ctx.fillStyle = '#6b7280'; ctx.font = '10px system-ui,sans-serif';
+    ctx.fillText(n.sub, n.x, n.y + n.r + 14);
+  });
 }
 
 // ── Tab switching ──

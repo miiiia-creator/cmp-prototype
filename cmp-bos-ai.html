@@ -393,33 +393,33 @@ tbody tr:hover td { background: #fffdf0; }
   <div class="kpi-row">
     <div class="kpi-card clickable" onclick="showPage('alert-viewer')">
       <div class="kpi-num orange">21</div>
-      <div class="kpi-label">今日新增 Alerts</div>
-      <div class="kpi-trend kpi-trend-up">↑ 8 vs 昨日 (13)</div>
+      <div class="kpi-label">New Alerts Today</div>
+      <div class="kpi-trend kpi-trend-up">↑ 8 vs Yesterday (13)</div>
     </div>
     <div class="kpi-card clickable" onclick="showPage('alert-viewer')">
       <div class="kpi-num" style="color:rgba(0,0,0,.85)">284</div>
-      <div class="kpi-label">待处理 Alerts</div>
-      <div class="kpi-trend kpi-trend-neu">含 3 条 New · 未领取</div>
+      <div class="kpi-label">Pending Alerts</div>
+      <div class="kpi-trend kpi-trend-neu">Incl. 3 New · Unclaimed</div>
     </div>
     <div class="kpi-card clickable" onclick="showPage('case-management')">
       <div class="kpi-num orange">5</div>
-      <div class="kpi-label">进行中 Cases</div>
-      <div class="kpi-trend kpi-trend-up">2 条已 Escalated</div>
+      <div class="kpi-label">Active Cases</div>
+      <div class="kpi-trend kpi-trend-up">2 Escalated</div>
     </div>
     <div class="kpi-card clickable" onclick="showPage('client-management')">
       <div class="kpi-num purple">6</div>
-      <div class="kpi-label">Watchlist 监控中</div>
-      <div class="kpi-trend kpi-trend-neu">1 条本周到期</div>
+      <div class="kpi-label">Watchlist Active</div>
+      <div class="kpi-trend kpi-trend-neu">1 Expiring This Week</div>
     </div>
     <div class="kpi-card">
       <div class="kpi-num green">68%</div>
-      <div class="kpi-label">AI 本周精准率</div>
-      <div class="kpi-trend kpi-trend-down">↑ 5pp vs 上周 (63%)</div>
+      <div class="kpi-label">AI Precision (This Week)</div>
+      <div class="kpi-trend kpi-trend-down">↑ 5pp vs Last Week (63%)</div>
     </div>
     <div class="kpi-card">
       <div class="kpi-num red">3</div>
-      <div class="kpi-label">SLA 超时 Alerts</div>
-      <div class="kpi-trend kpi-trend-up">需立即处理</div>
+      <div class="kpi-label">SLA Overdue Alerts</div>
+      <div class="kpi-trend kpi-trend-up">Requires Immediate Action</div>
     </div>
   </div>
 
@@ -431,7 +431,7 @@ tbody tr:hover td { background: #fffdf0; }
 
       <!-- Alert Trend -->
       <div class="card">
-        <div class="card-head">Alert 趋势（近 7 天）
+        <div class="card-head">Alert Trend (Last 7 Days)
           <span id="trend-legend" style="margin-left:auto;display:flex;gap:10px;font-size:11px;font-weight:400;color:var(--text-hint);align-items:center">
             <span style="display:inline-flex;align-items:center;gap:4px"><span style="width:10px;height:10px;background:#2563eb;border-radius:2px;display:inline-block"></span>TS Alert</span>
           </span>
@@ -443,10 +443,10 @@ tbody tr:hover td { background: #fffdf0; }
 
       <!-- Accuracy Trend -->
       <div class="card">
-        <div class="card-head">精确率趋势（近 8 周）
+        <div class="card-head">Precision Trend (Last 8 Weeks)
           <span style="margin-left:auto;display:flex;gap:12px;font-size:11px;font-weight:400;color:var(--text-hint);align-items:center">
-            <span style="display:inline-flex;align-items:center;gap:4px"><span style="width:10px;height:10px;background:#7c3aed;border-radius:2px;display:inline-block"></span>AI 精确率</span>
-            <span style="display:inline-flex;align-items:center;gap:4px"><span style="width:10px;height:2px;background:#d1d5db;display:inline-block"></span>整体精准率</span>
+            <span style="display:inline-flex;align-items:center;gap:4px"><span style="width:10px;height:10px;background:#7c3aed;border-radius:2px;display:inline-block"></span>AI Precision</span>
+            <span style="display:inline-flex;align-items:center;gap:4px"><span style="width:10px;height:2px;background:#d1d5db;display:inline-block"></span>Overall Precision</span>
           </span>
         </div>
         <div style="padding:8px 16px 14px">
@@ -456,10 +456,10 @@ tbody tr:hover td { background: #fffdf0; }
 
       <!-- Rule Health -->
       <div class="card">
-        <div class="card-head">规则健康度 <span class="section-subtitle">本周 FP 率 Top 4</span></div>
+        <div class="card-head">Rule Health <span class="section-subtitle">Top 4 FP Rate This Week</span></div>
         <div style="padding:0 16px 8px">
           <div style="display:grid;grid-template-columns:1fr auto 100px auto;gap:6px 10px;align-items:center;font-size:12px;color:var(--text-hint);padding:6px 0;border-bottom:1px solid var(--border)">
-            <span>规则名称</span><span>本周命中</span><span></span><span>FP 率</span>
+            <span>Rule Name</span><span>Hits This Week</span><span></span><span>FP Rate</span>
           </div>
           <div style="display:grid;grid-template-columns:1fr auto 100px auto;gap:6px 10px;align-items:center;font-size:12px;padding:8px 0;border-bottom:1px solid #f5f5f5">
             <span>pre-arranged trading (Profit)</span>
@@ -490,14 +490,14 @@ tbody tr:hover td { background: #fffdf0; }
 
       <!-- TS-AI Module Status -->
       <div class="card">
-        <div class="card-head"><span class="ai-badge">AI</span> TS-AI 模块状态</div>
+        <div class="card-head"><span class="ai-badge">AI</span> TS-AI Module Status</div>
         <div style="padding:0 16px 8px">
-          <div class="ai-mod-row"><span>① 风险识别补召</span><span style="display:flex;align-items:center;gap:5px;color:#52c41a"><span class="dot-ok"></span>正常运行</span></div>
-          <div class="ai-mod-row"><span>② 关联关系分析</span><span style="display:flex;align-items:center;gap:5px;color:#52c41a"><span class="dot-ok"></span>正常运行</span></div>
-          <div class="ai-mod-row"><span>③ 客户画像生成</span><span style="display:flex;align-items:center;gap:5px;color:#52c41a"><span class="dot-ok"></span>正常运行</span></div>
-          <div class="ai-mod-row"><span>④ 异常判定</span><span style="display:flex;align-items:center;gap:5px;color:#52c41a"><span class="dot-ok"></span>正常运行</span></div>
-          <div class="ai-mod-row"><span>⑤ 风险评分</span><span style="display:flex;align-items:center;gap:5px;color:#fa8c16"><span class="dot-warn"></span>延迟 ~3min</span></div>
-          <div class="ai-mod-row"><span>⑥ 报告草稿生成</span><span style="display:flex;align-items:center;gap:5px;color:#52c41a"><span class="dot-ok"></span>正常运行</span></div>
+          <div class="ai-mod-row"><span>① Risk Identification</span><span style="display:flex;align-items:center;gap:5px;color:#52c41a"><span class="dot-ok"></span>Running</span></div>
+          <div class="ai-mod-row"><span>② Association Analysis</span><span style="display:flex;align-items:center;gap:5px;color:#52c41a"><span class="dot-ok"></span>Running</span></div>
+          <div class="ai-mod-row"><span>③ Customer Profile</span><span style="display:flex;align-items:center;gap:5px;color:#52c41a"><span class="dot-ok"></span>Running</span></div>
+          <div class="ai-mod-row"><span>④ Anomaly Detection</span><span style="display:flex;align-items:center;gap:5px;color:#52c41a"><span class="dot-ok"></span>Running</span></div>
+          <div class="ai-mod-row"><span>⑤ Risk Score</span><span style="display:flex;align-items:center;gap:5px;color:#fa8c16"><span class="dot-warn"></span>Delayed ~3min</span></div>
+          <div class="ai-mod-row"><span>⑥ Report Draft Generation</span><span style="display:flex;align-items:center;gap:5px;color:#52c41a"><span class="dot-ok"></span>Running</span></div>
         </div>
       </div>
 
@@ -508,8 +508,8 @@ tbody tr:hover td { background: #fffdf0; }
 
       <!-- Real-time Rule Alerts -->
       <div class="card">
-        <div class="card-head">实时规则告警
-          <span style="display:flex;align-items:center;gap:5px;margin-left:auto;font-size:11px;font-weight:400;color:#52c41a"><span class="dot-ok"></span>实时同步</span>
+        <div class="card-head">Real-time Rule Alerts
+          <span style="display:flex;align-items:center;gap:5px;margin-left:auto;font-size:11px;font-weight:400;color:#52c41a"><span class="dot-ok"></span>Live Sync</span>
         </div>
         <div style="padding:0 16px 8px">
           <div class="queue-row">
@@ -547,7 +547,7 @@ tbody tr:hover td { background: #fffdf0; }
               <div style="color:var(--text-hint);font-size:11px;margin-top:2px">possible wash trade (A to A) · 2353510</div>
             </div>
             <div style="text-align:right;flex-shrink:0;margin-left:8px">
-              <div style="font-size:11px;color:rgba(0,0,0,.85)">昨日 20:44</div>
+              <div style="font-size:11px;color:rgba(0,0,0,.85)">Yesterday 20:44</div>
               <span class="ai-score ai-score-high" style="margin-top:2px">79</span>
             </div>
           </div>
@@ -565,14 +565,14 @@ tbody tr:hover td { background: #fffdf0; }
             </div>
           </div>
           <div style="text-align:center;padding:6px 0 2px">
-            <span onclick="showPage('alert-viewer')" style="font-size:11px;color:var(--text-hint);cursor:pointer">查看全部 284 条 →</span>
+            <span onclick="showPage('alert-viewer')" style="font-size:11px;color:var(--text-hint);cursor:pointer">View All 284 →</span>
           </div>
         </div>
       </div>
 
       <!-- Priority Queue -->
       <div class="card">
-        <div class="card-head">高优处理队列 <span class="section-subtitle">按 AI 评分排序</span></div>
+        <div class="card-head">Priority Queue <span class="section-subtitle">Sorted by AI Score</span></div>
         <div style="padding:0 16px 8px">
           <div class="queue-row">
             <div>
@@ -580,7 +580,7 @@ tbody tr:hover td { background: #fffdf0; }
                 <span class="queue-id" onclick="showPage('alert-details')">Alert 19150109</span>
                 <span class="tag tag-processing" style="font-size:10px">Processing</span>
               </div>
-              <div style="color:var(--text-hint);margin-top:2px">3215451 · SPXW · 今日</div>
+              <div style="color:var(--text-hint);margin-top:2px">3215451 · SPXW · Today</div>
             </div>
             <div style="margin-left:auto"><span class="ai-score ai-score-high">82</span></div>
           </div>
@@ -590,7 +590,7 @@ tbody tr:hover td { background: #fffdf0; }
                 <span class="queue-id">Alert 19150107</span>
                 <span class="tag" style="background:#fff7e6;color:#d46b08;border:1px solid #ffd591;font-size:10px">New</span>
               </div>
-              <div style="color:var(--text-hint);margin-top:2px">2353510 · TSLA OPT · 今日</div>
+              <div style="color:var(--text-hint);margin-top:2px">2353510 · TSLA OPT · Today</div>
             </div>
             <div style="margin-left:auto"><span class="ai-score ai-score-high">71</span></div>
           </div>
@@ -600,7 +600,7 @@ tbody tr:hover td { background: #fffdf0; }
                 <span class="queue-id" onclick="showPage('case-details')">Case TS_824</span>
                 <span class="tag tag-processing" style="font-size:10px">Processing</span>
               </div>
-              <div style="color:var(--text-hint);margin-top:2px">1277792 · BQ · <span style="color:#cf1322">67天未结</span></div>
+              <div style="color:var(--text-hint);margin-top:2px">1277792 · BQ · <span style="color:#cf1322">Open 67 Days</span></div>
             </div>
             <div style="margin-left:auto"><span style="font-size:11px;color:var(--text-hint)">—</span></div>
           </div>
@@ -610,7 +610,7 @@ tbody tr:hover td { background: #fffdf0; }
                 <span class="queue-id">Alert 19149981</span>
                 <span class="tag" style="background:#fff7e6;color:#d46b08;border:1px solid #ffd591;font-size:10px">New</span>
               </div>
-              <div style="color:var(--text-hint);margin-top:2px">7526677 · NQ2506 · 3天前</div>
+              <div style="color:var(--text-hint);margin-top:2px">7526677 · NQ2506 · 3 Days Ago</div>
             </div>
             <div style="margin-left:auto"><span class="ai-score ai-score-mid">67</span></div>
           </div>
@@ -620,7 +620,7 @@ tbody tr:hover td { background: #fffdf0; }
                 <span class="queue-id">Alert 19149970</span>
                 <span class="tag" style="background:#fff2f0;color:#cf1322;border:1px solid #ffa39e;font-size:10px">SLA !</span>
               </div>
-              <div style="color:var(--text-hint);margin-top:2px">1441692 · AAPL · <span style="color:#cf1322">超时 2天</span></div>
+              <div style="color:var(--text-hint);margin-top:2px">1441692 · AAPL · <span style="color:#cf1322">Overdue 2 Days</span></div>
             </div>
             <div style="margin-left:auto"><span class="ai-score ai-score-high">79</span></div>
           </div>
@@ -657,8 +657,8 @@ tbody tr:hover td { background: #fffdf0; }
     <input class="filter-input" style="width:80px" placeholder="Symbol">
     <span class="filter-label" style="color:var(--ai-color);font-weight:500">AI Score ≥</span>
     <select class="filter-select" style="width:64px;border-color:var(--ai-border)"><option>—</option><option>50</option><option>70</option><option>85</option></select>
-    <button class="btn btn-primary btn-sm">查询</button>
-    <button class="btn btn-sm">重置</button>
+    <button class="btn btn-primary btn-sm">Search</button>
+    <button class="btn btn-sm">Reset</button>
     <button class="btn btn-sm" style="margin-left:auto">Export</button>
   </div>
 
@@ -673,7 +673,7 @@ tbody tr:hover td { background: #fffdf0; }
           <th style="width:32px"><input type="checkbox"></th>
           <th>ID</th><th>Hit Time</th><th>Account ID</th><th>Symbol</th><th>License</th>
           <th>Rule Name</th><th>Status</th><th>Risk Level</th>
-          <th class="ai-col" style="color:var(--ai-dark)">AI 评分 <span class="tag tag-ai">AI</span></th>
+          <th class="ai-col" style="color:var(--ai-dark)">AI Score <span class="tag tag-ai">AI</span></th>
           <th>Alert Owner</th><th>Operation</th>
         </tr>
       </thead>
@@ -732,7 +732,7 @@ tbody tr:hover td { background: #fffdf0; }
     </table>
   </div>
   <div style="padding:10px 16px;background:#fff;border:1px solid var(--border);border-top:none;border-radius:0 0 6px 6px;font-size:12px;color:var(--text-hint);display:flex;align-items:center;justify-content:flex-end;gap:8px;">
-    <span>20 条/页</span><span>1 / 15</span>
+    <span>20 / page</span><span>1 / 15</span>
     <button class="btn btn-sm">‹</button><button class="btn btn-sm">›</button>
   </div>
 </div>
@@ -795,71 +795,71 @@ tbody tr:hover td { background: #fffdf0; }
   <!-- ✦ AI Analysis Card ✦ -->
   <div class="ai-card">
     <div class="ai-card-head">
-      <div class="ai-card-title"><span class="ai-badge">AI</span> TS-AI 分析结果 <span class="new-badge">NEW</span></div>
-      <span style="font-size:11px;color:var(--text-dis)">生成于 2026-04-07 09:02 · 模型 v2.4</span>
+      <div class="ai-card-title"><span class="ai-badge">AI</span> TS-AI Analysis <span class="new-badge">NEW</span></div>
+      <span style="font-size:11px;color:var(--text-dis)">Generated 2026-04-07 09:02 · Model v2.4</span>
     </div>
     <div class="ai-card-body">
       <div class="ai-score-row">
         <div>
           <div class="ai-score-big high">82</div>
-          <div style="font-size:11px;color:var(--text-hint);margin-top:3px;">风险评分 / 100</div>
-          <div style="font-size:11px;color:var(--text-hint);">置信度 74%</div>
+          <div style="font-size:11px;color:var(--text-hint);margin-top:3px;">Risk Score / 100</div>
+          <div style="font-size:11px;color:var(--text-hint);">Confidence 74%</div>
         </div>
         <div>
-          <div style="font-size:11px;color:var(--text-hint);margin-bottom:4px;">处置建议</div>
-          <span class="ai-recommend ai-recommend-escalate">⬆ 建议 Escalate</span>
+          <div style="font-size:11px;color:var(--text-hint);margin-bottom:4px;">Disposition Recommendation</div>
+          <span class="ai-recommend ai-recommend-escalate">⬆ Recommend Escalate</span>
         </div>
         <div style="margin-left:auto;">
-          <div style="font-size:11px;color:var(--text-hint);margin-bottom:4px;">客户行为标签</div>
+          <div style="font-size:11px;color:var(--text-hint);margin-bottom:4px;">Client Behavior Tags</div>
           <div style="display:flex;flex-wrap:wrap;gap:4px;">
-            <span class="tag tag-high">短期频繁开平仓</span>
-            <span class="tag tag-medium">期权集中交易</span>
-            <span class="tag tag-ai">关联账户活跃</span>
+            <span class="tag tag-high">Frequent Short-term Trading</span>
+            <span class="tag tag-medium">Concentrated Options Activity</span>
+            <span class="tag tag-ai">Associated Accounts Active</span>
           </div>
         </div>
       </div>
       <div class="ai-evidence">
-        <div class="ai-evidence-title">判定依据</div>
+        <div class="ai-evidence-title">Detection Basis</div>
         <ul>
-          <li>账户在 10:23 前后短时间内集中买入 SPXW，价格上涨后快速平仓，买卖价差模式与 pre-arranged trading 历史案例高度相似（相似度 87%）。</li>
-          <li>同一 IP（218.82.19.9）下存在 2 个关联账户（3215450、3215452），当日存在反向交易行为，可能构成对手方。</li>
-          <li>该账户近 6 个月内触发同类 Alert 3 次，其中 1 次升级为 Case，结论为 Further Action；当前无 Watchlist 标记。</li>
+          <li>Account concentrated buys on SPXW around 10:23, closing positions rapidly after price rises; the buy-sell spread pattern closely matches historical pre-arranged trading cases (similarity 87%).</li>
+          <li>2 associated accounts (3215450, 3215452) share the same IP (218.82.19.9) and showed reverse trading on the same day, potentially acting as counterparties.</li>
+          <li>Account triggered 3 similar alerts in the past 6 months; 1 was escalated to a case with a Further Action conclusion. No current Watchlist flag.</li>
         </ul>
       </div>
       <div class="ai-actions-row">
-        <button class="btn btn-ai btn-sm" onclick="sendChip('查关联账户')">查关联账户</button>
-        <button class="btn btn-ai btn-sm" onclick="sendChip('查历史 Alert')">查历史 Alert</button>
-        <button class="btn btn-ai btn-sm" onclick="sendChip('对比同类案例')">对比同类案例</button>
-        <button class="btn btn-ai btn-sm" onclick="sendChip('重新评估风险')">重新评估</button>
+        <button class="btn btn-ai btn-sm" onclick="sendChip('associated_accounts')">Associated Accounts</button>
+        <button class="btn btn-ai btn-sm" onclick="sendChip('alert_history')">Alert History</button>
+        <button class="btn btn-ai btn-sm" onclick="sendChip('compare_cases')">Compare Similar Cases</button>
+        <button class="btn btn-ai btn-sm" onclick="sendChip('re_evaluate')">Re-evaluate</button>
         <div style="flex:1"></div>
-        <button class="ask-ai-toggle" onclick="toggleAsk()"><span id="ask-toggle-label">追问 AI ↓</span></button>
+        <button class="ask-ai-toggle" onclick="toggleAsk()"><span id="ask-toggle-label">Ask AI ↓</span></button>
       </div>
       <div class="ask-ai-section">
         <div class="ask-ai-content" id="ask-ai-panel">
           <div class="ai-messages" id="ai-messages">
             <div class="ai-msg bot">
               <div class="ai-msg-icon bot">AI</div>
-              <div class="ai-msg-bubble">已分析完 Alert 19150109。如有疑问，可以直接提问，或点击快捷按钮。</div>
+              <div class="ai-msg-bubble">Analysis of Alert 19150109 complete. You may ask questions directly or use the quick-action buttons below.</div>
             </div>
           </div>
           <div class="chips-row">
-            <span class="chip" onclick="sendChip('查关联账户')">查关联账户</span>
-            <span class="chip" onclick="sendChip('查历史 Alert')">查历史 Alert</span>
-            <span class="chip" onclick="sendChip('对比同类案例')">对比同类案例</span>
-            <span class="chip" onclick="sendChip('重新评估风险')">重新评估风险</span>
+            <span class="chip" onclick="sendChip('associated_accounts')">Associated Accounts</span>
+            <span class="chip" onclick="sendChip('alert_history')">Alert History</span>
+            <span class="chip" onclick="sendChip('compare_cases')">Compare Similar Cases</span>
+            <span class="chip" onclick="sendChip('re_evaluate')">Re-evaluate Risk</span>
           </div>
           <div class="ask-input-row">
-            <input class="ask-input" id="ask-input" placeholder="输入问题，例如：这个账户的出入金记录有异常吗？" onkeydown="if(event.key==='Enter')sendMsg()">
-            <button class="btn btn-primary btn-sm" onclick="sendMsg()">发送</button>
+            <input class="ask-input" id="ask-input" placeholder="Ask a question, e.g.: Are there any anomalies in this account's deposit/withdrawal history?" onkeydown="if(event.key==='Enter')sendMsg()">
+            <button class="btn btn-primary btn-sm" onclick="sendMsg()">Send</button>
           </div>
         </div>
       </div>
     </div>
   </div>
 
-  <!-- Alert Detail (原有) -->
+  <!-- Alert Detail -->
   <div class="card">
-    <div class="section-title">Alert Detail <span class="section-subtitle">订单触发摘要</span></div>
+    <div class="section-title">Alert Detail <span class="section-subtitle">Order Trigger Summary</span></div>
     <div style="padding:0 16px 8px;">
       <table>
         <thead><tr><th>Account</th><th>Symbol</th><th>Order Date</th><th>Order Count</th><th>Buy Trade Count</th><th>Sell Trade Count</th></tr></thead>
@@ -882,8 +882,8 @@ tbody tr:hover td { background: #fffdf0; }
         </tbody>
       </table>
     </div>
-    <div class="tab-pane" id="tab-trade"><div class="empty">Trade 数据（同 Orders 格式）</div></div>
-    <div class="tab-pane" id="tab-oplog"><div class="empty">Order operation log 暂无</div></div>
+    <div class="tab-pane" id="tab-trade"><div class="empty">Trade data (same format as Orders)</div></div>
+    <div class="tab-pane" id="tab-oplog"><div class="empty">No order operation log available</div></div>
     <div style="padding:8px 16px 16px;">
       <div style="font-size:13px;font-weight:600;margin:12px 0 8px;">Alert Operation Log</div>
       <div class="log-item">
@@ -898,7 +898,7 @@ tbody tr:hover td { background: #fffdf0; }
     <div class="card-head">Investigation Tools <span class="new-badge">NEW</span></div>
     <div class="tab-bar">
       <div class="tab active" onclick="switchInvTab(this,'inv-spread-alert','alert','spread')">Spread Analysis</div>
-      <div class="tab" onclick="switchInvTab(this,'inv-graph-alert','alert','graph')">关联图谱</div>
+      <div class="tab" onclick="switchInvTab(this,'inv-graph-alert','alert','graph')">Association Graph</div>
     </div>
     <div class="tab-pane active" id="inv-spread-alert" style="padding:12px 16px">
       <div style="font-size:11px;color:var(--text-hint);background:#fafafa;border:1px solid var(--border);border-radius:4px;padding:5px 8px;margin-bottom:10px">SPXW 20260406 6615.0 C &nbsp;·&nbsp; Account 3215451 &nbsp;·&nbsp; Alert 19150109</div>
@@ -910,25 +910,25 @@ tbody tr:hover td { background: #fffdf0; }
         <div style="display:flex;align-items:center;gap:4px">
           <span style="width:10px;height:10px;border-radius:50%;background:#7c3aed;display:inline-block"></span>
           3215450 <input type="checkbox" id="related-toggle-alert" onchange="drawSpread('alert')" style="margin-left:2px">
-          <span style="color:var(--text-hint);font-size:11px">同IP</span>
+          <span style="color:var(--text-hint);font-size:11px">Same IP</span>
         </div>
       </div>
       <div style="background:#fff2f0;border:1px solid #ffccc7;border-radius:4px;padding:6px 8px;font-size:11px;color:#cf1322;margin-bottom:8px">
-        <strong>⚠</strong> 08:38–08:49 EDT 可疑窗口 · 3215450 反向操作
+        <strong>⚠</strong> 08:38–08:49 EDT Suspicious Window · 3215450 Reverse Trading
       </div>
       <canvas id="spread-canvas-alert" height="300" style="width:100%;display:block;border:1px solid var(--border);border-radius:4px"></canvas>
       <div style="display:flex;flex-wrap:wrap;gap:8px;font-size:11px;color:var(--text-hint);margin-top:6px;justify-content:center">
-        <span>● 买入</span><span>○ 卖出</span>
+        <span>● Buy</span><span>○ Sell</span>
         <span style="display:inline-flex;align-items:center;gap:3px"><span style="width:14px;height:2px;background:#ef4444;display:inline-block"></span>Hit time</span>
       </div>
     </div>
     <div class="tab-pane" id="inv-graph-alert" style="padding:12px 16px">
-      <div style="font-size:11px;color:var(--text-hint);background:#fafafa;border:1px solid var(--border);border-radius:4px;padding:5px 8px;margin-bottom:10px">Account 3215451 &nbsp;·&nbsp; 共 3 个关联账户</div>
+      <div style="font-size:11px;color:var(--text-hint);background:#fafafa;border:1px solid var(--border);border-radius:4px;padding:5px 8px;margin-bottom:10px">Account 3215451 &nbsp;·&nbsp; 3 Associated Accounts</div>
       <div style="display:flex;flex-wrap:wrap;gap:8px;margin-bottom:8px;font-size:11px;color:var(--text-hint)">
-        <span style="display:flex;align-items:center;gap:3px"><span style="width:9px;height:9px;border-radius:50%;background:#d97706;display:inline-block"></span>主体</span>
-        <span style="display:flex;align-items:center;gap:3px"><span style="width:9px;height:9px;border-radius:50%;background:#7c3aed;display:inline-block"></span>关联账户</span>
-        <span style="display:flex;align-items:center;gap:3px"><span style="width:9px;height:9px;border-radius:50%;background:#fff;border:1.5px solid #9ca3af;display:inline-block"></span>扩展</span>
-        <span style="margin-left:auto;color:var(--ai-color);cursor:pointer;font-size:11px" onclick="sendChip('查完整关联图谱')"><span class="ai-badge" style="font-size:10px">AI</span> 深度扩展</span>
+        <span style="display:flex;align-items:center;gap:3px"><span style="width:9px;height:9px;border-radius:50%;background:#d97706;display:inline-block"></span>Primary</span>
+        <span style="display:flex;align-items:center;gap:3px"><span style="width:9px;height:9px;border-radius:50%;background:#7c3aed;display:inline-block"></span>Associated</span>
+        <span style="display:flex;align-items:center;gap:3px"><span style="width:9px;height:9px;border-radius:50%;background:#fff;border:1.5px solid #9ca3af;display:inline-block"></span>Extended</span>
+        <span style="margin-left:auto;color:var(--ai-color);cursor:pointer;font-size:11px" onclick="sendChip('deep_expand')"><span class="ai-badge" style="font-size:10px">AI</span> Deep Expand</span>
       </div>
       <canvas id="assoc-canvas-alert" height="320" style="width:100%;display:block;border:1px solid var(--border);border-radius:4px"></canvas>
     </div>
@@ -970,8 +970,8 @@ tbody tr:hover td { background: #fffdf0; }
       <option>Processing</option><option>Escalated</option><option>Pending Review</option><option>Closed</option>
     </select>
     <span class="filter-label">Owner</span><input class="filter-input" style="width:90px">
-    <button class="btn btn-primary btn-sm">查询</button>
-    <button class="btn btn-sm" onclick="filterCaseTable('')">重置</button>
+    <button class="btn btn-primary btn-sm">Search</button>
+    <button class="btn btn-sm" onclick="filterCaseTable('')">Reset</button>
     <button class="btn btn-primary btn-sm" style="margin-left:auto">+ New Case</button>
   </div>
 
@@ -1040,7 +1040,7 @@ tbody tr:hover td { background: #fffdf0; }
     </table>
   </div>
   <div style="padding:10px 16px;background:#fff;border:1px solid var(--border);border-top:none;border-radius:0 0 6px 6px;font-size:12px;color:var(--text-hint);display:flex;justify-content:flex-end;gap:8px;">
-    <span>20 条/页</span><span>1 / 8</span>
+    <span>20 / page</span><span>1 / 8</span>
     <button class="btn btn-sm">‹</button><button class="btn btn-sm">›</button>
   </div>
 </div>
@@ -1051,7 +1051,7 @@ tbody tr:hover td { background: #fffdf0; }
 ══════════════════════════════════════════ -->
 <div class="page" id="page-case-details">
   <div class="breadcrumb"><a onclick="showPage('case-management')">Case Management</a> › TS_814</div>
-  <div class="page-actions"><button class="btn btn-sm" onclick="showPage('case-management')">← 返回</button></div>
+  <div class="page-actions"><button class="btn btn-sm" onclick="showPage('case-management')">← Back</button></div>
 
   <!-- Case Status Stepper -->
   <div class="status-stepper" id="case-stepper">
@@ -1101,21 +1101,21 @@ tbody tr:hover td { background: #fffdf0; }
   <!-- ✦ Investigation Notes ✦ -->
   <div class="notes-card">
     <div class="notes-head">
-      <div class="notes-title">📋 调查底稿 <span class="new-badge">NEW</span> <span style="font-size:11px;font-weight:400;color:#7c4a00aa;">· 可编辑</span></div>
-      <button class="btn-draft" onclick="fillDraft()">✦ AI 生成草稿</button>
+      <div class="notes-title">📋 Investigation Draft <span class="new-badge">NEW</span> <span style="font-size:11px;font-weight:400;color:#7c4a00aa;">· Editable</span></div>
+      <button class="btn-draft" onclick="fillDraft()">✦ AI Generate Draft</button>
     </div>
-    <textarea class="notes-textarea" id="draft-textarea" placeholder="在此处记录调查过程与结论..."></textarea>
+    <textarea class="notes-textarea" id="draft-textarea" placeholder="Record investigation process and conclusions here..."></textarea>
     <div class="notes-footer">
-      <span style="font-size:11px;color:var(--text-dis)" id="draft-status">尚未保存</span>
-      <button class="btn btn-primary btn-sm" onclick="saveDraft()">保存草稿</button>
-      <button class="btn btn-sm">导出</button>
+      <span style="font-size:11px;color:var(--text-dis)" id="draft-status">Unsaved</span>
+      <button class="btn btn-primary btn-sm" onclick="saveDraft()">Save Draft</button>
+      <button class="btn btn-sm">Export</button>
     </div>
   </div>
 
   <!-- Linked Alerts -->
   <div class="card">
-    <div class="section-title">关联 Alerts <span class="section-subtitle">8 条 · 全部 Closed</span>
-      <button class="btn btn-sm" style="margin-left:auto;font-size:11px">前往 Alert Viewer 关联</button>
+    <div class="section-title">Linked Alerts <span class="section-subtitle">8 Total · All Closed</span>
+      <button class="btn btn-sm" style="margin-left:auto;font-size:11px">Go to Alert Viewer to Link</button>
     </div>
     <table>
       <thead><tr><th>ID</th><th>Hit Time</th><th>Symbol</th><th>Rule Name</th><th>Status</th><th>Owner</th><th>Conclusion</th><th>Operation</th></tr></thead>
@@ -1143,7 +1143,7 @@ tbody tr:hover td { background: #fffdf0; }
     <div class="card-head">Investigation Tools <span class="new-badge">NEW</span></div>
     <div class="tab-bar">
       <div class="tab active" onclick="switchInvTab(this,'inv-spread-case','case','spread')">Spread Analysis</div>
-      <div class="tab" onclick="switchInvTab(this,'inv-graph-case','case','graph')">关联图谱</div>
+      <div class="tab" onclick="switchInvTab(this,'inv-graph-case','case','graph')">Association Graph</div>
     </div>
     <div class="tab-pane active" id="inv-spread-case" style="padding:12px 16px">
       <div style="font-size:11px;color:var(--text-hint);background:#fafafa;border:1px solid var(--border);border-radius:4px;padding:5px 8px;margin-bottom:10px">SPXW Option · Account 4183296 · Case TS_814</div>
@@ -1155,22 +1155,22 @@ tbody tr:hover td { background: #fffdf0; }
         <div style="display:flex;align-items:center;gap:4px">
           <span style="width:10px;height:10px;border-radius:50%;background:#7c3aed;display:inline-block"></span>
           4183297 <input type="checkbox" id="related-toggle-case" onchange="drawSpread('case')" style="margin-left:2px">
-          <span style="color:var(--text-hint);font-size:11px">同IP</span>
+          <span style="color:var(--text-hint);font-size:11px">Same IP</span>
         </div>
       </div>
       <canvas id="spread-canvas-case" height="300" style="width:100%;display:block;border:1px solid var(--border);border-radius:4px"></canvas>
       <div style="display:flex;flex-wrap:wrap;gap:8px;font-size:11px;color:var(--text-hint);margin-top:6px;justify-content:center">
-        <span>● 买入</span><span>○ 卖出</span>
+        <span>● Buy</span><span>○ Sell</span>
         <span style="display:inline-flex;align-items:center;gap:3px"><span style="width:14px;height:2px;background:#ef4444;display:inline-block"></span>Hit time</span>
       </div>
     </div>
     <div class="tab-pane" id="inv-graph-case" style="padding:12px 16px">
-      <div style="font-size:11px;color:var(--text-hint);background:#fafafa;border:1px solid var(--border);border-radius:4px;padding:5px 8px;margin-bottom:10px">Account 4183296 · Case TS_814 · 共 2 个关联账户</div>
+      <div style="font-size:11px;color:var(--text-hint);background:#fafafa;border:1px solid var(--border);border-radius:4px;padding:5px 8px;margin-bottom:10px">Account 4183296 · Case TS_814 · 2 Associated Accounts</div>
       <div style="display:flex;flex-wrap:wrap;gap:8px;margin-bottom:8px;font-size:11px;color:var(--text-hint)">
-        <span style="display:flex;align-items:center;gap:3px"><span style="width:9px;height:9px;border-radius:50%;background:#d97706;display:inline-block"></span>主体</span>
-        <span style="display:flex;align-items:center;gap:3px"><span style="width:9px;height:9px;border-radius:50%;background:#7c3aed;display:inline-block"></span>关联账户</span>
-        <span style="display:flex;align-items:center;gap:3px"><span style="width:9px;height:9px;border-radius:50%;background:#fff;border:1.5px solid #9ca3af;display:inline-block"></span>扩展</span>
-        <span style="margin-left:auto;color:var(--ai-color);cursor:pointer;font-size:11px"><span class="ai-badge" style="font-size:10px">AI</span> 深度扩展</span>
+        <span style="display:flex;align-items:center;gap:3px"><span style="width:9px;height:9px;border-radius:50%;background:#d97706;display:inline-block"></span>Primary</span>
+        <span style="display:flex;align-items:center;gap:3px"><span style="width:9px;height:9px;border-radius:50%;background:#7c3aed;display:inline-block"></span>Associated</span>
+        <span style="display:flex;align-items:center;gap:3px"><span style="width:9px;height:9px;border-radius:50%;background:#fff;border:1.5px solid #9ca3af;display:inline-block"></span>Extended</span>
+        <span style="margin-left:auto;color:var(--ai-color);cursor:pointer;font-size:11px"><span class="ai-badge" style="font-size:10px">AI</span> Deep Expand</span>
       </div>
       <canvas id="assoc-canvas-case" height="320" style="width:100%;display:block;border:1px solid var(--border);border-radius:4px"></canvas>
     </div>
@@ -1216,8 +1216,8 @@ tbody tr:hover td { background: #fffdf0; }
     <select class="filter-select" id="client-status-filter" onchange="filterClientTable(this.value)"><option value="">All</option><option>Detected</option><option>Investigating</option><option>Inquire</option><option>Report</option><option>Watchlist</option><option>Cleared</option><option>Restricted</option></select>
     <span class="filter-label" style="color:var(--ai-color);font-weight:500">AI Risk ≥</span>
     <select class="filter-select" style="width:64px;border-color:var(--ai-border)"><option>—</option><option>50</option><option>70</option><option>85</option></select>
-    <button class="btn btn-primary btn-sm">查询</button>
-    <button class="btn btn-sm">重置</button>
+    <button class="btn btn-primary btn-sm">Search</button>
+    <button class="btn btn-sm">Reset</button>
     <button class="btn btn-sm" style="margin-left:auto">Export</button>
   </div>
 
@@ -1230,7 +1230,7 @@ tbody tr:hover td { background: #fffdf0; }
         <tr>
           <th>Account ID</th><th>License</th><th>Registration</th>
           <th>Compliance Status</th><th>Total Alerts</th><th>Open Cases</th><th>Last Alert</th>
-          <th class="ai-col" style="color:var(--ai-dark)">AI 风险 <span class="tag tag-ai">AI</span></th>
+          <th class="ai-col" style="color:var(--ai-dark)">AI Risk <span class="tag tag-ai">AI</span></th>
           <th>Operation</th>
         </tr>
       </thead>
@@ -1288,7 +1288,7 @@ tbody tr:hover td { background: #fffdf0; }
     </table>
   </div>
   <div style="padding:10px 16px;background:#fff;border:1px solid var(--border);border-top:none;border-radius:0 0 6px 6px;font-size:12px;color:var(--text-hint);display:flex;justify-content:flex-end;gap:8px;">
-    <span>20 条/页</span><span>1 / 93</span>
+    <span>20 / page</span><span>1 / 93</span>
     <button class="btn btn-sm">‹</button><button class="btn btn-sm">›</button>
   </div>
 </div>
@@ -1352,106 +1352,106 @@ tbody tr:hover td { background: #fffdf0; }
   <!-- AI Portrait + Lifecycle -->
   <div class="profile-section">
 
-    <!-- AI 风险画像 -->
+    <!-- AI Customer Risk Profile -->
     <div class="ai-card" style="margin-bottom:0">
       <div class="ai-card-head">
-        <div class="ai-card-title"><span class="ai-badge">AI</span> 客户风险画像</div>
-        <span style="font-size:11px;color:var(--text-dis)">更新于 2026-04-07</span>
+        <div class="ai-card-title"><span class="ai-badge">AI</span> Customer Risk Profile</div>
+        <span style="font-size:11px;color:var(--text-dis)">Updated 2026-04-07</span>
       </div>
       <div class="ai-card-body">
         <!-- Score -->
         <div style="display:flex;align-items:flex-end;gap:12px;margin-bottom:12px;padding-bottom:12px;border-bottom:1px solid #e9d8fd;">
           <div>
             <div class="ai-score-big high">82</div>
-            <div style="font-size:11px;color:var(--text-hint);margin-top:2px;">综合风险评分</div>
+            <div style="font-size:11px;color:var(--text-hint);margin-top:2px;">Composite Risk Score</div>
           </div>
           <div style="flex:1">
             <div class="gauge-wrap"><div class="gauge-fill high" style="width:82%"></div></div>
-            <div style="font-size:11px;color:var(--text-hint);">置信度 74% · <span style="color:#cf1322">High Risk</span></div>
+            <div style="font-size:11px;color:var(--text-hint);">Confidence 74% · <span style="color:#cf1322">High Risk</span></div>
           </div>
         </div>
         <!-- Dimensions -->
-        <div class="ai-evidence-title" style="margin-bottom:8px;">风险维度分解</div>
-        <div class="dim-row"><span class="dim-label">交易行为异常度</span><div style="flex:1;margin:0 8px"><div class="gauge-wrap"><div class="gauge-fill high" style="width:88%"></div></div></div><span class="dim-score" style="color:#cf1322">88</span></div>
-        <div class="dim-row"><span class="dim-label">账户关联网络风险</span><div style="flex:1;margin:0 8px"><div class="gauge-wrap"><div class="gauge-fill high" style="width:75%"></div></div></div><span class="dim-score" style="color:#d46b08">75</span></div>
-        <div class="dim-row"><span class="dim-label">历史违规倾向</span><div style="flex:1;margin:0 8px"><div class="gauge-wrap"><div class="gauge-fill medium" style="width:62%"></div></div></div><span class="dim-score" style="color:#d46b08">62</span></div>
-        <div class="dim-row"><span class="dim-label">资金流动异常</span><div style="flex:1;margin:0 8px"><div class="gauge-wrap"><div class="gauge-fill low" style="width:35%"></div></div></div><span class="dim-score" style="color:#389e0d">35</span></div>
+        <div class="ai-evidence-title" style="margin-bottom:8px;">Risk Dimension Breakdown</div>
+        <div class="dim-row"><span class="dim-label">Trading Behavior Anomaly</span><div style="flex:1;margin:0 8px"><div class="gauge-wrap"><div class="gauge-fill high" style="width:88%"></div></div></div><span class="dim-score" style="color:#cf1322">88</span></div>
+        <div class="dim-row"><span class="dim-label">Account Network Risk</span><div style="flex:1;margin:0 8px"><div class="gauge-wrap"><div class="gauge-fill high" style="width:75%"></div></div></div><span class="dim-score" style="color:#d46b08">75</span></div>
+        <div class="dim-row"><span class="dim-label">Historical Violation Tendency</span><div style="flex:1;margin:0 8px"><div class="gauge-wrap"><div class="gauge-fill medium" style="width:62%"></div></div></div><span class="dim-score" style="color:#d46b08">62</span></div>
+        <div class="dim-row"><span class="dim-label">Fund Flow Anomaly</span><div style="flex:1;margin:0 8px"><div class="gauge-wrap"><div class="gauge-fill low" style="width:35%"></div></div></div><span class="dim-score" style="color:#389e0d">35</span></div>
         <div class="divider"></div>
         <!-- Behavior tags -->
-        <div class="ai-evidence-title" style="margin-bottom:6px;">行为特征标签</div>
+        <div class="ai-evidence-title" style="margin-bottom:6px;">Behavior Tags</div>
         <div style="display:flex;flex-wrap:wrap;gap:4px;margin-bottom:12px;">
-          <span class="tag tag-high">短期频繁开平仓</span>
-          <span class="tag tag-medium">期权集中交易</span>
-          <span class="tag tag-ai">关联账户活跃</span>
-          <span class="tag tag-low">出入金正常</span>
-          <span class="tag tag-medium">日内波段操作</span>
+          <span class="tag tag-high">Frequent Short-term Trading</span>
+          <span class="tag tag-medium">Concentrated Options Activity</span>
+          <span class="tag tag-ai">Associated Accounts Active</span>
+          <span class="tag tag-low">Normal Fund Flows</span>
+          <span class="tag tag-medium">Intraday Swing Trading</span>
         </div>
         <!-- Key observations -->
         <div class="ai-evidence">
-          <div class="ai-evidence-title">关键风险观察</div>
+          <div class="ai-evidence-title">Key Risk Observations</div>
           <ul>
-            <li>账户自 2025 年 Q4 起交易频率明显上升，尤其集中于临近到期的 SPXW 期权。</li>
-            <li>同 IP 关联账户在多次 Alert 触发时存在同步反向操作，构成对手方嫌疑。</li>
-            <li>近 6 个月内有 1 次 Further Action 历史记录（Case TS_798），当前无主动披露。</li>
+            <li>Trading frequency has risen significantly since Q4 2025, concentrated on near-expiry SPXW options.</li>
+            <li>Same-IP associated accounts showed synchronized reverse trading on multiple alert trigger dates, suggesting potential counterparty activity.</li>
+            <li>1 historical Further Action record in the past 6 months (Case TS_798); no active disclosure on file.</li>
           </ul>
         </div>
         <div style="display:flex;gap:6px;">
-          <button class="btn btn-ai btn-sm" onclick="sendChipClient('查完整关联图谱')">查关联图谱</button>
-          <button class="btn btn-ai btn-sm" onclick="sendChipClient('分析资金流向')">分析资金流向</button>
-          <button class="btn btn-ai btn-sm" onclick="sendChipClient('对比同类客户')">对比同类客户</button>
+          <button class="btn btn-ai btn-sm" onclick="sendChipClient('assoc_graph')">Association Graph</button>
+          <button class="btn btn-ai btn-sm" onclick="sendChipClient('fund_flow')">Fund Flow Analysis</button>
+          <button class="btn btn-ai btn-sm" onclick="sendChipClient('compare_clients')">Compare Similar Clients</button>
         </div>
       </div>
     </div>
 
-    <!-- 生命周期 -->
+    <!-- Lifecycle -->
     <div class="card" style="margin-bottom:0">
       <div class="card-head">
-        🕐 客户风险生命周期
-        <span style="font-size:11px;font-weight:400;color:var(--text-hint);margin-left:4px">共 7 个事件</span>
+        🕐 Client Risk Lifecycle
+        <span style="font-size:11px;font-weight:400;color:var(--text-hint);margin-left:4px">7 Events Total</span>
       </div>
       <div style="padding:16px;">
         <div class="timeline">
           <div class="tl-item">
             <div class="tl-dot gray"></div>
             <div class="tl-date">2023-08-12</div>
-            <div class="tl-title">账户注册</div>
-            <div class="tl-desc">TBNZ 牌照，个人投资者</div>
+            <div class="tl-title">Account Registered</div>
+            <div class="tl-desc">TBNZ License, Individual Investor</div>
           </div>
           <div class="tl-item">
             <div class="tl-dot yellow"></div>
             <div class="tl-date">2025-08-03</div>
-            <div class="tl-title">首次触发 Alert</div>
-            <div class="tl-desc">规则：possible ramping (without tick data)，状态 Processing → Cleared</div>
+            <div class="tl-title">First Alert Triggered</div>
+            <div class="tl-desc">Rule: possible ramping (without tick data), Status Processing → Cleared</div>
           </div>
           <div class="tl-item">
             <div class="tl-dot red"></div>
             <div class="tl-date">2025-11-02</div>
-            <div class="tl-title">Case TS_798 立案</div>
-            <div class="tl-desc">涉及 possible wash trade，由 mayimeng 负责调查</div>
+            <div class="tl-title">Case TS_798 Opened</div>
+            <div class="tl-desc">Involving possible wash trade, assigned to mayimeng for investigation</div>
           </div>
           <div class="tl-item">
             <div class="tl-dot green"></div>
             <div class="tl-date">2025-11-28</div>
-            <div class="tl-title">Case TS_798 结案</div>
-            <div class="tl-desc">结论：Further Action，已上报监管</div>
+            <div class="tl-title">Case TS_798 Closed</div>
+            <div class="tl-desc">Conclusion: Further Action, reported to regulator</div>
           </div>
           <div class="tl-item">
             <div class="tl-dot yellow"></div>
             <div class="tl-date">2025-12-02</div>
-            <div class="tl-title">加入 Watchlist</div>
-            <div class="tl-desc">风险级别：Medium，到期日：2026-06-02，由 houyuexuan 添加</div>
+            <div class="tl-title">Added to Watchlist</div>
+            <div class="tl-desc">Risk Level: Medium, Expiry: 2026-06-02, Added by houyuexuan</div>
           </div>
           <div class="tl-item">
             <div class="tl-dot yellow"></div>
             <div class="tl-date">2025-12-18</div>
-            <div class="tl-title">Alert 19149230 触发</div>
+            <div class="tl-title">Alert 19149230 Triggered</div>
             <div class="tl-desc">pre-arranged trading → Processing → Cleared</div>
           </div>
           <div class="tl-item">
             <div class="tl-dot red"></div>
-            <div class="tl-date">2026-04-07 <span style="background:var(--primary);color:rgba(0,0,0,.85);font-size:10px;padding:1px 5px;border-radius:3px;margin-left:4px">今日</span></div>
-            <div class="tl-title">Alert 19150109 触发（当前）</div>
-            <div class="tl-desc">pre-arranged trading (Profit) · AI 评分 82 · 建议 Escalate · 处理中</div>
+            <div class="tl-date">2026-04-07 <span style="background:var(--primary);color:rgba(0,0,0,.85);font-size:10px;padding:1px 5px;border-radius:3px;margin-left:4px">Today</span></div>
+            <div class="tl-title">Alert 19150109 Triggered (Current)</div>
+            <div class="tl-desc">pre-arranged trading (Profit) · AI Score 82 · Recommend Escalate · Processing</div>
           </div>
         </div>
       </div>
@@ -1461,13 +1461,13 @@ tbody tr:hover td { background: #fffdf0; }
   <!-- Tabs: Alert History / Watchlist / Inquiries -->
   <div class="card" style="margin-top:12px">
     <div class="tab-bar">
-      <div class="tab active" onclick="switchTab(this,'ct-alerts')">Alert 历史 <span style="background:#fff2f0;color:#cf1322;border:1px solid #ffa39e;border-radius:10px;padding:0 5px;font-size:10px;margin-left:3px">4</span></div>
-      <div class="tab" onclick="switchTab(this,'ct-watchlist')">Watchlist 记录</div>
-      <div class="tab" onclick="switchTab(this,'ct-inquiry')">问询记录</div>
+      <div class="tab active" onclick="switchTab(this,'ct-alerts')">Alert History <span style="background:#fff2f0;color:#cf1322;border:1px solid #ffa39e;border-radius:10px;padding:0 5px;font-size:10px;margin-left:3px">4</span></div>
+      <div class="tab" onclick="switchTab(this,'ct-watchlist')">Watchlist Records</div>
+      <div class="tab" onclick="switchTab(this,'ct-inquiry')">Inquiry Records</div>
     </div>
     <div class="tab-pane active" id="ct-alerts">
       <table>
-        <thead><tr><th>Alert ID</th><th>Hit Time</th><th>Symbol</th><th>Rule</th><th>Status</th><th>Conclusion</th><th class="ai-col" style="color:var(--ai-dark)">AI 评分</th><th>Case</th></tr></thead>
+        <thead><tr><th>Alert ID</th><th>Hit Time</th><th>Symbol</th><th>Rule</th><th>Status</th><th>Conclusion</th><th class="ai-col" style="color:var(--ai-dark)">AI Score</th><th>Case</th></tr></thead>
         <tbody>
           <tr><td class="col-link" onclick="showPage('alert-details')">19150109</td><td>2026-04-07</td><td>SPXW 20260406 6615.0 C</td><td>pre-arranged trading (Profit)</td><td><span class="tag tag-processing">Processing</span></td><td>—</td><td style="background:#fffdf0"><span class="ai-score ai-score-high">82</span></td><td>—</td></tr>
           <tr><td class="col-link">19149230</td><td>2025-12-18</td><td>SPXW 20251217 5800.0 C</td><td>pre-arranged trading (Profit)</td><td><span class="tag tag-closed">Closed</span></td><td><span class="tag tag-cleared">Cleared</span></td><td style="background:#fffdf0"><span class="ai-score ai-score-mid">51</span></td><td>—</td></tr>
@@ -1481,7 +1481,7 @@ tbody tr:hover td { background: #fffdf0; }
         <!-- Watchlist Config Card -->
         <div class="wl-card">
           <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px;">
-            <div style="font-weight:600;font-size:13px">Watchlist 配置</div>
+            <div style="font-weight:600;font-size:13px">Watchlist Configuration</div>
             <div style="display:flex;gap:6px;align-items:center">
               <span class="tag tag-medium">Medium Risk</span>
               <span class="tag tag-watchlist">Monitoring</span>
@@ -1496,22 +1496,22 @@ tbody tr:hover td { background: #fffdf0; }
             <div><div style="font-size:11px;color:var(--text-hint);margin-bottom:2px">Frequency</div><div style="font-size:12px">Monthly review</div></div>
           </div>
           <div class="wl-rules">
-            <div class="wl-rules-label">监控规则</div>
+            <div class="wl-rules-label">Monitoring Rules</div>
             <span class="wl-rule-tag">pre-arranged trading (Profit)</span>
             <span class="wl-rule-tag">possible wash trade (A to A)</span>
             <span class="wl-rule-tag">possible ramping</span>
             <span class="wl-rule-tag">large position accumulation</span>
           </div>
           <div style="margin-top:10px;padding-top:10px;border-top:1px solid #ffe58f;">
-            <div style="font-size:11px;color:var(--text-hint);margin-bottom:4px">加入原因 / Checkpoint</div>
-            <div style="font-size:12px;color:var(--text-base)">Case TS_798 结案结论为 Further Action，已上报 TBNZ 监管。根据内部规程，后续 6 个月内持续监控账户交易行为，若再次触发高置信度 Alert 则升级调查。</div>
+            <div style="font-size:11px;color:var(--text-hint);margin-bottom:4px">Reason / Checkpoint</div>
+            <div style="font-size:12px;color:var(--text-base)">Case TS_798 closed with a Further Action conclusion, reported to TBNZ regulator. Per internal procedure, account trading activity will be monitored for 6 months; any high-confidence alert re-trigger will escalate to a full investigation.</div>
           </div>
         </div>
 
         <!-- Triggered Alerts while on Watchlist -->
-        <div style="font-size:12px;color:var(--text-hint);margin-bottom:6px">Watchlist 期间触发的 Alerts</div>
+        <div style="font-size:12px;color:var(--text-hint);margin-bottom:6px">Alerts Triggered During Watchlist Period</div>
         <table>
-          <thead><tr><th>Alert ID</th><th>Hit Time</th><th>Symbol</th><th>Rule</th><th>Status</th><th class="ai-col" style="color:var(--ai-dark)">AI 评分</th></tr></thead>
+          <thead><tr><th>Alert ID</th><th>Hit Time</th><th>Symbol</th><th>Rule</th><th>Status</th><th class="ai-col" style="color:var(--ai-dark)">AI Score</th></tr></thead>
           <tbody>
             <tr>
               <td class="col-link" onclick="showPage('alert-details')">19150109</td>
@@ -1534,7 +1534,7 @@ tbody tr:hover td { background: #fffdf0; }
       </div>
     </div>
     <div class="tab-pane" id="ct-inquiry">
-      <div class="empty">暂无问询记录</div>
+      <div class="empty">No inquiry records</div>
     </div>
   </div>
 
@@ -1543,10 +1543,10 @@ tbody tr:hover td { background: #fffdf0; }
     <div class="card-head">Investigation Tools <span class="new-badge">NEW</span></div>
     <div class="tab-bar">
       <div class="tab active" onclick="switchInvTab(this,'inv-spread-client','client','spread')">Spread Analysis</div>
-      <div class="tab" onclick="switchInvTab(this,'inv-graph-client','client','graph')">关联图谱</div>
+      <div class="tab" onclick="switchInvTab(this,'inv-graph-client','client','graph')">Association Graph</div>
     </div>
     <div class="tab-pane active" id="inv-spread-client" style="padding:12px 16px">
-      <div style="font-size:11px;color:var(--text-hint);background:#fafafa;border:1px solid var(--border);border-radius:4px;padding:5px 8px;margin-bottom:10px">Account 3215451 · 最近活跃 SPXW 20260406 6615.0 C</div>
+      <div style="font-size:11px;color:var(--text-hint);background:#fafafa;border:1px solid var(--border);border-radius:4px;padding:5px 8px;margin-bottom:10px">Account 3215451 · Recently Active: SPXW 20260406 6615.0 C</div>
       <div style="display:flex;flex-wrap:wrap;gap:8px;margin-bottom:8px;font-size:12px">
         <div style="display:flex;align-items:center;gap:4px">
           <span style="width:10px;height:10px;border-radius:50%;background:#d97706;display:inline-block"></span>
@@ -1555,25 +1555,25 @@ tbody tr:hover td { background: #fffdf0; }
         <div style="display:flex;align-items:center;gap:4px">
           <span style="width:10px;height:10px;border-radius:50%;background:#7c3aed;display:inline-block"></span>
           3215450 <input type="checkbox" id="related-toggle-client" onchange="drawSpread('client')" style="margin-left:2px">
-          <span style="color:var(--text-hint);font-size:11px">同IP</span>
+          <span style="color:var(--text-hint);font-size:11px">Same IP</span>
         </div>
       </div>
       <div style="background:#fff2f0;border:1px solid #ffccc7;border-radius:4px;padding:6px 8px;font-size:11px;color:#cf1322;margin-bottom:8px">
-        <strong>⚠</strong> 08:38–08:49 EDT 可疑窗口 · 3215450 反向操作
+        <strong>⚠</strong> 08:38–08:49 EDT Suspicious Window · 3215450 Reverse Trading
       </div>
       <canvas id="spread-canvas-client" height="300" style="width:100%;display:block;border:1px solid var(--border);border-radius:4px"></canvas>
       <div style="display:flex;flex-wrap:wrap;gap:8px;font-size:11px;color:var(--text-hint);margin-top:6px;justify-content:center">
-        <span>● 买入</span><span>○ 卖出</span>
+        <span>● Buy</span><span>○ Sell</span>
         <span style="display:inline-flex;align-items:center;gap:3px"><span style="width:14px;height:2px;background:#ef4444;display:inline-block"></span>Hit time</span>
       </div>
     </div>
     <div class="tab-pane" id="inv-graph-client" style="padding:12px 16px">
-      <div style="font-size:11px;color:var(--text-hint);background:#fafafa;border:1px solid var(--border);border-radius:4px;padding:5px 8px;margin-bottom:10px">Account 3215451 &nbsp;·&nbsp; 共 3 个关联账户</div>
+      <div style="font-size:11px;color:var(--text-hint);background:#fafafa;border:1px solid var(--border);border-radius:4px;padding:5px 8px;margin-bottom:10px">Account 3215451 &nbsp;·&nbsp; 3 Associated Accounts</div>
       <div style="display:flex;flex-wrap:wrap;gap:8px;margin-bottom:8px;font-size:11px;color:var(--text-hint)">
-        <span style="display:flex;align-items:center;gap:3px"><span style="width:9px;height:9px;border-radius:50%;background:#d97706;display:inline-block"></span>主体</span>
-        <span style="display:flex;align-items:center;gap:3px"><span style="width:9px;height:9px;border-radius:50%;background:#7c3aed;display:inline-block"></span>关联账户</span>
-        <span style="display:flex;align-items:center;gap:3px"><span style="width:9px;height:9px;border-radius:50%;background:#fff;border:1.5px solid #9ca3af;display:inline-block"></span>扩展</span>
-        <span style="margin-left:auto;color:var(--ai-color);cursor:pointer;font-size:11px" onclick="sendChipClient('查完整关联图谱')"><span class="ai-badge" style="font-size:10px">AI</span> 深度扩展</span>
+        <span style="display:flex;align-items:center;gap:3px"><span style="width:9px;height:9px;border-radius:50%;background:#d97706;display:inline-block"></span>Primary</span>
+        <span style="display:flex;align-items:center;gap:3px"><span style="width:9px;height:9px;border-radius:50%;background:#7c3aed;display:inline-block"></span>Associated</span>
+        <span style="display:flex;align-items:center;gap:3px"><span style="width:9px;height:9px;border-radius:50%;background:#fff;border:1.5px solid #9ca3af;display:inline-block"></span>Extended</span>
+        <span style="margin-left:auto;color:var(--ai-color);cursor:pointer;font-size:11px" onclick="sendChipClient('assoc_graph')"><span class="ai-badge" style="font-size:10px">AI</span> Deep Expand</span>
       </div>
       <canvas id="assoc-canvas-client" height="320" style="width:100%;display:block;border:1px solid var(--border);border-radius:4px"></canvas>
     </div>
@@ -1597,7 +1597,7 @@ tbody tr:hover td { background: #fffdf0; }
     <select class="filter-select"><option>All</option><option>Enable</option><option>Disable</option></select>
     <button class="btn btn-primary btn-sm">Search</button>
     <button class="btn btn-sm">Reset</button>
-    <button class="btn btn-primary btn-sm" style="margin-left:auto">+ Add Rule</button>
+    <button class="btn btn-primary btn-sm" style="margin-left:auto" onclick="openAddRuleModal()">+ Add Rule</button>
   </div>
 
   <div class="table-bar"><span><strong>7</strong> rules in total</span></div>
@@ -1719,7 +1719,7 @@ tbody tr:hover td { background: #fffdf0; }
     </table>
   </div>
   <div style="padding:10px 16px;background:#fff;border:1px solid var(--border);border-top:none;border-radius:0 0 6px 6px;font-size:12px;color:var(--text-hint);display:flex;justify-content:flex-end;gap:8px;">
-    <span>20 条/页</span><span>1 / 1</span>
+    <span>20 / page</span><span>1 / 1</span>
     <button class="btn btn-sm">‹</button><button class="btn btn-sm">›</button>
   </div>
 </div>
@@ -1840,7 +1840,7 @@ tbody tr:hover td { background: #fffdf0; }
         <input type="date" class="filter-input" value="2026-04-09" style="width:120px">
         <span style="font-size:12px;color:var(--text-hint)">30 days</span>
         <div style="flex:1"></div>
-        <span id="ab-status-label" style="font-size:11px;color:var(--text-hint)">Version B 参数尚未修改</span>
+        <span id="ab-status-label" style="font-size:11px;color:var(--text-hint)">Version B parameters not yet modified</span>
         <button class="btn btn-primary btn-sm" id="ab-run-btn" onclick="runABTest()">▶ Run A/B Test</button>
       </div>
 
@@ -2398,11 +2398,11 @@ function drawAssocGraph(suffix) {
 
   // Node definitions
   const nodes = [
-    { id:'3215451', sub:'主体 · AI 82 · Alert', x:W*0.5,  y:H*0.5,  r:32, bg:'#d97706', fg:'#fff', alert:true  },
-    { id:'3215450', sub:'同IP · 反向交易',       x:W*0.2,  y:H*0.25, r:26, bg:'#7c3aed', fg:'#fff', alert:false },
-    { id:'3215452', sub:'同IP · 注册相近',       x:W*0.78, y:H*0.25, r:22, bg:'#7c3aed', fg:'#fff', alert:false },
-    { id:'5509871', sub:'同设备',               x:W*0.15, y:H*0.78, r:19, bg:'#fff',    fg:'#9ca3af', border:'#9ca3af', alert:false },
-    { id:'6614220', sub:'同IP',                 x:W*0.82, y:H*0.75, r:17, bg:'#fff',    fg:'#9ca3af', border:'#9ca3af', alert:false },
+    { id:'3215451', sub:'Primary · AI 82 · Alert', x:W*0.5,  y:H*0.5,  r:32, bg:'#d97706', fg:'#fff', alert:true  },
+    { id:'3215450', sub:'Same IP · Reverse Trade', x:W*0.2,  y:H*0.25, r:26, bg:'#7c3aed', fg:'#fff', alert:false },
+    { id:'3215452', sub:'Same IP · Close Reg.',    x:W*0.78, y:H*0.25, r:22, bg:'#7c3aed', fg:'#fff', alert:false },
+    { id:'5509871', sub:'Same Device',             x:W*0.15, y:H*0.78, r:19, bg:'#fff',    fg:'#9ca3af', border:'#9ca3af', alert:false },
+    { id:'6614220', sub:'Same IP',                 x:W*0.82, y:H*0.75, r:17, bg:'#fff',    fg:'#9ca3af', border:'#9ca3af', alert:false },
   ];
 
   const edges = [
@@ -2471,14 +2471,14 @@ let askOpen = false;
 function toggleAsk() {
   askOpen = !askOpen;
   document.getElementById('ask-ai-panel').classList.toggle('open', askOpen);
-  document.getElementById('ask-toggle-label').textContent = askOpen ? '收起 ↑' : '追问 AI ↓';
+  document.getElementById('ask-toggle-label').textContent = askOpen ? 'Collapse ↑' : 'Ask AI ↓';
 }
 const AI_REPLIES = {
-  '查关联账户': '发现 2 个同 IP 关联账户：<br>• <strong>3215450</strong>：同日 SPXW 反向卖出，成交量 12，PnL −240<br>• <strong>3215452</strong>：同日买入方向，注册距本账户 3 天<br>建议重点核查 3215450 是否为对手方。',
-  '查历史 Alert': '账户 3215451 近 6 个月触发 Alert <strong>3 次</strong>：<br>• 19149230（2025-12-18）→ Cleared<br>• 19147810（2025-11-02）→ Case TS_798 → Further Action<br>• 19150109（2026-04-07）→ 当前处理中<br>历史有持续性风险信号。',
-  '对比同类案例': '相似度 ≥ 80% 的历史案例共 <strong>4 例</strong>：<br>• TS_798（本账户）：同标的 SPXW → Further Action<br>• TS_781（2987631）：同规则 8 日集中操作 → Cleared<br>• TS_756（4412089）：跨账户反向 → 监管上报<br>建议参考 TS_798 处置路径。',
-  '重新评估风险': '纳入关联账户信息后，评分更新：<br>原评分 <strong>82</strong> → <strong>88</strong>（置信度 81%）<br>关联账户 3215450 反向交易模式确认，异常度权重上调。<br>建议维持 <strong>Escalate</strong>。',
-  'default': '已理解你的问题，正在查询相关数据…<br><em>（Static prototype — 接入 TS-AI 后返回真实结果）</em>'
+  'associated_accounts': 'Found 2 same-IP associated accounts:<br>• <strong>3215450</strong>: Same-day SPXW reverse sell, volume 12, PnL −240<br>• <strong>3215452</strong>: Same-day buy direction, registered 3 days after this account<br>Recommend prioritizing review of 3215450 as potential counterparty.',
+  'alert_history': 'Account 3215451 triggered <strong>3 alerts</strong> in the past 6 months:<br>• 19149230 (2025-12-18) → Cleared<br>• 19147810 (2025-11-02) → Case TS_798 → Further Action<br>• 19150109 (2026-04-07) → Currently Processing<br>Persistent risk signals in history.',
+  'compare_cases': '<strong>4 historical cases</strong> with ≥ 80% similarity:<br>• TS_798 (this account): Same instrument SPXW → Further Action<br>• TS_781 (2987631): Same rule, 8-day concentrated activity → Cleared<br>• TS_756 (4412089): Cross-account reverse trading → Reported to regulator<br>Recommend referencing TS_798 disposition approach.',
+  're_evaluate': 'Updated score after incorporating associated account data:<br>Original score <strong>82</strong> → <strong>88</strong> (Confidence 81%)<br>Reverse trading pattern of 3215450 confirmed; anomaly weight increased.<br>Recommendation: maintain <strong>Escalate</strong>.',
+  'default': 'Understood. Querying relevant data…<br><em>(Static prototype — live results available after TS-AI integration)</em>'
 };
 function sendMsg() {
   const input = document.getElementById('ask-input');
@@ -2488,7 +2488,7 @@ function sendMsg() {
   sendChip(text);
 }
 function sendChip(text) {
-  if (!askOpen) { askOpen = true; document.getElementById('ask-ai-panel').classList.add('open'); document.getElementById('ask-toggle-label').textContent = '收起 ↑'; }
+  if (!askOpen) { askOpen = true; document.getElementById('ask-ai-panel').classList.add('open'); document.getElementById('ask-toggle-label').textContent = 'Collapse ↑'; }
   appendMsg('ai-messages', text, 'user');
   setTimeout(() => appendMsg('ai-messages', AI_REPLIES[text] || AI_REPLIES['default'], 'bot'), 600);
 }
@@ -2503,25 +2503,25 @@ function appendMsg(containerId, text, role) {
 
 // ── Client AI query (placeholder) ──
 function sendChipClient(text) {
-  alert('TS-AI 正在处理查询：「' + text + '」\n\n（Static prototype — 接入后将展示真实结果）');
+  alert('TS-AI is processing query: "' + text + '"\n\n(Static prototype — live results available after integration)');
 }
 
 // ── Investigation Draft ──
-const DRAFT_TEXT = `【调查底稿 · AI 草稿 · 待人工核对】
+const DRAFT_TEXT = `[Investigation Draft · AI Draft · Pending Manual Review]
 
-一、案件概述
-本案账户 4183296 于 2025 年 5 月 10 日至 2025 年 7 月 14 日期间，对多支 SPXW 期权合约进行交易，累计触发 pre-arranged trading (Profit) 类规则共 8 次。案件编号 TS_814，由合规人员 mayimeng 负责处置。
+I. Case Overview
+Account 4183296 traded multiple SPXW option contracts between May 10, 2025 and July 14, 2025, triggering the pre-arranged trading (Profit) rule a total of 8 times. Case number TS_814, assigned to compliance officer mayimeng for disposition.
 
-二、交易行为分析
-账户交易模式表现为短期日内波段操作，买入后通常于同日或次日平仓，整体方向以看涨期权为主。订单执行价格与市场价格偏差未见明显异常，未发现显著的价格冲击行为。涉案交易日市场活跃度正常，同期标的价格波动在合理范围内。
+II. Trading Behavior Analysis
+The account's trading pattern reflects short-term intraday swing activity, with positions typically closed on the same or next day, predominantly in call options. Order execution prices showed no significant deviation from prevailing market prices, and no material price impact behavior was identified. Market activity on the flagged trading dates was normal, and the underlying price movement was within a reasonable range.
 
-三、关联账户核查
-Inquire 查询显示同 IP 及同设备关联账户共 2 个，未发现明确的对手方交易模式，亦无反向开平仓记录。
+III. Associated Account Review
+Inquiry results show 2 accounts sharing the same IP or device. No clear counterparty trading pattern was identified and no reverse open/close records were found.
 
-四、结论与建议
-综合以上分析，本次交易行为属于正常短线投机操作，未发现涉嫌预谋或共谋的证据。建议结案，结论为：No Further Action。
+IV. Conclusion and Recommendation
+Based on the above analysis, the trading activity reflects normal short-term speculative behavior, with no evidence of premeditation or collusion. Recommend closing the case with conclusion: No Further Action.
 
-※ 本草稿由 TS-AI 根据系统数据自动生成，请合规人员核对后修改确认。`;
+* This draft was automatically generated by TS-AI based on system data. Please review, amend, and confirm before finalizing.`;
 
 function fillDraft() {
   const ta = document.getElementById('draft-textarea');
@@ -2530,11 +2530,11 @@ function fillDraft() {
   const iv = setInterval(() => {
     ta.value += DRAFT_TEXT[i++];
     ta.scrollTop = ta.scrollHeight;
-    if (i >= DRAFT_TEXT.length) { clearInterval(iv); document.getElementById('draft-status').textContent = '草稿已生成，待确认'; }
+    if (i >= DRAFT_TEXT.length) { clearInterval(iv); document.getElementById('draft-status').textContent = 'Draft generated, pending review'; }
   }, 8);
 }
 function saveDraft() {
-  document.getElementById('draft-status').textContent = '已保存 · ' + new Date().toLocaleTimeString('zh-CN');
+  document.getElementById('draft-status').textContent = 'Saved · ' + new Date().toLocaleTimeString('en-US');
 }
 
 window.addEventListener('load', () => { setTimeout(drawDashTrend, 50); setTimeout(drawAccuracyTrend, 80); });
@@ -2558,7 +2558,7 @@ function markChanged(input, originalVal) {
   const label = document.getElementById('ab-status-label');
   if (label) label.textContent = hasChanges
     ? `${document.querySelectorAll('#rd-ab .param-input.changed').length} parameter(s) modified`
-    : 'Version B 参数尚未修改';
+    : 'Version B parameters not yet modified';
 }
 
 function setStepperStatus(stepperId, idx) {
@@ -2629,7 +2629,7 @@ function submitWLModal() {
   closeWLModal();
   // Show a brief confirmation toast
   const t = document.createElement('div');
-  t.textContent = `账户 ${id} 已加入 Watchlist`;
+  t.textContent = `Account ${id} added to Watchlist`;
   Object.assign(t.style, {
     position:'fixed', bottom:'28px', left:'50%', transform:'translateX(-50%)',
     background:'rgba(0,0,0,.75)', color:'#fff', padding:'8px 18px',
@@ -2662,7 +2662,7 @@ function submitWLModal() {
         </div>
         <div>
           <div style="color:#555;margin-bottom:4px;font-size:12px">Symbol</div>
-          <input class="filter-input" style="width:100%;box-sizing:border-box" placeholder="e.g. SPXW, AAPL (留空=全部)">
+          <input class="filter-input" style="width:100%;box-sizing:border-box" placeholder="e.g. SPXW, AAPL (leave blank = all)">
         </div>
       </div>
 
@@ -2696,11 +2696,11 @@ function submitWLModal() {
       <!-- Row 4: Frequency + Threshold -->
       <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px">
         <div>
-          <div style="color:#555;margin-bottom:4px;font-size:12px">Monitoring Frequency <span style="font-size:11px;color:var(--text-hint)">(次/月)</span></div>
+          <div style="color:#555;margin-bottom:4px;font-size:12px">Monitoring Frequency <span style="font-size:11px;color:var(--text-hint)">(times/month)</span></div>
           <input type="number" class="filter-input" style="width:100%;box-sizing:border-box" value="1" min="1">
         </div>
         <div>
-          <div style="color:#555;margin-bottom:4px;font-size:12px">Monitoring Threshold <span style="font-size:11px;color:var(--text-hint)">(触发次数)</span></div>
+          <div style="color:#555;margin-bottom:4px;font-size:12px">Monitoring Threshold <span style="font-size:11px;color:var(--text-hint)">(trigger count)</span></div>
           <input type="number" class="filter-input" style="width:100%;box-sizing:border-box" value="1" min="1">
         </div>
       </div>
@@ -2739,7 +2739,7 @@ function submitWLModal() {
       <!-- Comment -->
       <div>
         <div style="color:#555;margin-bottom:4px;font-size:12px">Reason / Comment</div>
-        <textarea id="wl-modal-reason" style="width:100%;box-sizing:border-box;height:68px;border:1px solid #d9d9d9;border-radius:4px;padding:7px 10px;font-size:12px;resize:vertical;font-family:inherit;color:rgba(0,0,0,.88)" placeholder="描述加入 Watchlist 的原因及后续检查要点..."></textarea>
+        <textarea id="wl-modal-reason" style="width:100%;box-sizing:border-box;height:68px;border:1px solid #d9d9d9;border-radius:4px;padding:7px 10px;font-size:12px;resize:vertical;font-family:inherit;color:rgba(0,0,0,.88)" placeholder="Describe the reason for adding to Watchlist and key follow-up checkpoints..."></textarea>
       </div>
 
     </div><!-- /body -->

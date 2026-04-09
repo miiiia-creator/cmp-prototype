@@ -236,6 +236,31 @@ tbody tr:hover td { background: #fffdf0; }
 .dim-label { font-size: 12px; color: var(--text-sec); }
 .dim-score { font-size: 12px; font-weight: 600; }
 
+/* ── Status Stepper ── */
+.status-stepper { display: flex; align-items: flex-start; padding: 16px 20px; background: #fff; border: 1px solid var(--border); border-radius: 6px; margin-bottom: 12px; }
+.sf-step { flex: 1; display: flex; flex-direction: column; align-items: center; position: relative; }
+.sf-step:not(:last-child)::after { content: ''; position: absolute; top: 7px; left: calc(50% + 10px); right: calc(-50% + 10px); height: 2px; background: var(--border-base); }
+.sf-step.done:not(:last-child)::after { background: var(--primary); }
+.sf-dot { width: 16px; height: 16px; border-radius: 50%; border: 2px solid var(--border-base); background: #fff; z-index: 1; position: relative; flex-shrink: 0; }
+.sf-dot.done { background: var(--primary); border-color: var(--primary); }
+.sf-dot.current { background: #fff; border-color: var(--primary); border-width: 3px; box-shadow: 0 0 0 3px var(--primary-shadow); }
+.sf-label { font-size: 11px; margin-top: 6px; color: var(--text-hint); text-align: center; white-space: nowrap; }
+.sf-label.done { color: var(--text-sec); }
+.sf-label.current { color: #7c4a00; font-weight: 600; }
+.sf-date { font-size: 10px; color: var(--text-dis); text-align: center; margin-top: 2px; }
+
+/* ── Watchlist config card ── */
+.wl-card { background: #fffdf6; border: 1px solid #ffe58f; border-radius: 6px; padding: 14px 16px; margin-bottom: 12px; }
+.wl-card-head { display: flex; align-items: center; justify-content: space-between; margin-bottom: 12px; }
+.wl-card-title { font-weight: 600; font-size: 13px; color: #7c4a00; }
+.wl-meta { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 10px; margin-bottom: 12px; }
+.wl-meta-item { font-size: 12px; }
+.wl-meta-label { color: var(--text-hint); margin-bottom: 2px; font-size: 11px; }
+.wl-meta-val { color: var(--text); font-weight: 500; }
+.wl-rules { font-size: 12px; }
+.wl-rules-label { color: var(--text-hint); font-size: 11px; margin-bottom: 4px; }
+.wl-rule-tag { display: inline-flex; padding: 1px 7px; background: #fffbe6; border: 1px solid #ffe58f; border-radius: 3px; font-size: 11px; color: #7c4a00; margin: 2px 3px 2px 0; }
+
 /* ── Misc ── */
 .page-actions { display: flex; gap: 8px; margin-bottom: 12px; align-items: center; }
 .divider { height: 1px; background: var(--border); margin: 12px 0; }
@@ -273,7 +298,6 @@ tbody tr:hover td { background: #fffdf0; }
     <div class="sidebar-item" onclick="showPage('case-management')">Case Management</div>
     <div class="sidebar-item" onclick="showPage('client-management')">Client Management</div>
     <div class="sidebar-item">Rule Testing</div>
-    <div class="sidebar-item">WatchList Viewer</div>
     <div class="sidebar-item">Inquire</div>
   </div>
 
@@ -634,8 +658,8 @@ tbody tr:hover td { background: #fffdf0; }
     <span class="filter-label">Account ID</span><input class="filter-input" style="width:90px" placeholder="Account ID">
     <span class="filter-label">License</span>
     <select class="filter-select"><option>All</option><option>TBNZ</option><option>TBHK</option><option>TBSG</option></select>
-    <span class="filter-label">Watchlist</span>
-    <select class="filter-select"><option>All</option><option>On Watchlist</option><option>Not on Watchlist</option></select>
+    <span class="filter-label">Compliance Status</span>
+    <select class="filter-select"><option>All</option><option>Active</option><option>On Watchlist</option><option>Investigating</option><option>Inquiry Sent</option><option>Escalated</option><option>Restricted</option><option>Cleared</option></select>
     <span class="filter-label" style="color:var(--ai-color);font-weight:500">AI Risk ≥</span>
     <select class="filter-select" style="width:64px;border-color:var(--ai-border)"><option>—</option><option>50</option><option>70</option><option>85</option></select>
     <button class="btn btn-primary btn-sm">查询</button>
@@ -650,8 +674,8 @@ tbody tr:hover td { background: #fffdf0; }
     <table>
       <thead>
         <tr>
-          <th>Account ID</th><th>License</th><th>Registration</th><th>Status</th>
-          <th>Watchlist</th><th>Total Alerts</th><th>Open Cases</th><th>Last Alert</th>
+          <th>Account ID</th><th>License</th><th>Registration</th>
+          <th>Compliance Status</th><th>Total Alerts</th><th>Open Cases</th><th>Last Alert</th>
           <th class="ai-col" style="color:var(--ai-dark)">AI 风险 <span class="tag tag-ai">AI</span></th>
           <th>Operation</th>
         </tr>
@@ -659,7 +683,7 @@ tbody tr:hover td { background: #fffdf0; }
       <tbody>
         <tr>
           <td class="col-link" onclick="showPage('client-details')">3215451</td>
-          <td>TBNZ</td><td>2023-08-12</td><td><span class="tag tag-cleared">Active</span></td>
+          <td>TBNZ</td><td>2023-08-12</td>
           <td><span class="tag tag-watchlist">On Watchlist</span></td>
           <td>4</td><td>1</td><td>2026-04-07</td>
           <td style="background:#fffdf0"><span class="ai-score ai-score-high">82</span></td>
@@ -667,32 +691,32 @@ tbody tr:hover td { background: #fffdf0; }
         </tr>
         <tr>
           <td class="col-link">2353510</td>
-          <td>TBNZ</td><td>2022-03-05</td><td><span class="tag tag-cleared">Active</span></td>
-          <td><span class="tag tag-closed">—</span></td>
+          <td>TBNZ</td><td>2022-03-05</td>
+          <td><span class="tag tag-cleared">Active</span></td>
           <td>3</td><td>0</td><td>2026-04-06</td>
           <td style="background:#fffdf0"><span class="ai-score ai-score-mid">67</span></td>
           <td><button class="btn btn-sm">Detail</button></td>
         </tr>
         <tr>
           <td class="col-link">4183296</td>
-          <td>TBNZ</td><td>2021-11-20</td><td><span class="tag tag-cleared">Active</span></td>
-          <td><span class="tag tag-closed">—</span></td>
+          <td>TBNZ</td><td>2021-11-20</td>
+          <td><span class="tag tag-cleared">Cleared</span></td>
           <td>8</td><td>0</td><td>2025-07-15</td>
           <td style="background:#fffdf0"><span class="ai-score ai-score-mid">55</span></td>
           <td><button class="btn btn-sm">Detail</button></td>
         </tr>
         <tr>
           <td class="col-link">1441692</td>
-          <td>TBNZ</td><td>2020-06-18</td><td><span class="tag" style="background:#fff2f0;color:#cf1322;border:1px solid #ffa39e">Restricted</span></td>
-          <td><span class="tag tag-watchlist">On Watchlist</span></td>
+          <td>TBNZ</td><td>2020-06-18</td>
+          <td><span class="tag" style="background:#fff2f0;color:#cf1322;border:1px solid #ffa39e">Restricted</span></td>
           <td>12</td><td>0</td><td>2025-08-29</td>
           <td style="background:#fffdf0"><span class="ai-score ai-score-high">91</span></td>
           <td><button class="btn btn-sm">Detail</button></td>
         </tr>
         <tr>
           <td class="col-link">7526677</td>
-          <td>TBNZ</td><td>2024-01-09</td><td><span class="tag tag-cleared">Active</span></td>
-          <td><span class="tag tag-closed">—</span></td>
+          <td>TBNZ</td><td>2024-01-09</td>
+          <td><span class="tag tag-cleared">Active</span></td>
           <td>2</td><td>1</td><td>2026-04-03</td>
           <td style="background:#fffdf0"><span class="ai-score ai-score-mid">48</span></td>
           <td><button class="btn btn-sm">Detail</button></td>
@@ -714,9 +738,43 @@ tbody tr:hover td { background: #fffdf0; }
   <div class="breadcrumb"><a onclick="showPage('client-management')">Client Management</a> › Account 3215451</div>
   <div class="page-actions">
     <button class="btn btn-sm" onclick="showPage('client-management')">← Back</button>
-    <button class="btn btn-sm">Add to Watchlist</button>
     <button class="btn btn-sm">Send Inquiry</button>
     <button class="btn btn-sm" style="color:#cf1322;border-color:#ffa39e">Request Restriction</button>
+    <button class="btn btn-sm" style="margin-left:auto">Edit Watchlist Config</button>
+  </div>
+
+  <!-- Compliance Status Stepper -->
+  <div class="status-stepper">
+    <div class="sf-step done">
+      <div class="sf-dot done"></div>
+      <div class="sf-label">Active</div>
+      <div class="sf-date">2023-08-12</div>
+    </div>
+    <div class="sf-step current">
+      <div class="sf-dot current"></div>
+      <div class="sf-label current">On Watchlist</div>
+      <div class="sf-date">2025-12-02</div>
+    </div>
+    <div class="sf-step">
+      <div class="sf-dot"></div>
+      <div class="sf-label">Investigating</div>
+      <div class="sf-date">—</div>
+    </div>
+    <div class="sf-step">
+      <div class="sf-dot"></div>
+      <div class="sf-label">Inquiry Sent</div>
+      <div class="sf-date">—</div>
+    </div>
+    <div class="sf-step">
+      <div class="sf-dot"></div>
+      <div class="sf-label">Escalated</div>
+      <div class="sf-date">—</div>
+    </div>
+    <div class="sf-step">
+      <div class="sf-dot"></div>
+      <div class="sf-label">Restricted / Cleared</div>
+      <div class="sf-date">—</div>
+    </div>
   </div>
 
   <!-- Client Meta -->
@@ -725,9 +783,9 @@ tbody tr:hover td { background: #fffdf0; }
       <div class="meta-item"><div class="meta-label">Account ID</div><div class="meta-val">3215451</div></div>
       <div class="meta-item"><div class="meta-label">License</div><div class="meta-val">TBNZ</div></div>
       <div class="meta-item"><div class="meta-label">Registration Date</div><div class="meta-val">2023-08-12</div></div>
-      <div class="meta-item"><div class="meta-label">Account Status</div><div class="meta-val"><span class="tag tag-cleared">Active</span></div></div>
-      <div class="meta-item"><div class="meta-label">Watchlist</div><div class="meta-val"><span class="tag tag-watchlist">On Watchlist</span></div></div>
-      <div class="meta-item"><div class="meta-label">Watchlist Added</div><div class="meta-val">2025-12-02</div></div>
+      <div class="meta-item"><div class="meta-label">Compliance Status</div><div class="meta-val"><span class="tag tag-watchlist">On Watchlist</span></div></div>
+      <div class="meta-item"><div class="meta-label">Watchlist Since</div><div class="meta-val">2025-12-02</div></div>
+      <div class="meta-item"><div class="meta-label">Watchlist Expiry</div><div class="meta-val">2026-06-02</div></div>
       <div class="meta-item"><div class="meta-label">Total Alerts</div><div class="meta-val">4</div></div>
       <div class="meta-item"><div class="meta-label">Total Cases</div><div class="meta-val">1</div></div>
     </div>
@@ -861,12 +919,61 @@ tbody tr:hover td { background: #fffdf0; }
       </table>
     </div>
     <div class="tab-pane" id="ct-watchlist">
-      <table>
-        <thead><tr><th>Added Date</th><th>Added By</th><th>Risk Level</th><th>Expiry</th><th>Reason</th><th>Status</th></tr></thead>
-        <tbody>
-          <tr><td>2025-12-02</td><td>houyuexuan</td><td><span class="tag tag-medium">Medium</span></td><td>2026-06-02</td><td>Case TS_798 Further Action 后续监控</td><td><span class="tag tag-watchlist">Active</span></td></tr>
-        </tbody>
-      </table>
+      <div style="padding:12px 16px">
+        <!-- Watchlist Config Card -->
+        <div class="wl-card">
+          <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px;">
+            <div style="font-weight:600;font-size:13px">Watchlist 配置</div>
+            <div style="display:flex;gap:6px;align-items:center">
+              <span class="tag tag-medium">Medium Risk</span>
+              <span class="tag tag-watchlist">Monitoring</span>
+            </div>
+          </div>
+          <div class="wl-meta">
+            <div><div style="font-size:11px;color:var(--text-hint);margin-bottom:2px">Added By</div><div style="font-size:12px">houyuexuan</div></div>
+            <div><div style="font-size:11px;color:var(--text-hint);margin-bottom:2px">Added Date</div><div style="font-size:12px">2025-12-02</div></div>
+            <div><div style="font-size:11px;color:var(--text-hint);margin-bottom:2px">Expiry Date</div><div style="font-size:12px">2026-06-02</div></div>
+            <div><div style="font-size:11px;color:var(--text-hint);margin-bottom:2px">Tag</div><div style="font-size:12px">Internal</div></div>
+            <div><div style="font-size:11px;color:var(--text-hint);margin-bottom:2px">Period</div><div style="font-size:12px">6 months</div></div>
+            <div><div style="font-size:11px;color:var(--text-hint);margin-bottom:2px">Frequency</div><div style="font-size:12px">Monthly review</div></div>
+          </div>
+          <div class="wl-rules">
+            <div class="wl-rules-label">监控规则</div>
+            <span class="wl-rule-tag">pre-arranged trading (Profit)</span>
+            <span class="wl-rule-tag">possible wash trade (A to A)</span>
+            <span class="wl-rule-tag">possible ramping</span>
+            <span class="wl-rule-tag">large position accumulation</span>
+          </div>
+          <div style="margin-top:10px;padding-top:10px;border-top:1px solid #ffe58f;">
+            <div style="font-size:11px;color:var(--text-hint);margin-bottom:4px">加入原因 / Checkpoint</div>
+            <div style="font-size:12px;color:var(--text-base)">Case TS_798 结案结论为 Further Action，已上报 TBNZ 监管。根据内部规程，后续 6 个月内持续监控账户交易行为，若再次触发高置信度 Alert 则升级调查。</div>
+          </div>
+        </div>
+
+        <!-- Triggered Alerts while on Watchlist -->
+        <div style="font-size:12px;color:var(--text-hint);margin-bottom:6px">Watchlist 期间触发的 Alerts</div>
+        <table>
+          <thead><tr><th>Alert ID</th><th>Hit Time</th><th>Symbol</th><th>Rule</th><th>Status</th><th class="ai-col" style="color:var(--ai-dark)">AI 评分</th></tr></thead>
+          <tbody>
+            <tr>
+              <td class="col-link" onclick="showPage('alert-details')">19150109</td>
+              <td>2026-04-07</td>
+              <td>SPXW 20260406 6615.0 C</td>
+              <td>pre-arranged trading (Profit)</td>
+              <td><span class="tag tag-processing">Processing</span></td>
+              <td style="background:#fffdf0"><span class="ai-score ai-score-high">82</span></td>
+            </tr>
+            <tr>
+              <td class="col-link">19149230</td>
+              <td>2025-12-18</td>
+              <td>SPXW 20251217 5800.0 C</td>
+              <td>pre-arranged trading (Profit)</td>
+              <td><span class="tag tag-closed">Closed · Cleared</span></td>
+              <td style="background:#fffdf0"><span class="ai-score ai-score-mid">51</span></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
     </div>
     <div class="tab-pane" id="ct-inquiry">
       <div class="empty">暂无问询记录</div>

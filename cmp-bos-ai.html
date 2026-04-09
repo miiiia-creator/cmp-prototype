@@ -999,7 +999,10 @@ tbody tr:hover td { background: #fffdf0; }
           <td><span class="tag tag-cleared">Active</span></td>
           <td>3</td><td>0</td><td>2026-04-06</td>
           <td style="background:#fffdf0"><span class="ai-score ai-score-mid">67</span></td>
-          <td><button class="btn btn-sm">Detail</button></td>
+          <td style="white-space:nowrap">
+            <button class="btn btn-sm">Detail</button>
+            <button class="btn btn-sm" style="color:#531dab;border-color:#b37feb;margin-left:4px" onclick="openWLModal('2353510')">+ Watchlist</button>
+          </td>
         </tr>
         <tr>
           <td class="col-link">4183296</td>
@@ -1007,7 +1010,10 @@ tbody tr:hover td { background: #fffdf0; }
           <td><span class="tag tag-cleared">Cleared</span></td>
           <td>8</td><td>0</td><td>2025-07-15</td>
           <td style="background:#fffdf0"><span class="ai-score ai-score-mid">55</span></td>
-          <td><button class="btn btn-sm">Detail</button></td>
+          <td style="white-space:nowrap">
+            <button class="btn btn-sm">Detail</button>
+            <button class="btn btn-sm" style="color:#531dab;border-color:#b37feb;margin-left:4px" onclick="openWLModal('4183296')">+ Watchlist</button>
+          </td>
         </tr>
         <tr>
           <td class="col-link">1441692</td>
@@ -1023,7 +1029,10 @@ tbody tr:hover td { background: #fffdf0; }
           <td><span class="tag tag-cleared">Active</span></td>
           <td>2</td><td>1</td><td>2026-04-03</td>
           <td style="background:#fffdf0"><span class="ai-score ai-score-mid">48</span></td>
-          <td><button class="btn btn-sm">Detail</button></td>
+          <td style="white-space:nowrap">
+            <button class="btn btn-sm">Detail</button>
+            <button class="btn btn-sm" style="color:#531dab;border-color:#b37feb;margin-left:4px" onclick="openWLModal('7526677')">+ Watchlist</button>
+          </td>
         </tr>
       </tbody>
     </table>
@@ -1622,6 +1631,87 @@ function saveDraft() {
 }
 
 window.addEventListener('load', () => setTimeout(drawDashTrend, 50));
+
+// ── Add to Watchlist Modal ──
+function openWLModal(accountId) {
+  document.getElementById('wl-modal-account').value = accountId;
+  document.getElementById('wl-modal-reason').value = '';
+  document.getElementById('wl-modal-overlay').style.display = 'flex';
+}
+function closeWLModal() {
+  document.getElementById('wl-modal-overlay').style.display = 'none';
+}
+function submitWLModal() {
+  const id = document.getElementById('wl-modal-account').value;
+  closeWLModal();
+  // Show a brief confirmation toast
+  const t = document.createElement('div');
+  t.textContent = `账户 ${id} 已加入 Watchlist`;
+  Object.assign(t.style, {
+    position:'fixed', bottom:'28px', left:'50%', transform:'translateX(-50%)',
+    background:'rgba(0,0,0,.75)', color:'#fff', padding:'8px 18px',
+    borderRadius:'4px', fontSize:'13px', zIndex:'9999', pointerEvents:'none'
+  });
+  document.body.appendChild(t);
+  setTimeout(() => t.remove(), 2500);
+}
 </script>
+
+<!-- ── Add to Watchlist Modal ── -->
+<div id="wl-modal-overlay" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,.45);z-index:1000;align-items:center;justify-content:center">
+  <div style="background:#fff;border-radius:6px;width:440px;max-width:95vw;box-shadow:0 8px 32px rgba(0,0,0,.18)">
+    <!-- Header -->
+    <div style="padding:14px 20px;border-bottom:1px solid #f0f0f0;display:flex;align-items:center;justify-content:space-between">
+      <div style="font-weight:600;font-size:14px">Add to Watchlist</div>
+      <span onclick="closeWLModal()" style="cursor:pointer;font-size:18px;color:#999;line-height:1">×</span>
+    </div>
+    <!-- Body -->
+    <div style="padding:16px 20px;display:flex;flex-direction:column;gap:12px;font-size:13px">
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px">
+        <div>
+          <div style="color:#666;margin-bottom:4px">Account ID</div>
+          <input id="wl-modal-account" class="filter-input" style="width:100%;box-sizing:border-box" readonly>
+        </div>
+        <div>
+          <div style="color:#666;margin-bottom:4px">Risk Level</div>
+          <select class="filter-select" style="width:100%">
+            <option>Medium</option><option>High</option><option>Low</option>
+          </select>
+        </div>
+        <div>
+          <div style="color:#666;margin-bottom:4px">Monitoring Period</div>
+          <select class="filter-select" style="width:100%">
+            <option>6 months</option><option>3 months</option><option>12 months</option>
+          </select>
+        </div>
+        <div>
+          <div style="color:#666;margin-bottom:4px">Tag</div>
+          <select class="filter-select" style="width:100%">
+            <option>Internal</option><option>External inquired</option>
+          </select>
+        </div>
+      </div>
+      <div>
+        <div style="color:#666;margin-bottom:4px">Monitoring Rules</div>
+        <div style="display:flex;flex-wrap:wrap;gap:6px;padding:8px;border:1px solid #d9d9d9;border-radius:4px">
+          <label style="display:flex;align-items:center;gap:4px;font-size:12px;cursor:pointer"><input type="checkbox" checked> pre-arranged trading (Profit)</label>
+          <label style="display:flex;align-items:center;gap:4px;font-size:12px;cursor:pointer"><input type="checkbox"> possible wash trade (A to A)</label>
+          <label style="display:flex;align-items:center;gap:4px;font-size:12px;cursor:pointer"><input type="checkbox"> possible ramping</label>
+          <label style="display:flex;align-items:center;gap:4px;font-size:12px;cursor:pointer"><input type="checkbox"> large position accumulation</label>
+        </div>
+      </div>
+      <div>
+        <div style="color:#666;margin-bottom:4px">加入原因 / Checkpoint</div>
+        <textarea id="wl-modal-reason" style="width:100%;box-sizing:border-box;height:72px;border:1px solid #d9d9d9;border-radius:4px;padding:7px 10px;font-size:12px;resize:vertical;font-family:inherit" placeholder="描述加入 Watchlist 的原因及后续检查要点..."></textarea>
+      </div>
+    </div>
+    <!-- Footer -->
+    <div style="padding:12px 20px;border-top:1px solid #f0f0f0;display:flex;justify-content:flex-end;gap:8px">
+      <button class="btn btn-sm" onclick="closeWLModal()">取消</button>
+      <button class="btn btn-primary btn-sm" onclick="submitWLModal()">确认加入 Watchlist</button>
+    </div>
+  </div>
+</div>
+
 </body>
 </html>

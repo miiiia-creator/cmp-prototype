@@ -299,6 +299,36 @@ tbody tr:hover td { background: #fffdf0; }
 .ctx-meta { font-size:12px; color:var(--text-hint); margin-left:auto; }
 
 
+/* ── Rule Management ── */
+.rule-state-enable { background:#f6ffed; color:#389e0d; border:1px solid #b7eb8f; }
+.rule-state-disable { background:#f5f5f5; color:var(--text-hint); border:1px solid #d9d9d9; }
+/* ── A/B Test ── */
+.ab-split { display:grid; grid-template-columns:1fr 1fr; border:1px solid var(--border); border-radius:6px; overflow:hidden; margin-bottom:12px; }
+.ab-col-a { border-right:1px solid var(--border); }
+.ab-col-b { background:#fffdf6; }
+.ab-col-head { padding:10px 14px; border-bottom:1px solid var(--border); font-size:12px; font-weight:600; display:flex; align-items:center; gap:8px; }
+.ab-col-head-b { background:#fffbe6; }
+.param-group-label { padding:7px 14px 5px; font-size:11px; color:var(--text-hint); text-transform:uppercase; letter-spacing:.3px; background:#fafafa; border-bottom:1px solid var(--border); border-top:1px solid var(--border); }
+.param-row { display:flex; align-items:center; padding:7px 14px; border-bottom:1px solid #f7f7f7; font-size:12px; }
+.param-row:last-child { border-bottom:none; }
+.param-key { flex:1; color:var(--text-sec); }
+.param-val { font-weight:500; min-width:90px; text-align:right; color:rgba(0,0,0,.85); }
+.param-input { width:90px; height:26px; border:1px solid var(--border-base); border-radius:3px; padding:0 8px; font-size:12px; text-align:right; outline:none; font-weight:500; background:#fff; }
+.param-input:focus { border-color:#d97706; box-shadow:0 0 0 2px rgba(217,119,6,.12); }
+.param-input.changed { border-color:#d97706; background:#fffbef; color:#d46b08; }
+.ab-run-bar { display:flex; align-items:center; gap:10px; background:#fff; border:1px solid var(--border); border-radius:6px; padding:12px 16px; margin-bottom:12px; }
+.ab-metric-row { display:flex; align-items:center; gap:12px; padding:9px 16px; border-bottom:1px solid #f5f5f5; font-size:12px; }
+.ab-metric-row:last-child { border-bottom:none; }
+.ab-metric-label { width:130px; color:var(--text-sec); flex-shrink:0; }
+.ab-metric-a { width:52px; text-align:right; color:var(--text-hint); flex-shrink:0; }
+.ab-metric-b { width:52px; text-align:right; font-weight:600; flex-shrink:0; }
+.ab-bar-wrap { flex:1; height:6px; background:#f0f0f0; border-radius:3px; overflow:hidden; position:relative; }
+.ab-bar-a { height:100%; background:#93c5fd; border-radius:3px; position:absolute; }
+.ab-bar-b { height:100%; background:#d97706; border-radius:3px; opacity:.75; }
+.ab-delta { font-size:11px; font-weight:600; padding:2px 7px; border-radius:3px; white-space:nowrap; flex-shrink:0; }
+.ab-delta-good { background:#f6ffed; color:#389e0d; }
+.ab-delta-bad  { background:#fff2f0; color:#cf1322; }
+.ab-delta-neu  { background:#f5f5f5; color:var(--text-hint); }
 /* ── Misc ── */
 .page-actions { display: flex; gap: 8px; margin-bottom: 12px; align-items: center; }
 .divider { height: 1px; background: var(--border); margin: 12px 0; }
@@ -345,7 +375,7 @@ tbody tr:hover td { background: #fffdf0; }
     <div class="sidebar-item" onclick="showPage('alert-viewer')">Alert Viewer</div>
     <div class="sidebar-item" onclick="showPage('case-management')">Case Management</div>
     <div class="sidebar-item" onclick="showPage('client-management')">Client Management</div>
-    <div class="sidebar-item">Rule Management</div>
+    <div class="sidebar-item" onclick="showPage('rule-management')">Rule Management</div>
   </div>
 
   <div class="content">
@@ -1554,6 +1584,451 @@ tbody tr:hover td { background: #fffdf0; }
   </div>
 </div>
 
+<!-- ══════════════════════════════════════════
+     PAGE: RULE MANAGEMENT
+══════════════════════════════════════════ -->
+<div class="page" id="page-rule-management">
+  <div class="breadcrumb"><span>Compliance Monitoring</span> › <span>Rule Management</span></div>
+
+  <div class="filter-bar">
+    <span class="filter-label">Search</span>
+    <input class="filter-input" style="width:160px" placeholder="Rule ID / Name / Short Name">
+    <span class="filter-label">Type</span>
+    <select class="filter-select"><option>All Types</option><option>TS Rule</option><option>TM Rule</option><option>General Rule</option></select>
+    <span class="filter-label">Policy</span>
+    <select class="filter-select" style="width:160px"><option>All Policies</option><option>Crossing</option><option>Possible Wash Trade</option><option>False Trading</option><option>Insider Trading</option><option>Possible Spoofing</option></select>
+    <span class="filter-label">State</span>
+    <select class="filter-select"><option>All</option><option>Enable</option><option>Disable</option></select>
+    <button class="btn btn-primary btn-sm">Search</button>
+    <button class="btn btn-sm">Reset</button>
+    <button class="btn btn-primary btn-sm" style="margin-left:auto">+ Add Rule</button>
+  </div>
+
+  <div class="table-bar"><span><strong>7</strong> rules in total</span></div>
+  <div class="table-wrap">
+    <table>
+      <thead>
+        <tr>
+          <th>Rule ID</th><th>Name</th><th>Policy</th><th>Type</th><th>State</th>
+          <th>Today Hits</th><th>FP Rate</th><th>Last A/B Test</th><th>Operation</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td style="font-family:monospace;font-size:11px;color:var(--text-hint)">R_TS_A003_V8_1</td>
+          <td class="col-link" onclick="showRuleDetail('A003')">pre-arranged trading (Profit)</td>
+          <td>Crossing</td>
+          <td><span class="tag" style="background:#e6f4ff;color:#0958d9;border:1px solid #91caff;font-size:10px">TS Rule</span></td>
+          <td><span class="tag rule-state-enable">Enable</span></td>
+          <td style="font-weight:600;color:#d46b08">21</td>
+          <td><span style="color:#fa8c16;font-weight:500">58%</span></td>
+          <td style="font-size:11px;color:var(--text-hint)">2026-04-07<br><span style="color:#389e0d">FP 58%→41% ✓</span></td>
+          <td style="white-space:nowrap">
+            <button class="btn btn-sm" onclick="showRuleDetail('A003')">Detail</button>
+            <button class="btn btn-sm" onclick="showRuleDetail('A003')">Edit</button>
+            <button class="btn btn-sm btn-ai" onclick="showRuleDetail('A003','ab')">A/B Test</button>
+          </td>
+        </tr>
+        <tr>
+          <td style="font-family:monospace;font-size:11px;color:var(--text-hint)">R_TS_A006_V8_1</td>
+          <td class="col-link" onclick="showRuleDetail('A006')">pre-arranged trading (Loss)</td>
+          <td>Crossing</td>
+          <td><span class="tag" style="background:#e6f4ff;color:#0958d9;border:1px solid #91caff;font-size:10px">TS Rule</span></td>
+          <td><span class="tag rule-state-enable">Enable</span></td>
+          <td style="font-weight:600;color:#d46b08">8</td>
+          <td><span style="color:#fa8c16;font-weight:500">63%</span></td>
+          <td style="font-size:11px;color:var(--text-hint)">2026-03-20<br><span style="color:#389e0d">FP 63%→55% ✓</span></td>
+          <td style="white-space:nowrap">
+            <button class="btn btn-sm">Detail</button>
+            <button class="btn btn-sm">Edit</button>
+            <button class="btn btn-sm btn-ai" onclick="showRuleDetail('A006','ab')">A/B Test</button>
+          </td>
+        </tr>
+        <tr>
+          <td style="font-family:monospace;font-size:11px;color:var(--text-hint)">R_TS_B001_V8_1</td>
+          <td class="col-link">possible wash trade (A to A)</td>
+          <td>Possible Wash Trade</td>
+          <td><span class="tag" style="background:#e6f4ff;color:#0958d9;border:1px solid #91caff;font-size:10px">TS Rule</span></td>
+          <td><span class="tag rule-state-enable">Enable</span></td>
+          <td>5</td>
+          <td><span style="color:#cf1322;font-weight:500">72%</span></td>
+          <td style="font-size:11px;color:var(--text-dis)">—</td>
+          <td style="white-space:nowrap">
+            <button class="btn btn-sm">Detail</button>
+            <button class="btn btn-sm">Edit</button>
+            <button class="btn btn-sm btn-ai">A/B Test</button>
+          </td>
+        </tr>
+        <tr>
+          <td style="font-family:monospace;font-size:11px;color:var(--text-hint)">R_TS_B003_V8_1</td>
+          <td class="col-link">possible ramping (without tick data)</td>
+          <td>False Trading</td>
+          <td><span class="tag" style="background:#e6f4ff;color:#0958d9;border:1px solid #91caff;font-size:10px">TS Rule</span></td>
+          <td><span class="tag rule-state-enable">Enable</span></td>
+          <td style="font-weight:600;color:#d46b08">28</td>
+          <td><span style="color:#cf1322;font-weight:500">72%</span></td>
+          <td style="font-size:11px;color:var(--text-hint)">2026-04-02<br><span style="color:#fa8c16">FP 72%→67%</span></td>
+          <td style="white-space:nowrap">
+            <button class="btn btn-sm">Detail</button>
+            <button class="btn btn-sm">Edit</button>
+            <button class="btn btn-sm btn-ai">A/B Test</button>
+          </td>
+        </tr>
+        <tr>
+          <td style="font-family:monospace;font-size:11px;color:var(--text-hint)">R_TS_C001_V8_1</td>
+          <td class="col-link">possible insider trading (before announcement)</td>
+          <td>Insider Trading</td>
+          <td><span class="tag" style="background:#e6f4ff;color:#0958d9;border:1px solid #91caff;font-size:10px">TS Rule</span></td>
+          <td><span class="tag rule-state-enable">Enable</span></td>
+          <td>2</td>
+          <td><span style="color:#52c41a;font-weight:500">36%</span></td>
+          <td style="font-size:11px;color:var(--text-dis)">—</td>
+          <td style="white-space:nowrap">
+            <button class="btn btn-sm">Detail</button>
+            <button class="btn btn-sm">Edit</button>
+            <button class="btn btn-sm btn-ai">A/B Test</button>
+          </td>
+        </tr>
+        <tr>
+          <td style="font-family:monospace;font-size:11px;color:var(--text-hint)">R_TS_D001_V8_1</td>
+          <td class="col-link">layering</td>
+          <td>Possible Spoofing</td>
+          <td><span class="tag" style="background:#e6f4ff;color:#0958d9;border:1px solid #91caff;font-size:10px">TS Rule</span></td>
+          <td><span class="tag rule-state-disable">Disable</span></td>
+          <td style="color:var(--text-dis)">—</td>
+          <td style="color:var(--text-dis)">—</td>
+          <td style="font-size:11px;color:var(--text-hint)">2026-01-15<br>No change</td>
+          <td style="white-space:nowrap">
+            <button class="btn btn-sm">Detail</button>
+            <button class="btn btn-sm">Edit</button>
+            <button class="btn btn-sm" disabled style="opacity:.45">A/B Test</button>
+          </td>
+        </tr>
+        <tr>
+          <td style="font-family:monospace;font-size:11px;color:var(--text-hint)">R_TS_D002_V8_1</td>
+          <td class="col-link">large single trade alert</td>
+          <td>False Trading</td>
+          <td><span class="tag" style="background:#e6f4ff;color:#0958d9;border:1px solid #91caff;font-size:10px">TS Rule</span></td>
+          <td><span class="tag rule-state-enable">Enable</span></td>
+          <td>11</td>
+          <td><span style="color:#d97706;font-weight:500">45%</span></td>
+          <td style="font-size:11px;color:var(--text-dis)">—</td>
+          <td style="white-space:nowrap">
+            <button class="btn btn-sm">Detail</button>
+            <button class="btn btn-sm">Edit</button>
+            <button class="btn btn-sm btn-ai">A/B Test</button>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+  <div style="padding:10px 16px;background:#fff;border:1px solid var(--border);border-top:none;border-radius:0 0 6px 6px;font-size:12px;color:var(--text-hint);display:flex;justify-content:flex-end;gap:8px;">
+    <span>20 条/页</span><span>1 / 1</span>
+    <button class="btn btn-sm">‹</button><button class="btn btn-sm">›</button>
+  </div>
+</div>
+
+
+<!-- ══════════════════════════════════════════
+     PAGE: RULE DETAILS
+══════════════════════════════════════════ -->
+<div class="page" id="page-rule-details">
+  <div class="breadcrumb"><a onclick="showPage('rule-management')">Rule Management</a> › pre-arranged trading (Profit)</div>
+  <div class="page-actions">
+    <button class="btn btn-sm" onclick="showPage('rule-management')">← Back</button>
+    <button class="btn btn-sm">Edit</button>
+    <button class="btn btn-sm" style="color:#cf1322;border-color:#ffa39e">Disable</button>
+  </div>
+
+  <!-- Basic Meta -->
+  <div class="card">
+    <div class="meta-grid">
+      <div class="meta-item"><div class="meta-label">Rule ID</div><div class="meta-val" style="font-family:monospace;font-size:12px">R_TS_A003_V8_1</div></div>
+      <div class="meta-item"><div class="meta-label">Rule Name</div><div class="meta-val">pre-arranged trading (Profit)</div></div>
+      <div class="meta-item"><div class="meta-label">Type</div><div class="meta-val"><span class="tag" style="background:#e6f4ff;color:#0958d9;border:1px solid #91caff">TS Rule</span></div></div>
+      <div class="meta-item"><div class="meta-label">Policy</div><div class="meta-val">Crossing</div></div>
+      <div class="meta-item"><div class="meta-label">State</div><div class="meta-val"><span class="tag rule-state-enable">Enable</span></div></div>
+      <div class="meta-item"><div class="meta-label">FP Rate (7d)</div><div class="meta-val"><span style="color:#fa8c16;font-weight:600">58%</span> <span style="font-size:11px;color:var(--text-hint)">47 hits / 20 TP</span></div></div>
+      <div class="meta-item"><div class="meta-label">Created</div><div class="meta-val">2024-03-12 · system_zengyuxiang</div></div>
+      <div class="meta-item"><div class="meta-label">Last Updated</div><div class="meta-val">2026-02-20 · zhoumi</div></div>
+      <div class="meta-item span2"><div class="meta-label">Description</div><div class="meta-val" style="font-weight:400;color:var(--text-sec)">Detects accounts that engage in pre-arranged profit-taking trades: buy-side and sell-side orders show mirrored execution within a short interval, with sell price significantly higher than buy price, implying coordinated counterparty arrangement.</div></div>
+    </div>
+  </div>
+
+  <!-- Tabs -->
+  <div class="card">
+    <div class="tab-bar">
+      <div class="tab active" onclick="switchTab(this,'rd-info')">Rule Info</div>
+      <div class="tab" onclick="switchTab(this,'rd-params')">Parameters</div>
+      <div class="tab" id="rd-tab-ab" onclick="switchTab(this,'rd-ab')">A/B Test</div>
+      <div class="tab" onclick="switchTab(this,'rd-changelog')">Change Log</div>
+    </div>
+
+    <!-- Tab: Rule Info -->
+    <div class="tab-pane active" id="rd-info" style="padding:14px 16px">
+      <div style="font-size:12px;font-weight:600;margin-bottom:8px;color:var(--text-hint);text-transform:uppercase;letter-spacing:.3px">Feature Expression</div>
+      <div style="background:#1e1e1e;color:#d4d4d4;font-family:monospace;font-size:11px;border-radius:5px;padding:14px;line-height:1.7;overflow-x:auto;margin-bottom:14px">
+        <span style="color:#569cd6">SELECT</span> account, symbol, orderDate,<br>
+        &nbsp;&nbsp;&nbsp;&nbsp;COUNT(orderId) <span style="color:#569cd6">AS</span> orderCount,<br>
+        &nbsp;&nbsp;&nbsp;&nbsp;SUM(<span style="color:#569cd6">CASE WHEN</span> action=<span style="color:#ce9178">'BUY'</span> <span style="color:#569cd6">THEN</span> tradeQty <span style="color:#569cd6">ELSE</span> 0 <span style="color:#569cd6">END</span>) <span style="color:#569cd6">AS</span> buyTradeCount,<br>
+        &nbsp;&nbsp;&nbsp;&nbsp;SUM(<span style="color:#569cd6">CASE WHEN</span> action=<span style="color:#ce9178">'SELL'</span> <span style="color:#569cd6">THEN</span> tradeQty <span style="color:#569cd6">ELSE</span> 0 <span style="color:#569cd6">END</span>) <span style="color:#569cd6">AS</span> sellTradeCount<br>
+        <span style="color:#569cd6">FROM</span> trade_events<br>
+        <span style="color:#569cd6">WHERE</span> isProfit = <span style="color:#569cd6">TRUE</span><br>
+        &nbsp;&nbsp;<span style="color:#569cd6">AND</span> priceDiffRatio &gt;= :priceDiffRatio<br>
+        &nbsp;&nbsp;<span style="color:#569cd6">AND</span> orderTradeInterval &lt;= :orderTradeIntervalMinute<br>
+        <span style="color:#569cd6">GROUP BY</span> account, symbol, orderDate<br>
+        <span style="color:#569cd6">HAVING</span> buyTradeCount &gt;= :orderTimes <span style="color:#569cd6">AND</span> sellTradeCount &gt;= :orderTimes
+      </div>
+      <div style="font-size:12px;font-weight:600;margin-bottom:8px;color:var(--text-hint);text-transform:uppercase;letter-spacing:.3px">Alert Overview Fields</div>
+      <table style="font-size:12px">
+        <thead><tr><th>Field</th><th>Source</th><th>Description</th></tr></thead>
+        <tbody>
+          <tr><td>Account</td><td>trade_events</td><td>Trading account ID</td></tr>
+          <tr><td>Symbol</td><td>trade_events</td><td>Security symbol</td></tr>
+          <tr><td>Order Date</td><td>trade_events</td><td>Date of flagged orders</td></tr>
+          <tr><td>Order Count</td><td>Computed</td><td>Total order count that day</td></tr>
+          <tr><td>Buy Trade Count</td><td>Computed</td><td>Total buy-side trade qty</td></tr>
+          <tr><td>Sell Trade Count</td><td>Computed</td><td>Total sell-side trade qty</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <!-- Tab: Parameters -->
+    <div class="tab-pane" id="rd-params" style="padding:14px 16px">
+      <div class="two-col">
+        <!-- STK -->
+        <div>
+          <div style="font-size:12px;font-weight:600;margin-bottom:8px;color:var(--text-hint);text-transform:uppercase;letter-spacing:.3px">STK / Equities</div>
+          <div class="table-wrap-full">
+            <table style="font-size:12px">
+              <thead><tr><th>Parameter</th><th>Value</th><th>Description</th></tr></thead>
+              <tbody>
+                <tr><td>orderTimes</td><td><strong>2</strong></td><td>Min buy/sell order count</td></tr>
+                <tr><td>orderTradeIntervalMinute</td><td><strong>1</strong></td><td>Max interval between orders (min)</td></tr>
+                <tr><td>priceDiffRatio</td><td><strong>0.05</strong></td><td>Min price spread ratio</td></tr>
+                <tr><td>priceDiffOrderThreshold</td><td><strong>2</strong></td><td>Min orders meeting price diff</td></tr>
+                <tr><td>tradePairTimes</td><td><strong>3</strong></td><td>Min paired trade count</td></tr>
+                <tr><td>perTradeAmountThreshold</td><td><strong>1,000</strong></td><td>Min per-trade value (USD)</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+        <!-- Derivatives -->
+        <div>
+          <div style="font-size:12px;font-weight:600;margin-bottom:8px;color:var(--text-hint);text-transform:uppercase;letter-spacing:.3px">Derivatives (OPT / FUT)</div>
+          <div class="table-wrap-full">
+            <table style="font-size:12px">
+              <thead><tr><th>Parameter</th><th>Value</th><th>Description</th></tr></thead>
+              <tbody>
+                <tr><td>orderTimes</td><td><strong>3</strong></td><td>Min buy/sell order count</td></tr>
+                <tr><td>orderTradeIntervalMinute</td><td><strong>1</strong></td><td>Max interval between orders (min)</td></tr>
+                <tr><td>priceDiffRatio</td><td><strong>0.03</strong></td><td>Min price spread ratio</td></tr>
+                <tr><td>priceDiffOrderThreshold</td><td><strong>2</strong></td><td>Min orders meeting price diff</td></tr>
+                <tr><td>tradePairTimes</td><td><strong>5</strong></td><td>Min paired trade count</td></tr>
+                <tr><td>perTradeAmountThreshold</td><td><strong>0</strong></td><td>Min per-trade value (USD)</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Tab: A/B Test -->
+    <div class="tab-pane" id="rd-ab" style="padding:14px 16px">
+
+      <!-- Run Config -->
+      <div class="ab-run-bar">
+        <span style="font-size:12px;font-weight:600;color:var(--text-sec)">Backtest Period</span>
+        <input type="date" class="filter-input" value="2026-03-10" style="width:120px">
+        <span style="color:var(--text-hint)">→</span>
+        <input type="date" class="filter-input" value="2026-04-09" style="width:120px">
+        <span style="font-size:12px;color:var(--text-hint)">30 days</span>
+        <div style="flex:1"></div>
+        <span id="ab-status-label" style="font-size:11px;color:var(--text-hint)">Version B 参数尚未修改</span>
+        <button class="btn btn-primary btn-sm" id="ab-run-btn" onclick="runABTest()">▶ Run A/B Test</button>
+      </div>
+
+      <!-- Parameter Comparison -->
+      <div style="font-size:12px;font-weight:600;margin-bottom:8px;color:var(--text-hint);text-transform:uppercase;letter-spacing:.3px">Parameter Configuration</div>
+      <div class="ab-split">
+        <!-- Version A -->
+        <div class="ab-col-a">
+          <div class="ab-col-head">
+            <span style="width:7px;height:7px;border-radius:50%;background:#93c5fd;display:inline-block"></span>
+            Version A &nbsp;<span style="font-weight:400;color:var(--text-hint)">(Current Online)</span>
+          </div>
+          <div class="param-group-label">STK / Equities</div>
+          <div class="param-row"><span class="param-key">orderTimes</span><span class="param-val">2</span></div>
+          <div class="param-row"><span class="param-key">orderTradeIntervalMinute</span><span class="param-val">1</span></div>
+          <div class="param-row"><span class="param-key">priceDiffRatio</span><span class="param-val">0.05</span></div>
+          <div class="param-row"><span class="param-key">priceDiffOrderThreshold</span><span class="param-val">2</span></div>
+          <div class="param-row"><span class="param-key">tradePairTimes</span><span class="param-val">3</span></div>
+          <div class="param-row"><span class="param-key">perTradeAmountThreshold</span><span class="param-val">1,000</span></div>
+          <div class="param-group-label">Derivatives (OPT / FUT)</div>
+          <div class="param-row"><span class="param-key">orderTimes</span><span class="param-val">3</span></div>
+          <div class="param-row"><span class="param-key">orderTradeIntervalMinute</span><span class="param-val">1</span></div>
+          <div class="param-row"><span class="param-key">priceDiffRatio</span><span class="param-val">0.03</span></div>
+          <div class="param-row"><span class="param-key">priceDiffOrderThreshold</span><span class="param-val">2</span></div>
+          <div class="param-row"><span class="param-key">tradePairTimes</span><span class="param-val">5</span></div>
+          <div class="param-row"><span class="param-key">perTradeAmountThreshold</span><span class="param-val">0</span></div>
+        </div>
+        <!-- Version B -->
+        <div class="ab-col-b">
+          <div class="ab-col-head ab-col-head-b">
+            <span style="width:7px;height:7px;border-radius:50%;background:#d97706;display:inline-block"></span>
+            Version B &nbsp;<span style="font-weight:400;color:var(--text-hint)">(Proposed — edit to adjust)</span>
+          </div>
+          <div class="param-group-label" style="background:#fffbe6">STK / Equities</div>
+          <div class="param-row"><span class="param-key">orderTimes</span><input class="param-input" id="b_stk_orderTimes" value="2" oninput="markChanged(this,2)"></div>
+          <div class="param-row"><span class="param-key">orderTradeIntervalMinute</span><input class="param-input" id="b_stk_interval" value="1" oninput="markChanged(this,1)"></div>
+          <div class="param-row"><span class="param-key">priceDiffRatio</span><input class="param-input" id="b_stk_pdr" value="0.05" oninput="markChanged(this,0.05)"></div>
+          <div class="param-row"><span class="param-key">priceDiffOrderThreshold</span><input class="param-input" id="b_stk_pdot" value="2" oninput="markChanged(this,2)"></div>
+          <div class="param-row"><span class="param-key">tradePairTimes</span><input class="param-input" id="b_stk_tpt" value="3" oninput="markChanged(this,3)"></div>
+          <div class="param-row"><span class="param-key">perTradeAmountThreshold</span><input class="param-input" id="b_stk_ptat" value="1000" oninput="markChanged(this,1000)"></div>
+          <div class="param-group-label" style="background:#fffbe6">Derivatives (OPT / FUT)</div>
+          <div class="param-row"><span class="param-key">orderTimes</span><input class="param-input" id="b_opt_orderTimes" value="3" oninput="markChanged(this,3)"></div>
+          <div class="param-row"><span class="param-key">orderTradeIntervalMinute</span><input class="param-input" id="b_opt_interval" value="1" oninput="markChanged(this,1)"></div>
+          <div class="param-row"><span class="param-key">priceDiffRatio</span><input class="param-input" id="b_opt_pdr" value="0.03" oninput="markChanged(this,0.03)"></div>
+          <div class="param-row"><span class="param-key">priceDiffOrderThreshold</span><input class="param-input" id="b_opt_pdot" value="2" oninput="markChanged(this,2)"></div>
+          <div class="param-row"><span class="param-key">tradePairTimes</span><input class="param-input" id="b_opt_tpt" value="5" oninput="markChanged(this,5)"></div>
+          <div class="param-row"><span class="param-key">perTradeAmountThreshold</span><input class="param-input" id="b_opt_ptat" value="0" oninput="markChanged(this,0)"></div>
+        </div>
+      </div>
+
+      <!-- Results (hidden until run) -->
+      <div id="ab-results" style="display:none">
+        <div style="font-size:12px;font-weight:600;margin-bottom:8px;color:var(--text-hint);text-transform:uppercase;letter-spacing:.3px">Backtest Results &nbsp;<span style="font-weight:400;text-transform:none;color:var(--text-hint)">2026-03-10 → 2026-04-09 · 30 days</span></div>
+        <div class="card" style="margin-bottom:10px">
+          <div class="card-head">Metrics Comparison
+            <span style="margin-left:auto;display:flex;gap:14px;font-size:11px;font-weight:400;color:var(--text-hint);align-items:center">
+              <span style="display:flex;align-items:center;gap:4px"><span style="width:9px;height:9px;background:#93c5fd;border-radius:2px;display:inline-block"></span>Version A</span>
+              <span style="display:flex;align-items:center;gap:4px"><span style="width:9px;height:9px;background:#d97706;border-radius:2px;display:inline-block;opacity:.75"></span>Version B</span>
+            </span>
+          </div>
+          <div style="padding:4px 0">
+            <!-- Header row -->
+            <div class="ab-metric-row" style="border-bottom:1px solid var(--border);padding:6px 16px">
+              <div class="ab-metric-label" style="color:var(--text-hint);font-size:11px">Metric</div>
+              <div class="ab-metric-a" style="color:var(--text-hint);font-size:11px">Ver A</div>
+              <div style="flex:1"></div>
+              <div class="ab-metric-b" style="color:var(--text-hint);font-size:11px">Ver B</div>
+              <div style="width:80px;font-size:11px;color:var(--text-hint)">Change</div>
+            </div>
+            <div class="ab-metric-row">
+              <div class="ab-metric-label">Total Alerts (30d)</div>
+              <div class="ab-metric-a">186</div>
+              <div class="ab-bar-wrap"><div class="ab-bar-a" style="width:100%;left:0"></div><div class="ab-bar-b" style="width:81%"></div></div>
+              <div class="ab-metric-b" style="color:#389e0d">151</div>
+              <div><span class="ab-delta ab-delta-good">▼ 35 (-19%)</span></div>
+            </div>
+            <div class="ab-metric-row">
+              <div class="ab-metric-label">True Positive (TP)</div>
+              <div class="ab-metric-a">78</div>
+              <div class="ab-bar-wrap"><div class="ab-bar-a" style="width:78%;left:0"></div><div class="ab-bar-b" style="width:88%"></div></div>
+              <div class="ab-metric-b" style="color:#389e0d">88</div>
+              <div><span class="ab-delta ab-delta-good">▲ 10 (+13%)</span></div>
+            </div>
+            <div class="ab-metric-row">
+              <div class="ab-metric-label">False Positive Rate</div>
+              <div class="ab-metric-a">58%</div>
+              <div class="ab-bar-wrap"><div class="ab-bar-a" style="width:58%;left:0"></div><div class="ab-bar-b" style="width:42%"></div></div>
+              <div class="ab-metric-b" style="color:#389e0d">42%</div>
+              <div><span class="ab-delta ab-delta-good">▼ 16pp ✓</span></div>
+            </div>
+            <div class="ab-metric-row">
+              <div class="ab-metric-label">Avg AI Risk Score</div>
+              <div class="ab-metric-a">62</div>
+              <div class="ab-bar-wrap"><div class="ab-bar-a" style="width:62%;left:0"></div><div class="ab-bar-b" style="width:74%"></div></div>
+              <div class="ab-metric-b" style="color:#389e0d">74</div>
+              <div><span class="ab-delta ab-delta-good">▲ 12pt</span></div>
+            </div>
+            <div class="ab-metric-row">
+              <div class="ab-metric-label">Alerts missed vs A</div>
+              <div class="ab-metric-a">—</div>
+              <div class="ab-bar-wrap"></div>
+              <div class="ab-metric-b">-35</div>
+              <div><span class="ab-delta ab-delta-neu">33 FP · 2 TP</span></div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Sample alerts removed (A-only) -->
+        <div class="two-col">
+          <div>
+            <div style="font-size:12px;font-weight:600;margin-bottom:6px;color:var(--text-hint);text-transform:uppercase;letter-spacing:.3px">
+              <span style="color:#389e0d">✓ Removed in B (FP saved)</span> &nbsp;top 4 of 33
+            </div>
+            <div class="table-wrap-full">
+              <table style="font-size:11px">
+                <thead><tr><th>Account</th><th>Symbol</th><th>Date</th><th>A Score</th><th>Conclusion</th></tr></thead>
+                <tbody>
+                  <tr><td>4812339</td><td>AAPL</td><td>2026-03-14</td><td><span class="ai-score ai-score-mid">41</span></td><td><span class="tag tag-cleared" style="font-size:10px">Cleared</span></td></tr>
+                  <tr><td>3301127</td><td>TSLA</td><td>2026-03-21</td><td><span class="ai-score ai-score-low">38</span></td><td><span class="tag tag-cleared" style="font-size:10px">Cleared</span></td></tr>
+                  <tr><td>5512088</td><td>SPY</td><td>2026-03-28</td><td><span class="ai-score ai-score-low">33</span></td><td><span class="tag tag-cleared" style="font-size:10px">Cleared</span></td></tr>
+                  <tr><td>2298451</td><td>NQ2506</td><td>2026-04-01</td><td><span class="ai-score ai-score-low">29</span></td><td><span class="tag tag-cleared" style="font-size:10px">Cleared</span></td></tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+          <div>
+            <div style="font-size:12px;font-weight:600;margin-bottom:6px;color:var(--text-hint);text-transform:uppercase;letter-spacing:.3px">
+              <span style="color:#cf1322">⚠ Missed vs A (verify)</span> &nbsp;2 alerts
+            </div>
+            <div class="table-wrap-full">
+              <table style="font-size:11px">
+                <thead><tr><th>Account</th><th>Symbol</th><th>Date</th><th>A Score</th><th>Conclusion</th></tr></thead>
+                <tbody>
+                  <tr><td class="col-link" onclick="showPage('alert-details')">3215451</td><td>SPXW</td><td>2026-03-19</td><td><span class="ai-score ai-score-high">77</span></td><td><span class="tag tag-escalated" style="font-size:10px">Further Action</span></td></tr>
+                  <tr><td>1277792</td><td>BQ</td><td>2026-03-25</td><td><span class="ai-score ai-score-mid">63</span></td><td><span class="tag tag-processing" style="font-size:10px">Processing</span></td></tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+
+        <!-- Publish action -->
+        <div style="display:flex;align-items:center;gap:10px;margin-top:14px;padding:12px 16px;background:#f6ffed;border:1px solid #b7eb8f;border-radius:6px">
+          <span style="color:#389e0d;font-size:13px;font-weight:600">✓ Version B shows significant FP reduction with acceptable TP impact.</span>
+          <div style="flex:1"></div>
+          <button class="btn btn-sm">Export Report</button>
+          <button class="btn btn-primary btn-sm" onclick="publishVersionB()">Publish Version B →</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Tab: Change Log -->
+    <div class="tab-pane" id="rd-changelog" style="padding:14px 16px">
+      <div class="timeline">
+        <div class="tl-item">
+          <div class="tl-dot yellow"></div>
+          <div class="tl-date">2026-04-07 · A/B Test · zhoumi</div>
+          <div class="tl-title">A/B Test Run: orderTimes STK 2→3, priceDiffRatio 0.05→0.04</div>
+          <div class="tl-desc">FP Rate 58%→41% in backtest. Not published yet.</div>
+        </div>
+        <div class="tl-item">
+          <div class="tl-dot gray"></div>
+          <div class="tl-date">2026-02-20 · Edit · zhoumi</div>
+          <div class="tl-title">Parameter update: perTradeAmountThreshold STK 0→1000</div>
+          <div class="tl-desc">Reduce low-value FP alerts from retail accounts.</div>
+        </div>
+        <div class="tl-item">
+          <div class="tl-dot gray"></div>
+          <div class="tl-date">2025-11-04 · Edit · system_zengyuxiang</div>
+          <div class="tl-title">priceDiffRatio STK 0.03→0.05, tradePairTimes 2→3</div>
+          <div class="tl-desc">Calibration based on Q3 FP analysis.</div>
+        </div>
+        <div class="tl-item">
+          <div class="tl-dot gray"></div>
+          <div class="tl-date">2024-03-12 · Created · system_lishuhan</div>
+          <div class="tl-title">Rule R_TS_A003_V8_1 created</div>
+          <div class="tl-desc">Initial deployment: STK orderTimes=2, priceDiffRatio=0.03.</div>
+        </div>
+      </div>
+    </div>
+
+  </div><!-- /card -->
+</div>
+
   </div><!-- /content -->
 </div><!-- /layout -->
 
@@ -1563,7 +2038,7 @@ function showPage(name) {
   document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
   document.getElementById('page-' + name).classList.add('active');
   document.querySelectorAll('.sidebar-item').forEach(s => s.classList.remove('active'));
-  const map = { 'dashboard': 0, 'alert-viewer': 1, 'alert-details': 1, 'case-management': 2, 'case-details': 2, 'client-management': 3, 'client-details': 3 };
+  const map = { 'dashboard': 0, 'alert-viewer': 1, 'alert-details': 1, 'case-management': 2, 'case-details': 2, 'client-management': 3, 'client-details': 3, 'rule-management': 4, 'rule-details': 4 };
   const idx = map[name];
   if (idx !== undefined) document.querySelectorAll('.sidebar-item')[idx].classList.add('active');
   window.scrollTo(0, 0);
@@ -1994,6 +2469,51 @@ function saveDraft() {
 }
 
 window.addEventListener('load', () => setTimeout(drawDashTrend, 50));
+
+// ── Rule Management ──
+function showRuleDetail(ruleId, tab) {
+  showPage('rule-details');
+  if (tab === 'ab') {
+    // Switch to A/B Test tab
+    setTimeout(() => {
+      const abTab = document.getElementById('rd-tab-ab');
+      if (abTab) abTab.click();
+    }, 0);
+  }
+}
+
+function markChanged(input, originalVal) {
+  const val = parseFloat(input.value);
+  input.classList.toggle('changed', val !== parseFloat(originalVal));
+  const hasChanges = document.querySelectorAll('#rd-ab .param-input.changed').length > 0;
+  const label = document.getElementById('ab-status-label');
+  if (label) label.textContent = hasChanges
+    ? `${document.querySelectorAll('#rd-ab .param-input.changed').length} parameter(s) modified`
+    : 'Version B 参数尚未修改';
+}
+
+function runABTest() {
+  const btn = document.getElementById('ab-run-btn');
+  const label = document.getElementById('ab-status-label');
+  btn.textContent = '⏳ Running...';
+  btn.disabled = true;
+  label.textContent = 'Running backtest on 30-day data...';
+  setTimeout(() => {
+    btn.textContent = '▶ Run Again';
+    btn.disabled = false;
+    label.innerHTML = '<span style="color:#389e0d;font-weight:500">✓ Test completed · 2026-03-10 → 2026-04-09</span>';
+    document.getElementById('ab-results').style.display = 'block';
+    document.getElementById('ab-results').scrollIntoView({ behavior: 'smooth', block: 'start' });
+  }, 1800);
+}
+
+function publishVersionB() {
+  const t = document.createElement('div');
+  t.textContent = 'Version B published · Rule R_TS_A003_V8_2 is now online';
+  Object.assign(t.style, { position:'fixed', bottom:'28px', left:'50%', transform:'translateX(-50%)', background:'#389e0d', color:'#fff', padding:'9px 20px', borderRadius:'4px', fontSize:'13px', zIndex:'9999', pointerEvents:'none' });
+  document.body.appendChild(t);
+  setTimeout(() => t.remove(), 3000);
+}
 
 // ── Add to Watchlist Modal ──
 function openWLModal(accountId) {

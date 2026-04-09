@@ -537,6 +537,54 @@ tbody tr:hover td { background: #fffdf0; }
       </div>
     </div>
   </div>
+
+  <!-- ── Spread Analysis ── -->
+  <div class="card" style="margin-top:12px">
+    <div class="section-title" style="cursor:pointer;user-select:none" onclick="toggleSpread()">
+      Spread Analysis
+      <span style="font-size:11px;color:var(--text-hint);font-weight:400;margin-left:6px">SPXW 20260406 6615.0 C &nbsp;·&nbsp; 2026-04-07 EDT</span>
+      <span id="spread-toggle-btn" style="margin-left:auto;font-size:12px;color:var(--primary-dark);font-weight:400">展开 ▼</span>
+    </div>
+    <div id="spread-body" style="display:none;padding:12px 16px 16px">
+
+      <!-- Account toggles -->
+      <div style="display:flex;align-items:center;gap:16px;margin-bottom:10px;flex-wrap:wrap;font-size:12px">
+        <div style="display:flex;align-items:center;gap:5px">
+          <span style="width:11px;height:11px;border-radius:50%;background:#d97706;display:inline-block;flex-shrink:0"></span>
+          3215451 <span style="color:var(--text-hint)">(主账户)</span>
+          <input type="checkbox" checked disabled>
+        </div>
+        <div style="display:flex;align-items:center;gap:5px;cursor:pointer">
+          <span style="width:11px;height:11px;border-radius:50%;background:#7c3aed;display:inline-block;flex-shrink:0"></span>
+          3215450 <span style="color:var(--text-hint)">(同IP关联)</span>
+          <input type="checkbox" id="related-toggle" onchange="drawSpread()">
+        </div>
+        <span style="margin-left:auto;color:var(--text-hint)">● 买入（实心） &nbsp; ○ 卖出（空心） &nbsp; 气泡大小 = 成交量</span>
+      </div>
+
+      <!-- AI annotation banner -->
+      <div style="background:#fff2f0;border:1px solid #ffccc7;border-radius:4px;padding:7px 10px;font-size:11px;color:#cf1322;margin-bottom:10px">
+        <strong>⚠ AI 标注：</strong>08:38–08:49 EDT 为可疑交易窗口。账户 3215451 快速建仓后高位平仓获利 $1,691；
+        账户 3215450 同期反向操作（先卖后买），构成对手方嫌疑。
+      </div>
+
+      <!-- Canvas -->
+      <canvas id="spread-canvas" height="300" style="width:100%;display:block;border:1px solid var(--border);border-radius:4px"></canvas>
+
+      <!-- Legend -->
+      <div style="display:flex;gap:16px;font-size:11px;color:var(--text-hint);margin-top:8px;justify-content:center;flex-wrap:wrap">
+        <span>● 买入（实心）</span>
+        <span>○ 卖出（空心）</span>
+        <span style="display:inline-flex;align-items:center;gap:4px">
+          <span style="width:18px;height:2px;background:#ef4444;display:inline-block"></span>触发时刻
+        </span>
+        <span style="display:inline-flex;align-items:center;gap:4px">
+          <span style="width:14px;height:12px;background:rgba(239,68,68,.12);border:1px solid rgba(239,68,68,.35);display:inline-block"></span>AI 标注窗口
+        </span>
+        <span style="color:#d1d5db">— 市场中间价</span>
+      </div>
+    </div>
+  </div>
 </div>
 
 
@@ -1036,6 +1084,165 @@ function setClientFilter(status) {
   showPage('client-management');
   const sel = document.getElementById('client-status-filter');
   if (sel) { sel.value = status; }
+}
+
+// ── Spread Analysis ──
+let spreadOpen = false;
+function toggleSpread() {
+  spreadOpen = !spreadOpen;
+  document.getElementById('spread-body').style.display = spreadOpen ? 'block' : 'none';
+  document.getElementById('spread-toggle-btn').textContent = spreadOpen ? '收起 ▲' : '展开 ▼';
+  if (spreadOpen) setTimeout(drawSpread, 0);
+}
+
+function drawSpread() {
+  const canvas = document.getElementById('spread-canvas');
+  if (!canvas) return;
+  const dpr = window.devicePixelRatio || 1;
+  const cssW = canvas.offsetWidth || 640;
+  const cssH = 300;
+  canvas.width = Math.round(cssW * dpr);
+  canvas.height = Math.round(cssH * dpr);
+  const ctx = canvas.getContext('2d');
+  ctx.scale(dpr, dpr);
+
+  const W = cssW, H = cssH;
+  const PAD_L = 52, PAD_R = 16, PAD_T = 26, PAD_B = 28;
+  const VOL_H = 52, SPLIT = 8;
+  const priceH = H - PAD_T - PAD_B - VOL_H - SPLIT;
+  const priceTop = PAD_T, priceBot = PAD_T + priceH;
+  const volTop = priceBot + SPLIT, volBot = H - PAD_B;
+  const chartW = W - PAD_L - PAD_R;
+
+  // Time axis: t=0 → 08:20, t=50 → 09:10 EDT
+  const tMax = 50;
+  const priceMin = 6607, priceMax = 6623;
+
+  function tX(t) { return PAD_L + (t / tMax) * chartW; }
+  function pY(p) { return priceTop + (priceMax - p) / (priceMax - priceMin) * priceH; }
+
+  const hitT = 23;      // 08:43
+  const winS = 18, winE = 29; // 08:38 – 08:49
+
+  const mktLine = [
+    {t:0,p:6610},{t:5,p:6611},{t:10,p:6612},{t:15,p:6613},
+    {t:18,p:6614},{t:21,p:6616},{t:23,p:6617},{t:26,p:6620},
+    {t:29,p:6621},{t:32,p:6620},{t:36,p:6618},{t:40,p:6616},
+    {t:45,p:6614},{t:50,p:6613}
+  ];
+
+  // Primary account 3215451 (amber)
+  const T1 = [
+    {t:2, p:6610,vol:3, s:'b',hit:false},
+    {t:11,p:6612,vol:5, s:'b',hit:false},
+    {t:18,p:6614,vol:8, s:'b',hit:true},
+    {t:21,p:6616,vol:12,s:'b',hit:true},
+    {t:23,p:6617,vol:15,s:'b',hit:true},
+    {t:25,p:6620,vol:10,s:'s',hit:true},
+    {t:27,p:6619,vol:12,s:'s',hit:true},
+    {t:29,p:6618,vol:6, s:'s',hit:true},
+    {t:36,p:6615,vol:3, s:'s',hit:false},
+  ];
+
+  // Related account 3215450 (purple) — opposite side
+  const T2 = [
+    {t:17,p:6614,vol:10,s:'s',hit:false},
+    {t:20,p:6616,vol:15,s:'s',hit:false},
+    {t:23,p:6618,vol:8, s:'s',hit:false},
+    {t:26,p:6620,vol:10,s:'b',hit:false},
+    {t:28,p:6621,vol:12,s:'b',hit:false},
+  ];
+
+  const vols = [
+    {t:2,v:3},{t:11,v:5},{t:18,v:8},{t:20,v:12},
+    {t:21,v:15},{t:23,v:23},{t:25,v:10},{t:27,v:12},
+    {t:29,v:6},{t:36,v:3}
+  ];
+  const maxV = 23;
+
+  // Clear
+  ctx.clearRect(0, 0, W, H);
+  ctx.fillStyle = '#fff';
+  ctx.fillRect(0, 0, W, H);
+
+  // Suspicious window shading (spans price + volume area)
+  ctx.fillStyle = 'rgba(239,68,68,0.07)';
+  ctx.fillRect(tX(winS), priceTop, tX(winE) - tX(winS), priceH + SPLIT + VOL_H);
+
+  // Horizontal price grid
+  for (let p = 6608; p <= 6622; p += 2) {
+    const y = pY(p);
+    ctx.strokeStyle = '#f3f4f6'; ctx.lineWidth = 1;
+    ctx.beginPath(); ctx.moveTo(PAD_L, y); ctx.lineTo(W - PAD_R, y); ctx.stroke();
+    if (p % 4 === 0) {
+      ctx.fillStyle = '#9ca3af'; ctx.font = '10px system-ui,sans-serif'; ctx.textAlign = 'right';
+      ctx.fillText(p, PAD_L - 5, y + 3.5);
+    }
+  }
+
+  // X axis ticks + vertical grid
+  for (let t = 0; t <= 50; t += 10) {
+    const x = tX(t);
+    ctx.strokeStyle = '#f3f4f6'; ctx.lineWidth = 1;
+    ctx.beginPath(); ctx.moveTo(x, priceTop); ctx.lineTo(x, volBot); ctx.stroke();
+    const totalM = 8*60 + 20 + t;
+    const h = Math.floor(totalM/60), m = totalM % 60;
+    ctx.fillStyle = '#9ca3af'; ctx.font = '10px system-ui,sans-serif'; ctx.textAlign = 'center';
+    ctx.fillText(`${String(h).padStart(2,'0')}:${String(m).padStart(2,'0')}`, x, H - PAD_B + 14);
+  }
+
+  // Hit-time dashed line
+  const hx = tX(hitT);
+  ctx.strokeStyle = '#ef4444'; ctx.lineWidth = 1.5;
+  ctx.setLineDash([4, 3]);
+  ctx.beginPath(); ctx.moveTo(hx, priceTop - 6); ctx.lineTo(hx, volBot); ctx.stroke();
+  ctx.setLineDash([]);
+  ctx.fillStyle = '#ef4444'; ctx.font = 'bold 10px system-ui,sans-serif'; ctx.textAlign = 'center';
+  ctx.fillText('Hit 08:43', hx, priceTop - 9);
+
+  // Market mid-price line
+  ctx.strokeStyle = '#d1d5db'; ctx.lineWidth = 1.5;
+  ctx.beginPath();
+  mktLine.forEach((pt, i) => i === 0 ? ctx.moveTo(tX(pt.t), pY(pt.p)) : ctx.lineTo(tX(pt.t), pY(pt.p)));
+  ctx.stroke();
+
+  // Volume bars
+  const bw = 9;
+  vols.forEach(b => {
+    const x = tX(b.t);
+    const bh = (b.v / maxV) * (volBot - volTop);
+    ctx.fillStyle = (b.t >= winS && b.t <= winE) ? 'rgba(239,68,68,0.38)' : 'rgba(156,163,175,0.45)';
+    ctx.fillRect(x - bw/2, volBot - bh, bw, bh);
+  });
+  ctx.fillStyle = '#9ca3af'; ctx.font = '10px system-ui,sans-serif'; ctx.textAlign = 'left';
+  ctx.fillText('Vol', PAD_L - 46, volTop + 9);
+
+  // Bubble draw helper
+  function bubble(t, p, vol, side, color, hit) {
+    const x = tX(t), y = pY(p);
+    const r = Math.max(4, Math.sqrt(vol) * 3.2);
+    ctx.beginPath();
+    ctx.arc(x, y, r, 0, Math.PI * 2);
+    if (side === 'b') {
+      ctx.fillStyle = color; ctx.fill();
+    } else {
+      ctx.strokeStyle = color; ctx.lineWidth = 2; ctx.stroke();
+    }
+    if (hit) {
+      ctx.beginPath(); ctx.arc(x, y, r + 3, 0, Math.PI * 2);
+      ctx.strokeStyle = '#ef4444'; ctx.lineWidth = 1.5; ctx.stroke();
+    }
+  }
+
+  T1.forEach(d => bubble(d.t, d.p, d.vol, d.s, '#d97706', d.hit));
+  if (document.getElementById('related-toggle')?.checked) {
+    T2.forEach(d => bubble(d.t, d.p, d.vol, d.s, '#7c3aed', d.hit));
+  }
+
+  // Chart border
+  ctx.strokeStyle = '#e5e7eb'; ctx.lineWidth = 1;
+  ctx.strokeRect(PAD_L, priceTop, chartW, priceH);
+  ctx.strokeRect(PAD_L, volTop, chartW, volBot - volTop);
 }
 
 // ── Tab switching ──

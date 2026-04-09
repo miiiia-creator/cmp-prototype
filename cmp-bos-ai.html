@@ -288,6 +288,13 @@ tbody tr:hover td { background: #fffdf0; }
 .fp-bar-bg { height:5px; background:#f0f0f0; border-radius:3px; flex:1; overflow:hidden; }
 .fp-bar-fill { height:100%; border-radius:3px; }
 
+/* ── TS/TM Context Bar ── */
+.ctx-bar { background:#fff; border-bottom:1px solid var(--border); height:38px; display:flex; align-items:center; padding:0 20px; gap:16px; flex-shrink:0; }
+.ctx-toggle { display:flex; background:#f5f5f5; border-radius:4px; padding:2px; gap:2px; }
+.ctx-btn { padding:3px 16px; border-radius:3px; border:none; background:transparent; font-size:12px; font-weight:500; cursor:pointer; color:var(--text-hint); line-height:1.6; }
+.ctx-btn.active { background:#fff; color:rgba(0,0,0,.85); box-shadow:0 1px 3px rgba(0,0,0,.12); }
+.ctx-meta { font-size:12px; color:var(--text-hint); margin-left:auto; }
+
 /* ── Misc ── */
 .page-actions { display: flex; gap: 8px; margin-bottom: 12px; align-items: center; }
 .divider { height: 1px; background: var(--border); margin: 12px 0; }
@@ -317,6 +324,15 @@ tbody tr:hover td { background: #fffdf0; }
   </div>
 </div>
 
+<!-- ── TS/TM Context Bar ── -->
+<div class="ctx-bar">
+  <div class="ctx-toggle">
+    <button class="ctx-btn active" id="ctx-ts" onclick="setContext('TS')">TS · Trade Surveillance</button>
+    <button class="ctx-btn" id="ctx-tm" onclick="setContext('TM')">TM · Transfer Monitoring</button>
+  </div>
+  <span class="ctx-meta" id="ctx-meta">TBNZ &nbsp;·&nbsp; 2026-04-09</span>
+</div>
+
 <div class="layout">
   <!-- ── Sidebar ── -->
   <div class="sidebar">
@@ -325,7 +341,7 @@ tbody tr:hover td { background: #fffdf0; }
     <div class="sidebar-item" onclick="showPage('alert-viewer')">Alert Viewer</div>
     <div class="sidebar-item" onclick="showPage('case-management')">Case Management</div>
     <div class="sidebar-item" onclick="showPage('client-management')">Client Management</div>
-    <div class="sidebar-item">Rule Testing</div>
+    <div class="sidebar-item">Rule Management</div>
   </div>
 
   <div class="content">
@@ -832,36 +848,85 @@ tbody tr:hover td { background: #fffdf0; }
 
   <div class="filter-bar">
     <span class="filter-label">Case Code</span><input class="filter-input" style="width:80px" placeholder="TS_xxx">
-    <span class="filter-label">Case Name</span><input class="filter-input" style="width:120px">
+    <span class="filter-label">Account</span><input class="filter-input" style="width:90px">
     <span class="filter-label">Status</span>
-    <select class="filter-select"><option>All</option><option>New</option><option>Processing</option><option>Closed</option></select>
+    <select class="filter-select" id="case-status-filter" onchange="filterCaseTable(this.value)">
+      <option value="">All</option>
+      <option>Processing</option><option>Escalated</option><option>Pending Review</option><option>Closed</option>
+    </select>
     <span class="filter-label">Owner</span><input class="filter-input" style="width:90px">
     <button class="btn btn-primary btn-sm">查询</button>
-    <button class="btn btn-sm">重置</button>
-    <button class="btn btn-primary btn-sm" style="margin-left:auto">+ Add New Case</button>
+    <button class="btn btn-sm" onclick="filterCaseTable('')">重置</button>
+    <button class="btn btn-primary btn-sm" style="margin-left:auto">+ New Case</button>
   </div>
 
-  <div style="display:flex;gap:6px;margin-bottom:12px;border-bottom:1px solid var(--border);padding-bottom:0;">
-    <div class="tab active" style="margin-bottom:-1px;">TS Case</div>
-    <div class="tab">TM Case</div>
-    <div class="tab">My Case</div>
-    <div class="tab">All Case</div>
+  <div class="table-bar">
+    <span><strong>149</strong> cases in total</span>
   </div>
-
-  <div class="case-card" onclick="showPage('case-details')">
-    <div><div class="case-card-code">TS_824</div><div class="case-card-name">1277792-BQ</div>
-    <div class="case-card-meta"><span>Account: 1277792</span><span>Symbol: BQ</span><span>Owner: mayimeng</span><span>Updated: 2026-02-02</span><span>Alerts: —</span></div></div>
-    <div style="display:flex;flex-direction:column;align-items:flex-end;gap:6px;"><span class="tag tag-processing">Processing</span><button class="btn btn-sm" onclick="event.stopPropagation();showPage('case-details')">Detail</button></div>
+  <div class="table-wrap">
+    <table>
+      <thead>
+        <tr>
+          <th>Case Code</th><th>Case Name</th><th>Account</th><th>Symbol</th>
+          <th>Owner</th><th>Alerts</th><th>Last Updated</th><th>Status</th><th>Operation</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr data-status="Processing">
+          <td class="col-link" onclick="showPage('case-details')">TS_824</td>
+          <td>1277792-BQ</td><td>1277792</td><td>BQ</td><td>mayimeng</td>
+          <td>—</td><td>2026-02-02</td>
+          <td><span class="tag tag-processing">Processing</span></td>
+          <td><button class="btn btn-sm" onclick="showPage('case-details')">Detail</button></td>
+        </tr>
+        <tr data-status="Processing">
+          <td class="col-link">TS_823</td>
+          <td>TSLA OPT - 2353510</td><td>2353510</td><td>TSLA OPT</td><td>houyuexuan</td>
+          <td>1</td><td>2026-04-01</td>
+          <td><span class="tag tag-processing">Processing</span></td>
+          <td><button class="btn btn-sm">Detail</button></td>
+        </tr>
+        <tr data-status="Escalated">
+          <td class="col-link">TS_821</td>
+          <td>SPXW - 3215451</td><td class="col-link" onclick="showPage('client-details')">3215451</td><td>SPXW</td><td>houyuexuan</td>
+          <td>3</td><td>2026-01-20</td>
+          <td><span class="tag tag-escalated">Escalated</span></td>
+          <td><button class="btn btn-sm">Detail</button></td>
+        </tr>
+        <tr data-status="Escalated">
+          <td class="col-link">TS_820</td>
+          <td>RAPP - 1441692</td><td>1441692</td><td>RAPP ASMB</td><td>mayimeng</td>
+          <td>2</td><td>2025-11-05</td>
+          <td><span class="tag tag-escalated">Escalated</span></td>
+          <td><button class="btn btn-sm">Detail</button></td>
+        </tr>
+        <tr data-status="Pending Review">
+          <td class="col-link">TS_819</td>
+          <td>NQ2506 - 7526677</td><td>7526677</td><td>NQ2506</td><td>houyuexuan</td>
+          <td>1</td><td>2026-03-15</td>
+          <td><span class="tag" style="background:#f0f5ff;color:#1d39c4;border:1px solid #adc6ff">Pending Review</span></td>
+          <td><button class="btn btn-sm">Detail</button></td>
+        </tr>
+        <tr data-status="Closed">
+          <td class="col-link" onclick="showPage('case-details')">TS_817</td>
+          <td>RAPP ASMB - 1441692</td><td>1441692</td><td>RAPP, ASMB, CAMP</td><td>mayimeng</td>
+          <td>5</td><td>2025-10-15</td>
+          <td><span class="tag tag-closed">Closed · Further Action</span></td>
+          <td><button class="btn btn-sm" onclick="showPage('case-details')">Detail</button></td>
+        </tr>
+        <tr data-status="Closed">
+          <td class="col-link" onclick="showPage('case-details')">TS_814</td>
+          <td>SPXW Option - 4183296</td><td class="col-link" onclick="showPage('client-details')">4183296</td><td>SPXW (8 contracts)</td><td>mayimeng</td>
+          <td>8</td><td>2025-09-19</td>
+          <td><span class="tag tag-closed">Closed · No Further Action</span></td>
+          <td><button class="btn btn-sm" onclick="showPage('case-details')">Detail</button></td>
+        </tr>
+      </tbody>
+    </table>
   </div>
-  <div class="case-card" onclick="showPage('case-details')">
-    <div><div class="case-card-code">TS_814</div><div class="case-card-name">SPXW Option - 4183296</div>
-    <div class="case-card-meta"><span>Account: 4183296</span><span>Symbol: SPXW (8 contracts)</span><span>Owner: mayimeng</span><span>Data: 2025-05-10 ~ 2025-07-14</span><span>Alerts: 8</span></div></div>
-    <div style="display:flex;flex-direction:column;align-items:flex-end;gap:6px;"><span class="tag tag-closed">Closed · No Further Action</span><button class="btn btn-sm" onclick="event.stopPropagation();showPage('case-details')">Detail</button></div>
-  </div>
-  <div class="case-card">
-    <div><div class="case-card-code">TS_817</div><div class="case-card-name">RAPP ASMB - 1441692</div>
-    <div class="case-card-meta"><span>Account: 1441692</span><span>Symbol: RAPP, ASMB, CAMP</span><span>Owner: mayimeng</span><span>Data: 2025-08-07 ~ 2025-08-29</span></div></div>
-    <div style="display:flex;flex-direction:column;align-items:flex-end;gap:6px;"><span class="tag tag-closed">Closed · Further Action</span><button class="btn btn-sm">Detail</button></div>
+  <div style="padding:10px 16px;background:#fff;border:1px solid var(--border);border-top:none;border-radius:0 0 6px 6px;font-size:12px;color:var(--text-hint);display:flex;justify-content:flex-end;gap:8px;">
+    <span>20 条/页</span><span>1 / 8</span>
+    <button class="btn btn-sm">‹</button><button class="btn btn-sm">›</button>
   </div>
 </div>
 
@@ -963,7 +1028,7 @@ tbody tr:hover td { background: #fffdf0; }
     <span class="filter-label">License</span>
     <select class="filter-select"><option>All</option><option>TBNZ</option><option>TBHK</option><option>TBSG</option></select>
     <span class="filter-label">Compliance Status</span>
-    <select class="filter-select" id="client-status-filter"><option>All</option><option>Detected</option><option>Investigating</option><option>Inquire</option><option>Report</option><option>Watchlist</option><option>Cleared</option><option>Restricted</option></select>
+    <select class="filter-select" id="client-status-filter" onchange="filterClientTable(this.value)"><option value="">All</option><option>Detected</option><option>Investigating</option><option>Inquire</option><option>Report</option><option>Watchlist</option><option>Cleared</option><option>Restricted</option></select>
     <span class="filter-label" style="color:var(--ai-color);font-weight:500">AI Risk ≥</span>
     <select class="filter-select" style="width:64px;border-color:var(--ai-border)"><option>—</option><option>50</option><option>70</option><option>85</option></select>
     <button class="btn btn-primary btn-sm">查询</button>
@@ -985,7 +1050,7 @@ tbody tr:hover td { background: #fffdf0; }
         </tr>
       </thead>
       <tbody>
-        <tr>
+        <tr data-status="Watchlist">
           <td class="col-link" onclick="showPage('client-details')">3215451</td>
           <td>TBNZ</td><td>2023-08-12</td>
           <td><span class="tag tag-watchlist">Watchlist</span></td>
@@ -993,10 +1058,10 @@ tbody tr:hover td { background: #fffdf0; }
           <td style="background:#fffdf0"><span class="ai-score ai-score-high">82</span></td>
           <td><button class="btn btn-sm" onclick="showPage('client-details')">Detail</button></td>
         </tr>
-        <tr>
+        <tr data-status="Detected">
           <td class="col-link">2353510</td>
           <td>TBNZ</td><td>2022-03-05</td>
-          <td><span class="tag tag-cleared">Active</span></td>
+          <td><span class="tag tag-cleared">Detected</span></td>
           <td>3</td><td>0</td><td>2026-04-06</td>
           <td style="background:#fffdf0"><span class="ai-score ai-score-mid">67</span></td>
           <td style="white-space:nowrap">
@@ -1004,7 +1069,7 @@ tbody tr:hover td { background: #fffdf0; }
             <button class="btn btn-sm" style="color:#531dab;border-color:#b37feb;margin-left:4px" onclick="openWLModal('2353510')">+ Watchlist</button>
           </td>
         </tr>
-        <tr>
+        <tr data-status="Cleared">
           <td class="col-link">4183296</td>
           <td>TBNZ</td><td>2021-11-20</td>
           <td><span class="tag tag-cleared">Cleared</span></td>
@@ -1015,7 +1080,7 @@ tbody tr:hover td { background: #fffdf0; }
             <button class="btn btn-sm" style="color:#531dab;border-color:#b37feb;margin-left:4px" onclick="openWLModal('4183296')">+ Watchlist</button>
           </td>
         </tr>
-        <tr>
+        <tr data-status="Restricted">
           <td class="col-link">1441692</td>
           <td>TBNZ</td><td>2020-06-18</td>
           <td><span class="tag" style="background:#fff2f0;color:#cf1322;border:1px solid #ffa39e">Restricted</span></td>
@@ -1023,10 +1088,10 @@ tbody tr:hover td { background: #fffdf0; }
           <td style="background:#fffdf0"><span class="ai-score ai-score-high">91</span></td>
           <td><button class="btn btn-sm">Detail</button></td>
         </tr>
-        <tr>
+        <tr data-status="Investigating">
           <td class="col-link">7526677</td>
           <td>TBNZ</td><td>2024-01-09</td>
-          <td><span class="tag tag-cleared">Active</span></td>
+          <td><span class="tag" style="background:#fff7e6;color:#d46b08;border:1px solid #ffd591">Investigating</span></td>
           <td>2</td><td>1</td><td>2026-04-03</td>
           <td style="background:#fffdf0"><span class="ai-score ai-score-mid">48</span></td>
           <td style="white-space:nowrap">
@@ -1378,16 +1443,38 @@ function drawDashTrend() {
   });
 }
 
+// ── TS/TM context toggle ──
+function setContext(ctx) {
+  document.getElementById('ctx-ts').classList.toggle('active', ctx === 'TS');
+  document.getElementById('ctx-tm').classList.toggle('active', ctx === 'TM');
+  const prefix = ctx === 'TS' ? 'TS' : 'TM';
+  document.getElementById('ctx-meta').textContent = `TBNZ · ${prefix} · 2026-04-09`;
+  // Update sidebar group label
+  document.querySelector('.sidebar-group').textContent = `${prefix} · Compliance Monitoring`;
+}
+
 // ── Stats bar click-to-filter ──
+function filterCaseTable(status) {
+  document.querySelectorAll('#page-case-management tbody tr').forEach(row => {
+    row.style.display = (!status || row.dataset.status === status) ? '' : 'none';
+  });
+}
+function filterClientTable(status) {
+  document.querySelectorAll('#page-client-management tbody tr').forEach(row => {
+    row.style.display = (!status || row.dataset.status === status) ? '' : 'none';
+  });
+}
 function setCaseFilter(status) {
   showPage('case-management');
-  const sel = document.querySelector('#page-case-management .filter-select');
-  if (sel) { sel.value = status; }
+  const sel = document.getElementById('case-status-filter');
+  if (sel) sel.value = status;
+  filterCaseTable(status);
 }
 function setClientFilter(status) {
   showPage('client-management');
   const sel = document.getElementById('client-status-filter');
-  if (sel) { sel.value = status; }
+  if (sel) sel.value = status;
+  filterClientTable(status);
 }
 
 // ── Spread Analysis ──

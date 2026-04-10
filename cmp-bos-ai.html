@@ -303,6 +303,23 @@ tbody tr:hover td { background: #fffdf0; }
 /* ── Rule Management ── */
 .rule-state-enable { background:#f6ffed; color:#389e0d; border:1px solid #b7eb8f; }
 .rule-state-disable { background:#f5f5f5; color:var(--text-hint); border:1px solid #d9d9d9; }
+/* ── Investigation Bottom Sheet ── */
+.inv-sheet { position:fixed; bottom:0; left:200px; right:0; z-index:500; background:#fff; border-top:2px solid #e8e8e8; border-radius:10px 10px 0 0; box-shadow:0 -4px 24px rgba(0,0,0,.10); display:none; flex-direction:column; transition:height .28s cubic-bezier(.4,0,.2,1); height:44px; }
+.inv-sheet.visible { display:flex; }
+.inv-sheet.open { height:460px; }
+.inv-sheet-handle { display:flex; align-items:center; padding:0 16px; height:44px; cursor:pointer; user-select:none; flex-shrink:0; position:relative; border-bottom:1px solid transparent; }
+.inv-sheet.open .inv-sheet-handle { border-bottom-color:#f0f0f0; }
+.inv-sheet-grip { width:36px; height:4px; background:#d9d9d9; border-radius:2px; position:absolute; top:8px; left:50%; transform:translateX(-50%); transition:background .15s; }
+.inv-sheet-handle:hover .inv-sheet-grip { background:#bbb; }
+.inv-sheet-title { font-size:13px; font-weight:600; color:var(--text); display:flex; align-items:center; gap:6px; }
+.inv-sheet-actions { margin-left:auto; display:flex; align-items:center; gap:8px; }
+.inv-sheet-body { flex:1; overflow:hidden; display:flex; flex-direction:column; opacity:0; transition:opacity .2s .05s; }
+.inv-sheet.open .inv-sheet-body { opacity:1; }
+.inv-sheet-content { display:none; flex:1; flex-direction:column; overflow-y:auto; }
+.inv-sheet-content.active { display:flex; }
+/* push detail page content above sheet */
+.page.detail-page { padding-bottom: 60px; }
+.page.detail-page.sheet-open { padding-bottom: 476px; }
 /* ── A/B Test ── */
 .ab-split { display:grid; grid-template-columns:1fr 1fr; border:1px solid var(--border); border-radius:6px; overflow:hidden; margin-bottom:12px; }
 .ab-col-a { border-right:1px solid var(--border); }
@@ -741,7 +758,7 @@ tbody tr:hover td { background: #fffdf0; }
 <!-- ══════════════════════════════════════════
      PAGE: ALERT DETAILS
 ══════════════════════════════════════════ -->
-<div class="page" id="page-alert-details">
+<div class="page detail-page" id="page-alert-details">
   <div class="breadcrumb"><a onclick="showPage('alert-viewer')">Alert Viewer</a> › Alert 19150109</div>
   <div class="page-actions">
     <button class="btn btn-sm" onclick="showPage('alert-viewer')">← Back</button>
@@ -893,47 +910,7 @@ tbody tr:hover td { background: #fffdf0; }
     </div>
   </div>
 
-  <!-- Investigation Tools -->
-  <div class="card">
-    <div class="card-head">Investigation Tools <span class="new-badge">NEW</span></div>
-    <div class="tab-bar">
-      <div class="tab active" onclick="switchInvTab(this,'inv-spread-alert','alert','spread')">Spread Analysis</div>
-      <div class="tab" onclick="switchInvTab(this,'inv-graph-alert','alert','graph')">Association Graph</div>
-    </div>
-    <div class="tab-pane active" id="inv-spread-alert" style="padding:12px 16px">
-      <div style="font-size:11px;color:var(--text-hint);background:#fafafa;border:1px solid var(--border);border-radius:4px;padding:5px 8px;margin-bottom:10px">SPXW 20260406 6615.0 C &nbsp;·&nbsp; Account 3215451 &nbsp;·&nbsp; Alert 19150109</div>
-      <div style="display:flex;flex-wrap:wrap;gap:8px;margin-bottom:8px;font-size:12px">
-        <div style="display:flex;align-items:center;gap:4px">
-          <span style="width:10px;height:10px;border-radius:50%;background:#d97706;display:inline-block"></span>
-          3215451 <input type="checkbox" checked disabled style="margin-left:2px">
-        </div>
-        <div style="display:flex;align-items:center;gap:4px">
-          <span style="width:10px;height:10px;border-radius:50%;background:#7c3aed;display:inline-block"></span>
-          3215450 <input type="checkbox" id="related-toggle-alert" onchange="drawSpread('alert')" style="margin-left:2px">
-          <span style="color:var(--text-hint);font-size:11px">Same IP</span>
-        </div>
-      </div>
-      <div style="background:#fff2f0;border:1px solid #ffccc7;border-radius:4px;padding:6px 8px;font-size:11px;color:#cf1322;margin-bottom:8px">
-        <strong>⚠</strong> 08:38–08:49 EDT Suspicious Window · 3215450 Reverse Trading
-      </div>
-      <canvas id="spread-canvas-alert" height="300" style="width:100%;display:block;border:1px solid var(--border);border-radius:4px"></canvas>
-      <div style="display:flex;flex-wrap:wrap;gap:8px;font-size:11px;color:var(--text-hint);margin-top:6px;justify-content:center">
-        <span>● Buy</span><span>○ Sell</span>
-        <span style="display:inline-flex;align-items:center;gap:3px"><span style="width:14px;height:2px;background:#ef4444;display:inline-block"></span>Hit time</span>
-      </div>
-    </div>
-    <div class="tab-pane" id="inv-graph-alert" style="padding:12px 16px">
-      <div style="font-size:11px;color:var(--text-hint);background:#fafafa;border:1px solid var(--border);border-radius:4px;padding:5px 8px;margin-bottom:10px">Account 3215451 &nbsp;·&nbsp; 3 Associated Accounts</div>
-      <div style="display:flex;flex-wrap:wrap;gap:8px;margin-bottom:8px;font-size:11px;color:var(--text-hint)">
-        <span style="display:flex;align-items:center;gap:3px"><span style="width:9px;height:9px;border-radius:50%;background:#d97706;display:inline-block"></span>Primary</span>
-        <span style="display:flex;align-items:center;gap:3px"><span style="width:9px;height:9px;border-radius:50%;background:#7c3aed;display:inline-block"></span>Associated</span>
-        <span style="display:flex;align-items:center;gap:3px"><span style="width:9px;height:9px;border-radius:50%;background:#fff;border:1.5px solid #9ca3af;display:inline-block"></span>Extended</span>
-        <span style="margin-left:auto;color:var(--ai-color);cursor:pointer;font-size:11px" onclick="sendChip('deep_expand')"><span class="ai-badge" style="font-size:10px">AI</span> Deep Expand</span>
-      </div>
-      <canvas id="assoc-canvas-alert" height="320" style="width:100%;display:block;border:1px solid var(--border);border-radius:4px"></canvas>
-    </div>
-  </div>
-
+  <div id="scroll-sentinel-alert" style="height:1px"></div>
 </div>
 
 
@@ -1049,7 +1026,7 @@ tbody tr:hover td { background: #fffdf0; }
 <!-- ══════════════════════════════════════════
      PAGE: CASE DETAILS
 ══════════════════════════════════════════ -->
-<div class="page" id="page-case-details">
+<div class="page detail-page" id="page-case-details">
   <div class="breadcrumb"><a onclick="showPage('case-management')">Case Management</a> › TS_814</div>
   <div class="page-actions"><button class="btn btn-sm" onclick="showPage('case-management')">← Back</button></div>
 
@@ -1138,43 +1115,7 @@ tbody tr:hover td { background: #fffdf0; }
     </div>
   </div>
 
-  <!-- Investigation Tools -->
-  <div class="card">
-    <div class="card-head">Investigation Tools <span class="new-badge">NEW</span></div>
-    <div class="tab-bar">
-      <div class="tab active" onclick="switchInvTab(this,'inv-spread-case','case','spread')">Spread Analysis</div>
-      <div class="tab" onclick="switchInvTab(this,'inv-graph-case','case','graph')">Association Graph</div>
-    </div>
-    <div class="tab-pane active" id="inv-spread-case" style="padding:12px 16px">
-      <div style="font-size:11px;color:var(--text-hint);background:#fafafa;border:1px solid var(--border);border-radius:4px;padding:5px 8px;margin-bottom:10px">SPXW Option · Account 4183296 · Case TS_814</div>
-      <div style="display:flex;flex-wrap:wrap;gap:8px;margin-bottom:8px;font-size:12px">
-        <div style="display:flex;align-items:center;gap:4px">
-          <span style="width:10px;height:10px;border-radius:50%;background:#d97706;display:inline-block"></span>
-          4183296 <input type="checkbox" checked disabled style="margin-left:2px">
-        </div>
-        <div style="display:flex;align-items:center;gap:4px">
-          <span style="width:10px;height:10px;border-radius:50%;background:#7c3aed;display:inline-block"></span>
-          4183297 <input type="checkbox" id="related-toggle-case" onchange="drawSpread('case')" style="margin-left:2px">
-          <span style="color:var(--text-hint);font-size:11px">Same IP</span>
-        </div>
-      </div>
-      <canvas id="spread-canvas-case" height="300" style="width:100%;display:block;border:1px solid var(--border);border-radius:4px"></canvas>
-      <div style="display:flex;flex-wrap:wrap;gap:8px;font-size:11px;color:var(--text-hint);margin-top:6px;justify-content:center">
-        <span>● Buy</span><span>○ Sell</span>
-        <span style="display:inline-flex;align-items:center;gap:3px"><span style="width:14px;height:2px;background:#ef4444;display:inline-block"></span>Hit time</span>
-      </div>
-    </div>
-    <div class="tab-pane" id="inv-graph-case" style="padding:12px 16px">
-      <div style="font-size:11px;color:var(--text-hint);background:#fafafa;border:1px solid var(--border);border-radius:4px;padding:5px 8px;margin-bottom:10px">Account 4183296 · Case TS_814 · 2 Associated Accounts</div>
-      <div style="display:flex;flex-wrap:wrap;gap:8px;margin-bottom:8px;font-size:11px;color:var(--text-hint)">
-        <span style="display:flex;align-items:center;gap:3px"><span style="width:9px;height:9px;border-radius:50%;background:#d97706;display:inline-block"></span>Primary</span>
-        <span style="display:flex;align-items:center;gap:3px"><span style="width:9px;height:9px;border-radius:50%;background:#7c3aed;display:inline-block"></span>Associated</span>
-        <span style="display:flex;align-items:center;gap:3px"><span style="width:9px;height:9px;border-radius:50%;background:#fff;border:1.5px solid #9ca3af;display:inline-block"></span>Extended</span>
-        <span style="margin-left:auto;color:var(--ai-color);cursor:pointer;font-size:11px"><span class="ai-badge" style="font-size:10px">AI</span> Deep Expand</span>
-      </div>
-      <canvas id="assoc-canvas-case" height="320" style="width:100%;display:block;border:1px solid var(--border);border-radius:4px"></canvas>
-    </div>
-  </div>
+  <div id="scroll-sentinel-case" style="height:1px"></div>
 </div>
 
 
@@ -1297,7 +1238,7 @@ tbody tr:hover td { background: #fffdf0; }
 <!-- ══════════════════════════════════════════
      PAGE: CLIENT DETAILS
 ══════════════════════════════════════════ -->
-<div class="page" id="page-client-details">
+<div class="page detail-page" id="page-client-details">
   <div class="breadcrumb"><a onclick="showPage('client-management')">Client Management</a> › Account 3215451</div>
   <div class="page-actions">
     <button class="btn btn-sm" onclick="showPage('client-management')">← Back</button>
@@ -1538,46 +1479,7 @@ tbody tr:hover td { background: #fffdf0; }
     </div>
   </div>
 
-  <!-- Investigation Tools -->
-  <div class="card" style="margin-top:12px">
-    <div class="card-head">Investigation Tools <span class="new-badge">NEW</span></div>
-    <div class="tab-bar">
-      <div class="tab active" onclick="switchInvTab(this,'inv-spread-client','client','spread')">Spread Analysis</div>
-      <div class="tab" onclick="switchInvTab(this,'inv-graph-client','client','graph')">Association Graph</div>
-    </div>
-    <div class="tab-pane active" id="inv-spread-client" style="padding:12px 16px">
-      <div style="font-size:11px;color:var(--text-hint);background:#fafafa;border:1px solid var(--border);border-radius:4px;padding:5px 8px;margin-bottom:10px">Account 3215451 · Recently Active: SPXW 20260406 6615.0 C</div>
-      <div style="display:flex;flex-wrap:wrap;gap:8px;margin-bottom:8px;font-size:12px">
-        <div style="display:flex;align-items:center;gap:4px">
-          <span style="width:10px;height:10px;border-radius:50%;background:#d97706;display:inline-block"></span>
-          3215451 <input type="checkbox" checked disabled style="margin-left:2px">
-        </div>
-        <div style="display:flex;align-items:center;gap:4px">
-          <span style="width:10px;height:10px;border-radius:50%;background:#7c3aed;display:inline-block"></span>
-          3215450 <input type="checkbox" id="related-toggle-client" onchange="drawSpread('client')" style="margin-left:2px">
-          <span style="color:var(--text-hint);font-size:11px">Same IP</span>
-        </div>
-      </div>
-      <div style="background:#fff2f0;border:1px solid #ffccc7;border-radius:4px;padding:6px 8px;font-size:11px;color:#cf1322;margin-bottom:8px">
-        <strong>⚠</strong> 08:38–08:49 EDT Suspicious Window · 3215450 Reverse Trading
-      </div>
-      <canvas id="spread-canvas-client" height="300" style="width:100%;display:block;border:1px solid var(--border);border-radius:4px"></canvas>
-      <div style="display:flex;flex-wrap:wrap;gap:8px;font-size:11px;color:var(--text-hint);margin-top:6px;justify-content:center">
-        <span>● Buy</span><span>○ Sell</span>
-        <span style="display:inline-flex;align-items:center;gap:3px"><span style="width:14px;height:2px;background:#ef4444;display:inline-block"></span>Hit time</span>
-      </div>
-    </div>
-    <div class="tab-pane" id="inv-graph-client" style="padding:12px 16px">
-      <div style="font-size:11px;color:var(--text-hint);background:#fafafa;border:1px solid var(--border);border-radius:4px;padding:5px 8px;margin-bottom:10px">Account 3215451 &nbsp;·&nbsp; 3 Associated Accounts</div>
-      <div style="display:flex;flex-wrap:wrap;gap:8px;margin-bottom:8px;font-size:11px;color:var(--text-hint)">
-        <span style="display:flex;align-items:center;gap:3px"><span style="width:9px;height:9px;border-radius:50%;background:#d97706;display:inline-block"></span>Primary</span>
-        <span style="display:flex;align-items:center;gap:3px"><span style="width:9px;height:9px;border-radius:50%;background:#7c3aed;display:inline-block"></span>Associated</span>
-        <span style="display:flex;align-items:center;gap:3px"><span style="width:9px;height:9px;border-radius:50%;background:#fff;border:1.5px solid #9ca3af;display:inline-block"></span>Extended</span>
-        <span style="margin-left:auto;color:var(--ai-color);cursor:pointer;font-size:11px" onclick="sendChipClient('assoc_graph')"><span class="ai-badge" style="font-size:10px">AI</span> Deep Expand</span>
-      </div>
-      <canvas id="assoc-canvas-client" height="320" style="width:100%;display:block;border:1px solid var(--border);border-radius:4px"></canvas>
-    </div>
-  </div>
+  <div id="scroll-sentinel-client" style="height:1px"></div>
 </div>
 
 <!-- ══════════════════════════════════════════
@@ -2039,9 +1941,15 @@ function showPage(name) {
   if (idx !== undefined) document.querySelectorAll('.sidebar-item')[idx].classList.add('active');
   window.scrollTo(0, 0);
   if (name === 'dashboard') { setTimeout(drawDashTrend, 0); setTimeout(drawAccuracyTrend, 0); }
-  if (name === 'alert-details') setTimeout(() => drawSpread('alert'), 50);
-  else if (name === 'case-details') setTimeout(() => drawSpread('case'), 50);
-  else if (name === 'client-details') setTimeout(() => drawSpread('client'), 50);
+
+  // Investigation bottom sheet
+  const detailSuffix = { 'alert-details': 'alert', 'case-details': 'case', 'client-details': 'client' }[name];
+  if (detailSuffix) {
+    showInvSheet(detailSuffix);
+    setTimeout(() => setupScrollSentinel(detailSuffix), 100);
+  } else {
+    hideInvSheet();
+  }
 }
 
 function drawDashTrend() {
@@ -2751,6 +2659,190 @@ function submitWLModal() {
     </div>
   </div>
 </div>
+
+<!-- ══ Investigation Bottom Sheet ══ -->
+<div class="inv-sheet" id="inv-sheet">
+  <!-- Handle -->
+  <div class="inv-sheet-handle" onclick="toggleInvSheet()">
+    <div class="inv-sheet-grip"></div>
+    <div class="inv-sheet-title">
+      <span>Investigation Tools</span>
+      <span class="new-badge">NEW</span>
+    </div>
+    <div class="inv-sheet-actions">
+      <button class="btn btn-sm" id="inv-sheet-toggle-btn" style="font-size:11px;padding:2px 10px">Expand ↑</button>
+      <span onclick="event.stopPropagation();hideInvSheet()" style="cursor:pointer;color:#aaa;font-size:18px;line-height:1;padding:0 2px;margin-left:4px">×</span>
+    </div>
+  </div>
+
+  <!-- Body -->
+  <div class="inv-sheet-body">
+
+    <!-- ALERT content -->
+    <div class="inv-sheet-content" id="inv-sheet-alert">
+      <div class="tab-bar" style="flex-shrink:0">
+        <div class="tab active" id="inv-tab-spread-alert" onclick="switchSheetTab('alert','spread')">Spread Analysis</div>
+        <div class="tab" id="inv-tab-graph-alert" onclick="switchSheetTab('alert','graph')">Association Graph</div>
+      </div>
+      <div class="tab-pane active" id="inv-spread-alert" style="padding:12px 16px;overflow-y:auto;flex:1">
+        <div style="font-size:11px;color:var(--text-hint);background:#fafafa;border:1px solid var(--border);border-radius:4px;padding:5px 8px;margin-bottom:10px">SPXW 20260406 6615.0 C &nbsp;·&nbsp; Account 3215451 &nbsp;·&nbsp; Alert 19150109</div>
+        <div style="display:flex;flex-wrap:wrap;gap:8px;margin-bottom:8px;font-size:12px">
+          <div style="display:flex;align-items:center;gap:4px"><span style="width:10px;height:10px;border-radius:50%;background:#d97706;display:inline-block"></span>3215451 <input type="checkbox" checked disabled style="margin-left:2px"></div>
+          <div style="display:flex;align-items:center;gap:4px"><span style="width:10px;height:10px;border-radius:50%;background:#7c3aed;display:inline-block"></span>3215450 <input type="checkbox" id="related-toggle-alert" onchange="drawSpread('alert')" style="margin-left:2px"><span style="color:var(--text-hint);font-size:11px">Same IP</span></div>
+        </div>
+        <div style="background:#fff2f0;border:1px solid #ffccc7;border-radius:4px;padding:6px 8px;font-size:11px;color:#cf1322;margin-bottom:8px"><strong>⚠</strong> 08:38–08:49 EDT Suspicious Window · 3215450 Reverse Trading</div>
+        <canvas id="spread-canvas-alert" height="240" style="width:100%;display:block;border:1px solid var(--border);border-radius:4px"></canvas>
+        <div style="display:flex;flex-wrap:wrap;gap:8px;font-size:11px;color:var(--text-hint);margin-top:6px;justify-content:center"><span>● Buy</span><span>○ Sell</span><span style="display:inline-flex;align-items:center;gap:3px"><span style="width:14px;height:2px;background:#ef4444;display:inline-block"></span>Hit time</span></div>
+      </div>
+      <div class="tab-pane" id="inv-graph-alert" style="padding:12px 16px;overflow-y:auto;flex:1">
+        <div style="font-size:11px;color:var(--text-hint);background:#fafafa;border:1px solid var(--border);border-radius:4px;padding:5px 8px;margin-bottom:10px">Account 3215451 &nbsp;·&nbsp; 3 Associated Accounts</div>
+        <div style="display:flex;flex-wrap:wrap;gap:8px;margin-bottom:8px;font-size:11px;color:var(--text-hint)">
+          <span style="display:flex;align-items:center;gap:3px"><span style="width:9px;height:9px;border-radius:50%;background:#d97706;display:inline-block"></span>Primary</span>
+          <span style="display:flex;align-items:center;gap:3px"><span style="width:9px;height:9px;border-radius:50%;background:#7c3aed;display:inline-block"></span>Associated</span>
+          <span style="display:flex;align-items:center;gap:3px"><span style="width:9px;height:9px;border-radius:50%;background:#fff;border:1.5px solid #9ca3af;display:inline-block"></span>Extended</span>
+          <span style="margin-left:auto;color:var(--ai-color);cursor:pointer;font-size:11px" onclick="sendChip('deep_expand')"><span class="ai-badge" style="font-size:10px">AI</span> Deep Expand</span>
+        </div>
+        <canvas id="assoc-canvas-alert" height="280" style="width:100%;display:block;border:1px solid var(--border);border-radius:4px"></canvas>
+      </div>
+    </div>
+
+    <!-- CASE content -->
+    <div class="inv-sheet-content" id="inv-sheet-case">
+      <div class="tab-bar" style="flex-shrink:0">
+        <div class="tab active" id="inv-tab-spread-case" onclick="switchSheetTab('case','spread')">Spread Analysis</div>
+        <div class="tab" id="inv-tab-graph-case" onclick="switchSheetTab('case','graph')">Association Graph</div>
+      </div>
+      <div class="tab-pane active" id="inv-spread-case" style="padding:12px 16px;overflow-y:auto;flex:1">
+        <div style="font-size:11px;color:var(--text-hint);background:#fafafa;border:1px solid var(--border);border-radius:4px;padding:5px 8px;margin-bottom:10px">SPXW Option · Account 4183296 · Case TS_814</div>
+        <div style="display:flex;flex-wrap:wrap;gap:8px;margin-bottom:8px;font-size:12px">
+          <div style="display:flex;align-items:center;gap:4px"><span style="width:10px;height:10px;border-radius:50%;background:#d97706;display:inline-block"></span>4183296 <input type="checkbox" checked disabled style="margin-left:2px"></div>
+          <div style="display:flex;align-items:center;gap:4px"><span style="width:10px;height:10px;border-radius:50%;background:#7c3aed;display:inline-block"></span>4183297 <input type="checkbox" id="related-toggle-case" onchange="drawSpread('case')" style="margin-left:2px"><span style="color:var(--text-hint);font-size:11px">Same IP</span></div>
+        </div>
+        <canvas id="spread-canvas-case" height="240" style="width:100%;display:block;border:1px solid var(--border);border-radius:4px"></canvas>
+        <div style="display:flex;flex-wrap:wrap;gap:8px;font-size:11px;color:var(--text-hint);margin-top:6px;justify-content:center"><span>● Buy</span><span>○ Sell</span><span style="display:inline-flex;align-items:center;gap:3px"><span style="width:14px;height:2px;background:#ef4444;display:inline-block"></span>Hit time</span></div>
+      </div>
+      <div class="tab-pane" id="inv-graph-case" style="padding:12px 16px;overflow-y:auto;flex:1">
+        <div style="font-size:11px;color:var(--text-hint);background:#fafafa;border:1px solid var(--border);border-radius:4px;padding:5px 8px;margin-bottom:10px">Account 4183296 · Case TS_814 · 2 Associated Accounts</div>
+        <div style="display:flex;flex-wrap:wrap;gap:8px;margin-bottom:8px;font-size:11px;color:var(--text-hint)">
+          <span style="display:flex;align-items:center;gap:3px"><span style="width:9px;height:9px;border-radius:50%;background:#d97706;display:inline-block"></span>Primary</span>
+          <span style="display:flex;align-items:center;gap:3px"><span style="width:9px;height:9px;border-radius:50%;background:#7c3aed;display:inline-block"></span>Associated</span>
+          <span style="display:flex;align-items:center;gap:3px"><span style="width:9px;height:9px;border-radius:50%;background:#fff;border:1.5px solid #9ca3af;display:inline-block"></span>Extended</span>
+          <span style="margin-left:auto;color:var(--ai-color);cursor:pointer;font-size:11px"><span class="ai-badge" style="font-size:10px">AI</span> Deep Expand</span>
+        </div>
+        <canvas id="assoc-canvas-case" height="280" style="width:100%;display:block;border:1px solid var(--border);border-radius:4px"></canvas>
+      </div>
+    </div>
+
+    <!-- CLIENT content -->
+    <div class="inv-sheet-content" id="inv-sheet-client">
+      <div class="tab-bar" style="flex-shrink:0">
+        <div class="tab active" id="inv-tab-spread-client" onclick="switchSheetTab('client','spread')">Spread Analysis</div>
+        <div class="tab" id="inv-tab-graph-client" onclick="switchSheetTab('client','graph')">Association Graph</div>
+      </div>
+      <div class="tab-pane active" id="inv-spread-client" style="padding:12px 16px;overflow-y:auto;flex:1">
+        <div style="font-size:11px;color:var(--text-hint);background:#fafafa;border:1px solid var(--border);border-radius:4px;padding:5px 8px;margin-bottom:10px">Account 3215451 · Recently Active: SPXW 20260406 6615.0 C</div>
+        <div style="display:flex;flex-wrap:wrap;gap:8px;margin-bottom:8px;font-size:12px">
+          <div style="display:flex;align-items:center;gap:4px"><span style="width:10px;height:10px;border-radius:50%;background:#d97706;display:inline-block"></span>3215451 <input type="checkbox" checked disabled style="margin-left:2px"></div>
+          <div style="display:flex;align-items:center;gap:4px"><span style="width:10px;height:10px;border-radius:50%;background:#7c3aed;display:inline-block"></span>3215450 <input type="checkbox" id="related-toggle-client" onchange="drawSpread('client')" style="margin-left:2px"><span style="color:var(--text-hint);font-size:11px">Same IP</span></div>
+        </div>
+        <div style="background:#fff2f0;border:1px solid #ffccc7;border-radius:4px;padding:6px 8px;font-size:11px;color:#cf1322;margin-bottom:8px"><strong>⚠</strong> 08:38–08:49 EDT Suspicious Window · 3215450 Reverse Trading</div>
+        <canvas id="spread-canvas-client" height="240" style="width:100%;display:block;border:1px solid var(--border);border-radius:4px"></canvas>
+        <div style="display:flex;flex-wrap:wrap;gap:8px;font-size:11px;color:var(--text-hint);margin-top:6px;justify-content:center"><span>● Buy</span><span>○ Sell</span><span style="display:inline-flex;align-items:center;gap:3px"><span style="width:14px;height:2px;background:#ef4444;display:inline-block"></span>Hit time</span></div>
+      </div>
+      <div class="tab-pane" id="inv-graph-client" style="padding:12px 16px;overflow-y:auto;flex:1">
+        <div style="font-size:11px;color:var(--text-hint);background:#fafafa;border:1px solid var(--border);border-radius:4px;padding:5px 8px;margin-bottom:10px">Account 3215451 &nbsp;·&nbsp; 3 Associated Accounts</div>
+        <div style="display:flex;flex-wrap:wrap;gap:8px;margin-bottom:8px;font-size:11px;color:var(--text-hint)">
+          <span style="display:flex;align-items:center;gap:3px"><span style="width:9px;height:9px;border-radius:50%;background:#d97706;display:inline-block"></span>Primary</span>
+          <span style="display:flex;align-items:center;gap:3px"><span style="width:9px;height:9px;border-radius:50%;background:#7c3aed;display:inline-block"></span>Associated</span>
+          <span style="display:flex;align-items:center;gap:3px"><span style="width:9px;height:9px;border-radius:50%;background:#fff;border:1.5px solid #9ca3af;display:inline-block"></span>Extended</span>
+          <span style="margin-left:auto;color:var(--ai-color);cursor:pointer;font-size:11px" onclick="sendChipClient('assoc_graph')"><span class="ai-badge" style="font-size:10px">AI</span> Deep Expand</span>
+        </div>
+        <canvas id="assoc-canvas-client" height="280" style="width:100%;display:block;border:1px solid var(--border);border-radius:4px"></canvas>
+      </div>
+    </div>
+
+  </div><!-- /body -->
+</div>
+
+<script>
+// ── Investigation Bottom Sheet ──
+let invSheetSuffix = null;
+
+function showInvSheet(suffix) {
+  invSheetSuffix = suffix;
+  const sheet = document.getElementById('inv-sheet');
+  sheet.classList.add('visible');
+  // Activate correct content panel
+  document.querySelectorAll('.inv-sheet-content').forEach(c => c.classList.remove('active'));
+  document.getElementById('inv-sheet-' + suffix).classList.add('active');
+}
+
+function openInvSheet() {
+  const sheet = document.getElementById('inv-sheet');
+  if (!sheet.classList.contains('open')) {
+    sheet.classList.add('open');
+    document.getElementById('inv-sheet-toggle-btn').textContent = 'Collapse ↓';
+    document.querySelectorAll('.detail-page.active').forEach(p => p.classList.add('sheet-open'));
+    // Draw active canvas
+    setTimeout(() => {
+      const content = document.querySelector('.inv-sheet-content.active');
+      if (!content) return;
+      const activePane = content.querySelector('.tab-pane.active');
+      if (!activePane) return;
+      if (activePane.querySelector('canvas[id^="spread"]')) drawSpread(invSheetSuffix);
+      else drawAssocGraph(invSheetSuffix);
+    }, 50);
+  }
+}
+
+function collapseInvSheet() {
+  const sheet = document.getElementById('inv-sheet');
+  sheet.classList.remove('open');
+  document.getElementById('inv-sheet-toggle-btn').textContent = 'Expand ↑';
+  document.querySelectorAll('.detail-page').forEach(p => p.classList.remove('sheet-open'));
+}
+
+function hideInvSheet() {
+  collapseInvSheet();
+  document.getElementById('inv-sheet').classList.remove('visible');
+  invSheetSuffix = null;
+}
+
+function toggleInvSheet() {
+  const sheet = document.getElementById('inv-sheet');
+  if (sheet.classList.contains('open')) collapseInvSheet();
+  else openInvSheet();
+}
+
+function switchSheetTab(suffix, type) {
+  const content = document.getElementById('inv-sheet-' + suffix);
+  const spreadTab = document.getElementById('inv-tab-spread-' + suffix);
+  const graphTab  = document.getElementById('inv-tab-graph-' + suffix);
+  const spreadPane = document.getElementById('inv-spread-' + suffix);
+  const graphPane  = document.getElementById('inv-graph-' + suffix);
+  if (type === 'spread') {
+    spreadTab.classList.add('active'); graphTab.classList.remove('active');
+    spreadPane.classList.add('active'); graphPane.classList.remove('active');
+    setTimeout(() => drawSpread(suffix), 0);
+  } else {
+    graphTab.classList.add('active'); spreadTab.classList.remove('active');
+    graphPane.classList.add('active'); spreadPane.classList.remove('active');
+    setTimeout(() => drawAssocGraph(suffix), 0);
+  }
+}
+
+// Auto-open on scroll to bottom
+function setupScrollSentinel(suffix) {
+  const sentinel = document.getElementById('scroll-sentinel-' + suffix);
+  if (!sentinel) return;
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(e => {
+      if (e.isIntersecting) openInvSheet();
+    });
+  }, { threshold: 0.1 });
+  observer.observe(sentinel);
+}
+</script>
 
 <!-- ══ Add Rule Modal ══ -->
 <div id="add-rule-modal-overlay" onclick="if(event.target===this)closeAddRuleModal()" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,.45);z-index:1000;align-items:center;justify-content:center">

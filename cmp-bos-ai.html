@@ -2139,13 +2139,107 @@ function switchInvTab(el, paneId, suffix, type) {
   setTimeout(() => type === 'spread' ? drawSpread(suffix) : drawAssocGraph(suffix), 0);
 }
 
+// ── Spread Analysis state (per suffix) ──
+const spreadState = {
+  alert:  { viewStart: 0, viewEnd: 50 },
+  case:   { viewStart: 0, viewEnd: 50 },
+  client: { viewStart: 0, viewEnd: 50 },
+};
+
+function updateZoomLabel(suffix) {
+  const st = spreadState[suffix];
+  const zoom = (50 / (st.viewEnd - st.viewStart)).toFixed(1);
+  const el = document.getElementById('spread-zoom-' + suffix);
+  if (el) el.textContent = (zoom === '1.0' ? '1' : zoom) + '×';
+}
+
+function zoomSpread(suffix, dir) {
+  const st = spreadState[suffix];
+  const span = st.viewEnd - st.viewStart;
+  const center = (st.viewStart + st.viewEnd) / 2;
+  let newSpan;
+  if (dir > 0) {
+    newSpan = Math.max(5, span * 0.6);
+  } else {
+    newSpan = Math.min(50, span / 0.6);
+  }
+  st.viewStart = Math.max(0, center - newSpan / 2);
+  st.viewEnd = Math.min(50, st.viewStart + newSpan);
+  if (st.viewEnd === 50) st.viewStart = Math.max(0, 50 - newSpan);
+  updateZoomLabel(suffix);
+  drawSpread(suffix);
+}
+
+function resetSpread(suffix) {
+  spreadState[suffix].viewStart = 0;
+  spreadState[suffix].viewEnd = 50;
+  updateZoomLabel(suffix);
+  drawSpread(suffix);
+}
+
+function applySpread(suffix) {
+  resetSpread(suffix);
+}
+
+function setupSpreadInteraction(suffix) {
+  const canvas = document.getElementById('spread-canvas-' + suffix);
+  if (!canvas || canvas._spreadBound) return;
+  canvas._spreadBound = true;
+
+  // Wheel: zoom centered on cursor x
+  canvas.addEventListener('wheel', (e) => {
+    e.preventDefault();
+    const st = spreadState[suffix];
+    const rect = canvas.getBoundingClientRect();
+    const frac = (e.clientX - rect.left) / rect.width;
+    const viewSpan = st.viewEnd - st.viewStart;
+    const tAtCursor = st.viewStart + frac * viewSpan;
+    const factor = e.deltaY > 0 ? 1.25 : 0.8;
+    let newSpan = Math.min(50, Math.max(5, viewSpan * factor));
+    st.viewStart = Math.max(0, tAtCursor - frac * newSpan);
+    st.viewEnd = Math.min(50, st.viewStart + newSpan);
+    if (st.viewEnd === 50) st.viewStart = Math.max(0, 50 - newSpan);
+    updateZoomLabel(suffix);
+    drawSpread(suffix);
+  }, { passive: false });
+
+  // Drag: pan
+  let dragStart = null;
+  let dragViewStart = 0;
+  canvas.addEventListener('mousedown', (e) => {
+    dragStart = e.clientX;
+    dragViewStart = spreadState[suffix].viewStart;
+    canvas.style.cursor = 'grabbing';
+  });
+  window.addEventListener('mousemove', (e) => {
+    if (dragStart === null) return;
+    const st = spreadState[suffix];
+    const rect = canvas.getBoundingClientRect();
+    const pxPerT = rect.width / (st.viewEnd - st.viewStart);
+    const dtPx = e.clientX - dragStart;
+    const dt = dtPx / pxPerT;
+    const span = st.viewEnd - st.viewStart;
+    let ns = dragViewStart - dt;
+    ns = Math.max(0, Math.min(50 - span, ns));
+    st.viewStart = ns;
+    st.viewEnd = ns + span;
+    drawSpread(suffix);
+  });
+  window.addEventListener('mouseup', () => {
+    if (dragStart !== null) {
+      dragStart = null;
+      canvas.style.cursor = 'crosshair';
+    }
+  });
+}
+
 function drawSpread(suffix) {
   suffix = suffix || 'alert';
   const canvas = document.getElementById('spread-canvas-' + suffix);
   if (!canvas) return;
   const dpr = window.devicePixelRatio || 1;
   const cssW = canvas.offsetWidth || 640;
-  const cssH = 300;
+  const cssH = canvas.offsetHeight || 260;
   canvas.width = Math.round(cssW * dpr);
   canvas.height = Math.round(cssH * dpr);
   const ctx = canvas.getContext('2d');
@@ -2159,11 +2253,14 @@ function drawSpread(suffix) {
   const volTop = priceBot + SPLIT, volBot = H - PAD_B;
   const chartW = W - PAD_L - PAD_R;
 
-  // Time axis: t=0 → 08:20, t=50 → 09:10 EDT
-  const tMax = 50;
+  // Time axis driven by spreadState view window
+  const st = spreadState[suffix] || { viewStart: 0, viewEnd: 50 };
+  const viewStart = st.viewStart, viewEnd = st.viewEnd;
+  const viewSpan = viewEnd - viewStart;
   const priceMin = 6607, priceMax = 6623;
 
-  function tX(t) { return PAD_L + (t / tMax) * chartW; }
+  function tX(t) { return PAD_L + ((t - viewStart) / viewSpan) * chartW; }
+  function tInView(t) { return t >= viewStart - 2 && t <= viewEnd + 2; }
   function pY(p) { return priceTop + (priceMax - p) / (priceMax - priceMin) * priceH; }
 
   const hitT = 23;      // 08:43
@@ -2210,9 +2307,13 @@ function drawSpread(suffix) {
   ctx.fillStyle = '#fff';
   ctx.fillRect(0, 0, W, H);
 
-  // Suspicious window shading (spans price + volume area)
-  ctx.fillStyle = 'rgba(239,68,68,0.07)';
-  ctx.fillRect(tX(winS), priceTop, tX(winE) - tX(winS), priceH + SPLIT + VOL_H);
+  // Suspicious window shading — clipped to chart area
+  const shadX1 = Math.max(PAD_L, tX(winS));
+  const shadX2 = Math.min(W - PAD_R, tX(winE));
+  if (shadX2 > shadX1) {
+    ctx.fillStyle = 'rgba(239,68,68,0.07)';
+    ctx.fillRect(shadX1, priceTop, shadX2 - shadX1, priceH + SPLIT + VOL_H);
+  }
 
   // Horizontal price grid
   for (let p = 6608; p <= 6622; p += 2) {
@@ -2225,9 +2326,12 @@ function drawSpread(suffix) {
     }
   }
 
-  // X axis ticks + vertical grid
-  for (let t = 0; t <= 50; t += 10) {
+  // X axis ticks + vertical grid — auto-step based on view span
+  const xStep = viewSpan <= 10 ? 2 : viewSpan <= 20 ? 5 : 10;
+  const xStart = Math.ceil(viewStart / xStep) * xStep;
+  for (let t = xStart; t <= viewEnd + 0.01; t += xStep) {
     const x = tX(t);
+    if (x < PAD_L || x > W - PAD_R) continue;
     ctx.strokeStyle = '#f3f4f6'; ctx.lineWidth = 1;
     ctx.beginPath(); ctx.moveTo(x, priceTop); ctx.lineTo(x, volBot); ctx.stroke();
     const totalM = 8*60 + 20 + t;
@@ -2236,24 +2340,35 @@ function drawSpread(suffix) {
     ctx.fillText(`${String(h).padStart(2,'0')}:${String(m).padStart(2,'0')}`, x, H - PAD_B + 14);
   }
 
-  // Hit-time dashed line
-  const hx = tX(hitT);
-  ctx.strokeStyle = '#ef4444'; ctx.lineWidth = 1.5;
-  ctx.setLineDash([4, 3]);
-  ctx.beginPath(); ctx.moveTo(hx, priceTop - 6); ctx.lineTo(hx, volBot); ctx.stroke();
-  ctx.setLineDash([]);
-  ctx.fillStyle = '#ef4444'; ctx.font = 'bold 10px system-ui,sans-serif'; ctx.textAlign = 'center';
-  ctx.fillText('Hit 08:43', hx, priceTop - 9);
+  // Hit-time dashed line (only if in view)
+  if (hitT >= viewStart && hitT <= viewEnd) {
+    const hx = tX(hitT);
+    ctx.strokeStyle = '#ef4444'; ctx.lineWidth = 1.5;
+    ctx.setLineDash([4, 3]);
+    ctx.beginPath(); ctx.moveTo(hx, priceTop - 6); ctx.lineTo(hx, volBot); ctx.stroke();
+    ctx.setLineDash([]);
+    ctx.fillStyle = '#ef4444'; ctx.font = 'bold 10px system-ui,sans-serif'; ctx.textAlign = 'center';
+    ctx.fillText('Hit 08:43', hx, priceTop - 9);
+  }
 
-  // Market mid-price line
+  // Market mid-price line (clip to chart bounds)
+  ctx.save();
+  ctx.rect(PAD_L, priceTop - 2, chartW, priceH + 4);
+  ctx.clip();
   ctx.strokeStyle = '#d1d5db'; ctx.lineWidth = 1.5;
   ctx.beginPath();
-  mktLine.forEach((pt, i) => i === 0 ? ctx.moveTo(tX(pt.t), pY(pt.p)) : ctx.lineTo(tX(pt.t), pY(pt.p)));
+  let mktStarted = false;
+  mktLine.forEach(pt => {
+    if (!mktStarted) { ctx.moveTo(tX(pt.t), pY(pt.p)); mktStarted = true; }
+    else { ctx.lineTo(tX(pt.t), pY(pt.p)); }
+  });
   ctx.stroke();
+  ctx.restore();
 
   // Volume bars
   const bw = 9;
   vols.forEach(b => {
+    if (!tInView(b.t)) return;
     const x = tX(b.t);
     const bh = (b.v / maxV) * (volBot - volTop);
     ctx.fillStyle = (b.t >= winS && b.t <= winE) ? 'rgba(239,68,68,0.38)' : 'rgba(156,163,175,0.45)';
@@ -2279,10 +2394,14 @@ function drawSpread(suffix) {
     }
   }
 
-  T1.forEach(d => bubble(d.t, d.p, d.vol, d.s, '#d97706', d.hit));
+  ctx.save();
+  ctx.rect(PAD_L - 1, priceTop - 1, chartW + 2, priceH + 2);
+  ctx.clip();
+  T1.forEach(d => { if (tInView(d.t)) bubble(d.t, d.p, d.vol, d.s, '#d97706', d.hit); });
   if (document.getElementById('related-toggle-' + suffix)?.checked) {
-    T2.forEach(d => bubble(d.t, d.p, d.vol, d.s, '#7c3aed', d.hit));
+    T2.forEach(d => { if (tInView(d.t)) bubble(d.t, d.p, d.vol, d.s, '#7c3aed', d.hit); });
   }
+  ctx.restore();
 
   // Chart border
   ctx.strokeStyle = '#e5e7eb'; ctx.lineWidth = 1;
@@ -2684,15 +2803,43 @@ function submitWLModal() {
         <div class="tab active" id="inv-tab-spread-alert" onclick="switchSheetTab('alert','spread')">Spread Analysis</div>
         <div class="tab" id="inv-tab-graph-alert" onclick="switchSheetTab('alert','graph')">Association Graph</div>
       </div>
-      <div class="tab-pane active" id="inv-spread-alert" style="padding:12px 16px;overflow-y:auto;flex:1">
-        <div style="font-size:11px;color:var(--text-hint);background:#fafafa;border:1px solid var(--border);border-radius:4px;padding:5px 8px;margin-bottom:10px">SPXW 20260406 6615.0 C &nbsp;·&nbsp; Account 3215451 &nbsp;·&nbsp; Alert 19150109</div>
-        <div style="display:flex;flex-wrap:wrap;gap:8px;margin-bottom:8px;font-size:12px">
-          <div style="display:flex;align-items:center;gap:4px"><span style="width:10px;height:10px;border-radius:50%;background:#d97706;display:inline-block"></span>3215451 <input type="checkbox" checked disabled style="margin-left:2px"></div>
-          <div style="display:flex;align-items:center;gap:4px"><span style="width:10px;height:10px;border-radius:50%;background:#7c3aed;display:inline-block"></span>3215450 <input type="checkbox" id="related-toggle-alert" onchange="drawSpread('alert')" style="margin-left:2px"><span style="color:var(--text-hint);font-size:11px">Same IP</span></div>
+      <div class="tab-pane active" id="inv-spread-alert" style="display:flex;flex-direction:column;flex:1;overflow:hidden">
+        <!-- Toolbar -->
+        <div style="display:flex;flex-wrap:wrap;gap:6px;align-items:center;padding:7px 12px;border-bottom:1px solid #f0f0f0;background:#fafafa;flex-shrink:0">
+          <span style="font-size:11px;color:var(--text-hint)">Symbol</span>
+          <select id="spread-symbol-alert" class="filter-select" style="width:175px;font-size:11px">
+            <option>SPXW 20260406 6615.0 C</option><option>SPXW 20260405 6600.0 P</option>
+            <option>AAPL 20260406 200.0 C</option><option>TSLA 20260406 250.0 P</option><option>SPY 20260406 560.0 C</option>
+          </select>
+          <span style="font-size:11px;color:var(--text-hint)">Date</span>
+          <input type="date" id="spread-date-alert" class="filter-input" style="width:126px;font-size:11px" value="2026-04-06">
+          <span style="font-size:11px;color:var(--text-hint)">Account</span>
+          <input id="spread-acct1-alert" class="filter-input" style="width:84px;font-size:11px" value="3215451">
+          <label style="display:flex;align-items:center;gap:4px;font-size:11px;color:var(--text-hint);cursor:pointer">
+            <input type="checkbox" id="related-toggle-alert" onchange="drawSpread('alert')" style="margin:0">
+            <input id="spread-acct2-alert" class="filter-input" style="width:72px;font-size:11px" value="3215450" placeholder="Compare…">
+            <span style="color:var(--text-hint);font-size:10px">Same IP</span>
+          </label>
+          <button class="btn btn-primary btn-sm" id="spread-apply-alert" onclick="applySpread('alert')" style="font-size:11px">Apply</button>
+          <div style="margin-left:auto;display:flex;align-items:center;gap:3px">
+            <button class="btn btn-sm" onclick="zoomSpread('alert',-1)" style="font-size:13px;padding:0 8px;line-height:22px" title="Zoom out">−</button>
+            <span id="spread-zoom-alert" style="font-size:11px;min-width:28px;text-align:center;color:var(--text-hint)">1×</span>
+            <button class="btn btn-sm" onclick="zoomSpread('alert',1)" style="font-size:13px;padding:0 8px;line-height:22px" title="Zoom in">+</button>
+            <button class="btn btn-sm" onclick="resetSpread('alert')" style="font-size:11px;margin-left:2px">Reset</button>
+          </div>
         </div>
-        <div style="background:#fff2f0;border:1px solid #ffccc7;border-radius:4px;padding:6px 8px;font-size:11px;color:#cf1322;margin-bottom:8px"><strong>⚠</strong> 08:38–08:49 EDT Suspicious Window · 3215450 Reverse Trading</div>
-        <canvas id="spread-canvas-alert" height="240" style="width:100%;display:block;border:1px solid var(--border);border-radius:4px"></canvas>
-        <div style="display:flex;flex-wrap:wrap;gap:8px;font-size:11px;color:var(--text-hint);margin-top:6px;justify-content:center"><span>● Buy</span><span>○ Sell</span><span style="display:inline-flex;align-items:center;gap:3px"><span style="width:14px;height:2px;background:#ef4444;display:inline-block"></span>Hit time</span></div>
+        <!-- Alert bar -->
+        <div style="background:#fff2f0;border-bottom:1px solid #ffccc7;padding:5px 12px;font-size:11px;color:#cf1322;flex-shrink:0"><strong>⚠</strong> 08:38–08:49 EDT Suspicious Window · 3215450 Reverse Trading</div>
+        <!-- Canvas -->
+        <div style="flex:1;padding:8px 12px 4px;display:flex;flex-direction:column;overflow:hidden">
+          <canvas id="spread-canvas-alert" style="width:100%;flex:1;display:block;border:1px solid var(--border);border-radius:4px;cursor:crosshair"></canvas>
+          <div style="display:flex;flex-wrap:wrap;gap:8px;font-size:11px;color:var(--text-hint);margin-top:5px;justify-content:center">
+            <span>● Buy</span><span>○ Sell</span>
+            <span style="display:inline-flex;align-items:center;gap:3px"><span style="width:14px;height:2px;background:#ef4444;display:inline-block"></span>Hit time</span>
+            <span style="display:inline-flex;align-items:center;gap:3px"><span style="width:14px;height:2px;background:#d1d5db;display:inline-block"></span>Mid price</span>
+            <span style="font-size:10px;color:#9ca3af">Scroll to zoom · Drag to pan</span>
+          </div>
+        </div>
       </div>
       <div class="tab-pane" id="inv-graph-alert" style="padding:12px 16px;overflow-y:auto;flex:1">
         <div style="font-size:11px;color:var(--text-hint);background:#fafafa;border:1px solid var(--border);border-radius:4px;padding:5px 8px;margin-bottom:10px">Account 3215451 &nbsp;·&nbsp; 3 Associated Accounts</div>
@@ -2712,14 +2859,41 @@ function submitWLModal() {
         <div class="tab active" id="inv-tab-spread-case" onclick="switchSheetTab('case','spread')">Spread Analysis</div>
         <div class="tab" id="inv-tab-graph-case" onclick="switchSheetTab('case','graph')">Association Graph</div>
       </div>
-      <div class="tab-pane active" id="inv-spread-case" style="padding:12px 16px;overflow-y:auto;flex:1">
-        <div style="font-size:11px;color:var(--text-hint);background:#fafafa;border:1px solid var(--border);border-radius:4px;padding:5px 8px;margin-bottom:10px">SPXW Option · Account 4183296 · Case TS_814</div>
-        <div style="display:flex;flex-wrap:wrap;gap:8px;margin-bottom:8px;font-size:12px">
-          <div style="display:flex;align-items:center;gap:4px"><span style="width:10px;height:10px;border-radius:50%;background:#d97706;display:inline-block"></span>4183296 <input type="checkbox" checked disabled style="margin-left:2px"></div>
-          <div style="display:flex;align-items:center;gap:4px"><span style="width:10px;height:10px;border-radius:50%;background:#7c3aed;display:inline-block"></span>4183297 <input type="checkbox" id="related-toggle-case" onchange="drawSpread('case')" style="margin-left:2px"><span style="color:var(--text-hint);font-size:11px">Same IP</span></div>
+      <div class="tab-pane active" id="inv-spread-case" style="display:flex;flex-direction:column;flex:1;overflow:hidden">
+        <!-- Toolbar -->
+        <div style="display:flex;flex-wrap:wrap;gap:6px;align-items:center;padding:7px 12px;border-bottom:1px solid #f0f0f0;background:#fafafa;flex-shrink:0">
+          <span style="font-size:11px;color:var(--text-hint)">Symbol</span>
+          <select id="spread-symbol-case" class="filter-select" style="width:175px;font-size:11px">
+            <option>SPXW 20260406 6615.0 C</option><option>SPXW 20260405 6600.0 P</option>
+            <option>AAPL 20260406 200.0 C</option><option>TSLA 20260406 250.0 P</option><option>SPY 20260406 560.0 C</option>
+          </select>
+          <span style="font-size:11px;color:var(--text-hint)">Date</span>
+          <input type="date" id="spread-date-case" class="filter-input" style="width:126px;font-size:11px" value="2026-04-06">
+          <span style="font-size:11px;color:var(--text-hint)">Account</span>
+          <input id="spread-acct1-case" class="filter-input" style="width:84px;font-size:11px" value="4183296">
+          <label style="display:flex;align-items:center;gap:4px;font-size:11px;color:var(--text-hint);cursor:pointer">
+            <input type="checkbox" id="related-toggle-case" onchange="drawSpread('case')" style="margin:0">
+            <input id="spread-acct2-case" class="filter-input" style="width:72px;font-size:11px" value="4183297" placeholder="Compare…">
+            <span style="color:var(--text-hint);font-size:10px">Same IP</span>
+          </label>
+          <button class="btn btn-primary btn-sm" id="spread-apply-case" onclick="applySpread('case')" style="font-size:11px">Apply</button>
+          <div style="margin-left:auto;display:flex;align-items:center;gap:3px">
+            <button class="btn btn-sm" onclick="zoomSpread('case',-1)" style="font-size:13px;padding:0 8px;line-height:22px" title="Zoom out">−</button>
+            <span id="spread-zoom-case" style="font-size:11px;min-width:28px;text-align:center;color:var(--text-hint)">1×</span>
+            <button class="btn btn-sm" onclick="zoomSpread('case',1)" style="font-size:13px;padding:0 8px;line-height:22px" title="Zoom in">+</button>
+            <button class="btn btn-sm" onclick="resetSpread('case')" style="font-size:11px;margin-left:2px">Reset</button>
+          </div>
         </div>
-        <canvas id="spread-canvas-case" height="240" style="width:100%;display:block;border:1px solid var(--border);border-radius:4px"></canvas>
-        <div style="display:flex;flex-wrap:wrap;gap:8px;font-size:11px;color:var(--text-hint);margin-top:6px;justify-content:center"><span>● Buy</span><span>○ Sell</span><span style="display:inline-flex;align-items:center;gap:3px"><span style="width:14px;height:2px;background:#ef4444;display:inline-block"></span>Hit time</span></div>
+        <!-- Canvas -->
+        <div style="flex:1;padding:8px 12px 4px;display:flex;flex-direction:column;overflow:hidden">
+          <canvas id="spread-canvas-case" style="width:100%;flex:1;display:block;border:1px solid var(--border);border-radius:4px;cursor:crosshair"></canvas>
+          <div style="display:flex;flex-wrap:wrap;gap:8px;font-size:11px;color:var(--text-hint);margin-top:5px;justify-content:center">
+            <span>● Buy</span><span>○ Sell</span>
+            <span style="display:inline-flex;align-items:center;gap:3px"><span style="width:14px;height:2px;background:#ef4444;display:inline-block"></span>Hit time</span>
+            <span style="display:inline-flex;align-items:center;gap:3px"><span style="width:14px;height:2px;background:#d1d5db;display:inline-block"></span>Mid price</span>
+            <span style="font-size:10px;color:#9ca3af">Scroll to zoom · Drag to pan</span>
+          </div>
+        </div>
       </div>
       <div class="tab-pane" id="inv-graph-case" style="padding:12px 16px;overflow-y:auto;flex:1">
         <div style="font-size:11px;color:var(--text-hint);background:#fafafa;border:1px solid var(--border);border-radius:4px;padding:5px 8px;margin-bottom:10px">Account 4183296 · Case TS_814 · 2 Associated Accounts</div>
@@ -2739,15 +2913,43 @@ function submitWLModal() {
         <div class="tab active" id="inv-tab-spread-client" onclick="switchSheetTab('client','spread')">Spread Analysis</div>
         <div class="tab" id="inv-tab-graph-client" onclick="switchSheetTab('client','graph')">Association Graph</div>
       </div>
-      <div class="tab-pane active" id="inv-spread-client" style="padding:12px 16px;overflow-y:auto;flex:1">
-        <div style="font-size:11px;color:var(--text-hint);background:#fafafa;border:1px solid var(--border);border-radius:4px;padding:5px 8px;margin-bottom:10px">Account 3215451 · Recently Active: SPXW 20260406 6615.0 C</div>
-        <div style="display:flex;flex-wrap:wrap;gap:8px;margin-bottom:8px;font-size:12px">
-          <div style="display:flex;align-items:center;gap:4px"><span style="width:10px;height:10px;border-radius:50%;background:#d97706;display:inline-block"></span>3215451 <input type="checkbox" checked disabled style="margin-left:2px"></div>
-          <div style="display:flex;align-items:center;gap:4px"><span style="width:10px;height:10px;border-radius:50%;background:#7c3aed;display:inline-block"></span>3215450 <input type="checkbox" id="related-toggle-client" onchange="drawSpread('client')" style="margin-left:2px"><span style="color:var(--text-hint);font-size:11px">Same IP</span></div>
+      <div class="tab-pane active" id="inv-spread-client" style="display:flex;flex-direction:column;flex:1;overflow:hidden">
+        <!-- Toolbar -->
+        <div style="display:flex;flex-wrap:wrap;gap:6px;align-items:center;padding:7px 12px;border-bottom:1px solid #f0f0f0;background:#fafafa;flex-shrink:0">
+          <span style="font-size:11px;color:var(--text-hint)">Symbol</span>
+          <select id="spread-symbol-client" class="filter-select" style="width:175px;font-size:11px">
+            <option>SPXW 20260406 6615.0 C</option><option>SPXW 20260405 6600.0 P</option>
+            <option>AAPL 20260406 200.0 C</option><option>TSLA 20260406 250.0 P</option><option>SPY 20260406 560.0 C</option>
+          </select>
+          <span style="font-size:11px;color:var(--text-hint)">Date</span>
+          <input type="date" id="spread-date-client" class="filter-input" style="width:126px;font-size:11px" value="2026-04-06">
+          <span style="font-size:11px;color:var(--text-hint)">Account</span>
+          <input id="spread-acct1-client" class="filter-input" style="width:84px;font-size:11px" value="3215451">
+          <label style="display:flex;align-items:center;gap:4px;font-size:11px;color:var(--text-hint);cursor:pointer">
+            <input type="checkbox" id="related-toggle-client" onchange="drawSpread('client')" style="margin:0">
+            <input id="spread-acct2-client" class="filter-input" style="width:72px;font-size:11px" value="3215450" placeholder="Compare…">
+            <span style="color:var(--text-hint);font-size:10px">Same IP</span>
+          </label>
+          <button class="btn btn-primary btn-sm" id="spread-apply-client" onclick="applySpread('client')" style="font-size:11px">Apply</button>
+          <div style="margin-left:auto;display:flex;align-items:center;gap:3px">
+            <button class="btn btn-sm" onclick="zoomSpread('client',-1)" style="font-size:13px;padding:0 8px;line-height:22px" title="Zoom out">−</button>
+            <span id="spread-zoom-client" style="font-size:11px;min-width:28px;text-align:center;color:var(--text-hint)">1×</span>
+            <button class="btn btn-sm" onclick="zoomSpread('client',1)" style="font-size:13px;padding:0 8px;line-height:22px" title="Zoom in">+</button>
+            <button class="btn btn-sm" onclick="resetSpread('client')" style="font-size:11px;margin-left:2px">Reset</button>
+          </div>
         </div>
-        <div style="background:#fff2f0;border:1px solid #ffccc7;border-radius:4px;padding:6px 8px;font-size:11px;color:#cf1322;margin-bottom:8px"><strong>⚠</strong> 08:38–08:49 EDT Suspicious Window · 3215450 Reverse Trading</div>
-        <canvas id="spread-canvas-client" height="240" style="width:100%;display:block;border:1px solid var(--border);border-radius:4px"></canvas>
-        <div style="display:flex;flex-wrap:wrap;gap:8px;font-size:11px;color:var(--text-hint);margin-top:6px;justify-content:center"><span>● Buy</span><span>○ Sell</span><span style="display:inline-flex;align-items:center;gap:3px"><span style="width:14px;height:2px;background:#ef4444;display:inline-block"></span>Hit time</span></div>
+        <!-- Alert bar -->
+        <div style="background:#fff2f0;border-bottom:1px solid #ffccc7;padding:5px 12px;font-size:11px;color:#cf1322;flex-shrink:0"><strong>⚠</strong> 08:38–08:49 EDT Suspicious Window · 3215450 Reverse Trading</div>
+        <!-- Canvas -->
+        <div style="flex:1;padding:8px 12px 4px;display:flex;flex-direction:column;overflow:hidden">
+          <canvas id="spread-canvas-client" style="width:100%;flex:1;display:block;border:1px solid var(--border);border-radius:4px;cursor:crosshair"></canvas>
+          <div style="display:flex;flex-wrap:wrap;gap:8px;font-size:11px;color:var(--text-hint);margin-top:5px;justify-content:center">
+            <span>● Buy</span><span>○ Sell</span>
+            <span style="display:inline-flex;align-items:center;gap:3px"><span style="width:14px;height:2px;background:#ef4444;display:inline-block"></span>Hit time</span>
+            <span style="display:inline-flex;align-items:center;gap:3px"><span style="width:14px;height:2px;background:#d1d5db;display:inline-block"></span>Mid price</span>
+            <span style="font-size:10px;color:#9ca3af">Scroll to zoom · Drag to pan</span>
+          </div>
+        </div>
       </div>
       <div class="tab-pane" id="inv-graph-client" style="padding:12px 16px;overflow-y:auto;flex:1">
         <div style="font-size:11px;color:var(--text-hint);background:#fafafa;border:1px solid var(--border);border-radius:4px;padding:5px 8px;margin-bottom:10px">Account 3215451 &nbsp;·&nbsp; 3 Associated Accounts</div>
@@ -2783,14 +2985,18 @@ function openInvSheet() {
     sheet.classList.add('open');
     document.getElementById('inv-sheet-toggle-btn').textContent = 'Collapse ↓';
     document.querySelectorAll('.detail-page.active').forEach(p => p.classList.add('sheet-open'));
-    // Draw active canvas
+    // Draw active canvas + wire interactions
     setTimeout(() => {
       const content = document.querySelector('.inv-sheet-content.active');
       if (!content) return;
       const activePane = content.querySelector('.tab-pane.active');
       if (!activePane) return;
-      if (activePane.querySelector('canvas[id^="spread"]')) drawSpread(invSheetSuffix);
-      else drawAssocGraph(invSheetSuffix);
+      if (activePane.querySelector('canvas[id^="spread"]')) {
+        drawSpread(invSheetSuffix);
+        setupSpreadInteraction(invSheetSuffix);
+      } else {
+        drawAssocGraph(invSheetSuffix);
+      }
     }, 50);
   }
 }
@@ -2823,7 +3029,7 @@ function switchSheetTab(suffix, type) {
   if (type === 'spread') {
     spreadTab.classList.add('active'); graphTab.classList.remove('active');
     spreadPane.classList.add('active'); graphPane.classList.remove('active');
-    setTimeout(() => drawSpread(suffix), 0);
+    setTimeout(() => { drawSpread(suffix); setupSpreadInteraction(suffix); }, 0);
   } else {
     graphTab.classList.add('active'); spreadTab.classList.remove('active');
     graphPane.classList.add('active'); spreadPane.classList.remove('active');

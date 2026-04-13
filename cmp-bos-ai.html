@@ -306,7 +306,7 @@ tbody tr:hover td { background: #fffdf0; }
 /* ── Investigation Bottom Sheet ── */
 .inv-sheet { position:fixed; bottom:0; left:200px; right:0; z-index:500; background:#fff; border-top:2px solid #e8e8e8; border-radius:10px 10px 0 0; box-shadow:0 -4px 24px rgba(0,0,0,.10); display:none; flex-direction:column; transition:height .28s cubic-bezier(.4,0,.2,1); height:44px; }
 .inv-sheet.visible { display:flex; }
-.inv-sheet.open { height:460px; }
+.inv-sheet.open { height:520px; }
 .inv-sheet-handle { display:flex; align-items:center; padding:0 16px; height:44px; cursor:pointer; user-select:none; flex-shrink:0; position:relative; border-bottom:1px solid transparent; }
 .inv-sheet.open .inv-sheet-handle { border-bottom-color:#f0f0f0; }
 .inv-sheet-grip { width:36px; height:4px; background:#d9d9d9; border-radius:2px; position:absolute; top:8px; left:50%; transform:translateX(-50%); transition:background .15s; }
@@ -317,9 +317,12 @@ tbody tr:hover td { background: #fffdf0; }
 .inv-sheet.open .inv-sheet-body { opacity:1; }
 .inv-sheet-content { display:none; flex:1; flex-direction:column; overflow-y:auto; }
 .inv-sheet-content.active { display:flex; }
+/* spread panes need flex display (overrides generic .tab-pane.active display:block) */
+#inv-sheet .tab-pane { padding: 0; }
+#inv-sheet .tab-pane[id^="inv-spread"].active { display: flex; }
 /* push detail page content above sheet */
 .page.detail-page { padding-bottom: 60px; }
-.page.detail-page.sheet-open { padding-bottom: 476px; }
+.page.detail-page.sheet-open { padding-bottom: 536px; }
 /* ── A/B Test ── */
 .ab-split { display:grid; grid-template-columns:1fr 1fr; border:1px solid var(--border); border-radius:6px; overflow:hidden; margin-bottom:12px; }
 .ab-col-a { border-right:1px solid var(--border); }
@@ -353,9 +356,63 @@ tbody tr:hover td { background: #fffdf0; }
 .empty { padding: 24px; text-align: center; color: var(--text-dis); font-size: 12px; }
 .two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
 @media(max-width:1100px){ .two-col { grid-template-columns: 1fr; } }
+/* ── New status tags ── */
+.tag-restricted { background: #fff2f0; color: #cf1322; border: 1px solid #ffa39e; }
+.tag-terminate { background: #fff1f0; color: #820014; border: 1px solid #ffccc7; }
+/* ── Case detail: alerts + clients side-by-side ── */
+.case-alert-client-row { display: grid; grid-template-columns: 3fr 2fr; gap: 12px; align-items: start; }
+@media(max-width:1200px){ .case-alert-client-row { grid-template-columns: 1fr; } }
+/* ── Multi-version A/B ── */
+.ab-split-multi { display: grid; gap: 0; border: 1px solid var(--border); border-radius: 6px; overflow: hidden; margin-bottom: 12px; }
+.ab-col-c { background: #f6ffed; }
+.ab-col-head-c { background: #f6ffed; border-bottom: 1px solid #b7eb8f; color: #389e0d; font-size: 12px; font-weight: 600; padding: 8px 12px; display: flex; align-items: center; gap: 6px; }
+.ab-experiments-list { display: flex; flex-direction: column; gap: 8px; margin-bottom: 12px; }
+.ab-exp-item { display: flex; align-items: center; gap: 8px; padding: 8px 12px; background: #fafafa; border: 1px solid var(--border); border-radius: 6px; font-size: 12px; }
+.ab-exp-status-running { color: #389e0d; font-weight: 500; }
+.ab-exp-status-queued { color: #d46b08; }
+.ab-exp-status-done { color: var(--text-hint); }
 </style>
 </head>
 <body>
+
+<!-- ══ Password Gate ══ -->
+<div id="auth-overlay" style="position:fixed;inset:0;z-index:99999;background:#001529;display:flex;align-items:center;justify-content:center">
+  <div style="background:#fff;border-radius:10px;padding:40px 44px;width:360px;max-width:92vw;box-shadow:0 16px 48px rgba(0,0,0,.4);text-align:center">
+    <div style="font-size:22px;font-weight:700;color:#001529;letter-spacing:1px;margin-bottom:4px">Tiger CMP</div>
+    <div style="font-size:12px;color:rgba(0,0,0,.45);margin-bottom:28px">Internal Prototype · Access Restricted</div>
+    <input type="password" id="auth-input" placeholder="Enter password"
+      style="width:100%;box-sizing:border-box;padding:9px 12px;border:1px solid #d9d9d9;border-radius:5px;font-size:14px;outline:none;margin-bottom:12px"
+      onkeydown="if(event.key==='Enter')checkAuth()"
+      onfocus="this.style.borderColor='#ffe100'" onblur="this.style.borderColor='#d9d9d9'">
+    <div id="auth-error" style="display:none;color:#cf1322;font-size:12px;margin-bottom:10px">Incorrect password — please try again</div>
+    <button onclick="checkAuth()"
+      style="width:100%;padding:10px;background:#ffe100;border:none;border-radius:5px;font-size:14px;font-weight:600;color:#001529;cursor:pointer;transition:background .15s"
+      onmouseover="this.style.background='#ffec40'" onmouseout="this.style.background='#ffe100'">Enter</button>
+  </div>
+</div>
+<script>
+(function() {
+  const H = '48f36903a3acd24764ae1a57afe0167df4d6a6c1288318ea0f19a68355a80137';
+  if (sessionStorage.getItem('cmp_auth') === H) {
+    document.getElementById('auth-overlay').style.display = 'none';
+  }
+  window.checkAuth = async function() {
+    const pw = document.getElementById('auth-input').value;
+    if (!pw) return;
+    const buf = await crypto.subtle.digest('SHA-256', new TextEncoder().encode(pw));
+    const hash = Array.from(new Uint8Array(buf)).map(b => b.toString(16).padStart(2,'0')).join('');
+    if (hash === H) {
+      sessionStorage.setItem('cmp_auth', H);
+      document.getElementById('auth-overlay').style.display = 'none';
+    } else {
+      document.getElementById('auth-error').style.display = 'block';
+      document.getElementById('auth-input').value = '';
+      document.getElementById('auth-input').focus();
+    }
+  };
+})();
+</script>
+
 
 <!-- ── Top Nav ── -->
 <div class="topnav">
@@ -682,6 +739,7 @@ tbody tr:hover td { background: #fffdf0; }
   <div class="table-bar">
     <span>0 Alerts selected, <strong>284</strong> Alerts in total</span>
     <button class="btn btn-sm" style="margin-left:auto">Manage in bulk</button>
+    <button class="btn btn-sm" style="color:#0958d9;border-color:#91caff" onclick="openAddAlertModal()">+ Manual Alert</button>
   </div>
   <div class="table-wrap">
     <table>
@@ -1089,20 +1147,47 @@ tbody tr:hover td { background: #fffdf0; }
     </div>
   </div>
 
-  <!-- Linked Alerts -->
-  <div class="card">
-    <div class="section-title">Linked Alerts <span class="section-subtitle">8 Total · All Closed</span>
-      <button class="btn btn-sm" style="margin-left:auto;font-size:11px">Go to Alert Viewer to Link</button>
+  <!-- Linked Alerts + Related Clients side-by-side -->
+  <div class="case-alert-client-row">
+
+    <div class="card" style="margin:0">
+      <div class="section-title">Linked Alerts <span class="section-subtitle">8 Total · All Closed</span>
+        <button class="btn btn-sm" style="margin-left:auto;font-size:11px" onclick="openAddAlertModal()">+ Manual Alert</button>
+        <button class="btn btn-sm" style="font-size:11px">Link Existing</button>
+      </div>
+      <table>
+        <thead><tr><th>ID</th><th>Hit Time</th><th>Symbol</th><th>Rule Name</th><th>Status</th><th>Owner</th><th>Conclusion</th><th>Op</th></tr></thead>
+        <tbody>
+          <tr><td class="col-link">19141761</td><td>2025-07-15</td><td>SPXW 20250714 6235.0 P</td><td>pre-arranged trading (Profit)</td><td><span class="tag tag-closed">Closed</span></td><td>zengyuxiang</td><td><span class="tag tag-cleared">Cleared</span></td><td><button class="btn btn-sm">Detail</button></td></tr>
+          <tr><td class="col-link">19141760</td><td>2025-07-15</td><td>SPXW 20250714 6255.0 P</td><td>pre-arranged trading (Profit)</td><td><span class="tag tag-closed">Closed</span></td><td>houyuexuan</td><td><span class="tag tag-cleared">Cleared</span></td><td><button class="btn btn-sm">Detail</button></td></tr>
+          <tr><td class="col-link">19141753</td><td>2025-07-14</td><td>SPXW 20250711 6260.0 C</td><td>pre-arranged trading (Profit)</td><td><span class="tag tag-closed">Closed</span></td><td>zengyuxiang</td><td><span class="tag tag-cleared">Cleared</span></td><td><button class="btn btn-sm">Detail</button></td></tr>
+          <tr><td colspan="8" style="text-align:center;padding:8px;color:var(--text-dis);font-size:12px">+ 5 more alerts</td></tr>
+        </tbody>
+      </table>
     </div>
-    <table>
-      <thead><tr><th>ID</th><th>Hit Time</th><th>Symbol</th><th>Rule Name</th><th>Status</th><th>Owner</th><th>Conclusion</th><th>Operation</th></tr></thead>
-      <tbody>
-        <tr><td class="col-link">19141761</td><td>2025-07-15</td><td>SPXW 20250714 6235.0 P</td><td>pre-arranged trading (Profit)</td><td><span class="tag tag-closed">Closed</span></td><td>zengyuxiang</td><td><span class="tag tag-cleared">Cleared</span></td><td><button class="btn btn-sm">Detail</button></td></tr>
-        <tr><td class="col-link">19141760</td><td>2025-07-15</td><td>SPXW 20250714 6255.0 P</td><td>pre-arranged trading (Profit)</td><td><span class="tag tag-closed">Closed</span></td><td>houyuexuan</td><td><span class="tag tag-cleared">Cleared</span></td><td><button class="btn btn-sm">Detail</button></td></tr>
-        <tr><td class="col-link">19141753</td><td>2025-07-14</td><td>SPXW 20250711 6260.0 C</td><td>pre-arranged trading (Profit)</td><td><span class="tag tag-closed">Closed</span></td><td>zengyuxiang</td><td><span class="tag tag-cleared">Cleared</span></td><td><button class="btn btn-sm">Detail</button></td></tr>
-        <tr><td colspan="8" style="text-align:center;padding:8px;color:var(--text-dis);font-size:12px">+ 5 more alerts</td></tr>
-      </tbody>
-    </table>
+
+    <div class="card" style="margin:0">
+      <div class="section-title">Related Clients <span class="section-subtitle">2 Accounts</span></div>
+      <table>
+        <thead><tr><th>Account ID</th><th>Status</th><th>AI Risk</th><th>Op</th></tr></thead>
+        <tbody>
+          <tr>
+            <td class="col-link" onclick="showPage('client-details')">4183296</td>
+            <td><span class="tag tag-cleared">Cleared</span></td>
+            <td style="background:#fffdf0"><span class="ai-score ai-score-mid">55</span></td>
+            <td><button class="btn btn-sm" onclick="showPage('client-details')">Detail</button></td>
+          </tr>
+          <tr>
+            <td class="col-link">4183297</td>
+            <td><span class="tag tag-watchlist">Watchlist</span></td>
+            <td style="background:#fffdf0"><span class="ai-score ai-score-mid">61</span></td>
+            <td><button class="btn btn-sm">Detail</button></td>
+          </tr>
+        </tbody>
+      </table>
+      <div style="padding:8px 12px;font-size:11px;color:var(--text-hint);border-top:1px solid var(--border)">Same IP / Device linkage detected</div>
+    </div>
+
   </div>
 
   <div class="card">
@@ -1127,7 +1212,7 @@ tbody tr:hover td { background: #fffdf0; }
 
   <div class="stats-bar">
     <div class="stat-card" onclick="setClientFilter('')" style="cursor:pointer">
-      <div class="stat-num" style="color:rgba(0,0,0,.45)">1,842</div><div class="stat-label">All</div>
+      <div class="stat-num" style="color:rgba(0,0,0,.45)">277</div><div class="stat-label">All</div>
     </div>
     <div class="stat-card" onclick="setClientFilter('Detected')" style="cursor:pointer">
       <div class="stat-num orange">12</div><div class="stat-label">Detected</div>
@@ -1138,8 +1223,11 @@ tbody tr:hover td { background: #fffdf0; }
     <div class="stat-card" onclick="setClientFilter('Inquire')" style="cursor:pointer">
       <div class="stat-num" style="color:#d46b08">3</div><div class="stat-label">Inquire</div>
     </div>
-    <div class="stat-card" onclick="setClientFilter('Report')" style="cursor:pointer">
-      <div class="stat-num" style="color:#cf1322">1</div><div class="stat-label">Report</div>
+    <div class="stat-card" onclick="setClientFilter('Restricted')" style="cursor:pointer">
+      <div class="stat-num" style="color:#cf1322">1</div><div class="stat-label">Restricted</div>
+    </div>
+    <div class="stat-card" onclick="setClientFilter('Terminate')" style="cursor:pointer">
+      <div class="stat-num" style="color:#820014">0</div><div class="stat-label">Terminate</div>
     </div>
     <div class="stat-card" onclick="setClientFilter('Watchlist')" style="cursor:pointer">
       <div class="stat-num" style="color:#531dab">6</div><div class="stat-label">Watchlist</div>
@@ -1154,7 +1242,7 @@ tbody tr:hover td { background: #fffdf0; }
     <span class="filter-label">License</span>
     <select class="filter-select"><option>All</option><option>TBNZ</option><option>TBHK</option><option>TBSG</option></select>
     <span class="filter-label">Compliance Status</span>
-    <select class="filter-select" id="client-status-filter" onchange="filterClientTable(this.value)"><option value="">All</option><option>Detected</option><option>Investigating</option><option>Inquire</option><option>Report</option><option>Watchlist</option><option>Cleared</option><option>Restricted</option></select>
+    <select class="filter-select" id="client-status-filter" onchange="filterClientTable(this.value)"><option value="">All</option><option>Detected</option><option>Investigating</option><option>Inquire</option><option>Restricted</option><option>Terminate</option><option>Watchlist</option><option>Cleared</option></select>
     <span class="filter-label" style="color:var(--ai-color);font-weight:500">AI Risk ≥</span>
     <select class="filter-select" style="width:64px;border-color:var(--ai-border)"><option>—</option><option>50</option><option>70</option><option>85</option></select>
     <button class="btn btn-primary btn-sm">Search</button>
@@ -1163,7 +1251,7 @@ tbody tr:hover td { background: #fffdf0; }
   </div>
 
   <div class="table-bar">
-    <span><strong>1,842</strong> clients in total</span>
+    <span><strong>277</strong> clients with compliance activity</span>
   </div>
   <div class="table-wrap">
     <table>
@@ -1209,7 +1297,7 @@ tbody tr:hover td { background: #fffdf0; }
         <tr data-status="Restricted">
           <td class="col-link">1441692</td>
           <td>TBNZ</td><td>2020-06-18</td>
-          <td><span class="tag" style="background:#fff2f0;color:#cf1322;border:1px solid #ffa39e">Restricted</span></td>
+          <td><span class="tag tag-restricted">Restricted</span></td>
           <td>12</td><td>0</td><td>2025-08-29</td>
           <td style="background:#fffdf0"><span class="ai-score ai-score-high">91</span></td>
           <td><button class="btn btn-sm">Detail</button></td>
@@ -1271,7 +1359,12 @@ tbody tr:hover td { background: #fffdf0; }
     </div>
     <div class="sf-step">
       <div class="sf-dot"></div>
-      <div class="sf-label">Report</div>
+      <div class="sf-label">Restricted</div>
+      <div class="sf-date">—</div>
+    </div>
+    <div class="sf-step">
+      <div class="sf-dot"></div>
+      <div class="sf-label">Terminate</div>
       <div class="sf-date">—</div>
     </div>
   </div>
@@ -1403,6 +1496,7 @@ tbody tr:hover td { background: #fffdf0; }
   <div class="card" style="margin-top:12px">
     <div class="tab-bar">
       <div class="tab active" onclick="switchTab(this,'ct-alerts')">Alert History <span style="background:#fff2f0;color:#cf1322;border:1px solid #ffa39e;border-radius:10px;padding:0 5px;font-size:10px;margin-left:3px">4</span></div>
+      <div class="tab" onclick="switchTab(this,'ct-cases')">Linked Cases <span style="background:#e6f4ff;color:#0958d9;border:1px solid #91caff;border-radius:10px;padding:0 5px;font-size:10px;margin-left:3px">1</span></div>
       <div class="tab" onclick="switchTab(this,'ct-watchlist')">Watchlist Records</div>
       <div class="tab" onclick="switchTab(this,'ct-inquiry')">Inquiry Records</div>
     </div>
@@ -1417,6 +1511,24 @@ tbody tr:hover td { background: #fffdf0; }
         </tbody>
       </table>
     </div>
+    <div class="tab-pane" id="ct-cases">
+      <table>
+        <thead><tr><th>Case ID</th><th>Case Name</th><th>Status</th><th>Tag</th><th>Open Date</th><th>Close Date</th><th>Owner</th><th>Operation</th></tr></thead>
+        <tbody>
+          <tr>
+            <td class="col-link" onclick="showPage('case-details')">TS_798</td>
+            <td>NQ Futures - 3215451</td>
+            <td><span class="tag tag-closed">Closed</span></td>
+            <td><span class="tag tag-escalated">Further Action</span></td>
+            <td>2025-11-02</td>
+            <td>2025-11-28</td>
+            <td>mayimeng</td>
+            <td><button class="btn btn-sm" onclick="showPage('case-details')">Detail</button></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
     <div class="tab-pane" id="ct-watchlist">
       <div style="padding:12px 16px">
         <!-- Watchlist Config Card -->
@@ -1734,6 +1846,25 @@ tbody tr:hover td { background: #fffdf0; }
     <!-- Tab: A/B Test -->
     <div class="tab-pane" id="rd-ab" style="padding:14px 16px">
 
+      <!-- Multi-experiment manager -->
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:8px">
+        <div style="font-size:12px;font-weight:600;color:var(--text-hint);text-transform:uppercase;letter-spacing:.3px">Experiment Groups
+          <span style="font-weight:400;text-transform:none;font-size:11px;color:var(--text-hint);margin-left:6px">Run multiple parameter sets simultaneously</span>
+        </div>
+        <button class="btn btn-sm" style="font-size:11px;color:#0958d9;border-color:#91caff" onclick="addABExperiment()">+ Add Experiment</button>
+      </div>
+      <div class="ab-experiments-list" id="ab-exp-list">
+        <div class="ab-exp-item" id="ab-exp-1">
+          <span style="font-weight:600;color:var(--text)">Exp 1</span>
+          <span style="color:var(--text-hint)">—</span>
+          <span style="font-size:11px;color:var(--text-hint)">A vs B · 2026-03-10 → 2026-04-09</span>
+          <span class="ab-exp-status-running" style="margin-left:4px">● Active</span>
+          <div style="flex:1"></div>
+          <button class="btn btn-sm" style="font-size:11px" onclick="selectABExp(1)">Configure ↓</button>
+        </div>
+      </div>
+      <div id="ab-exp-active-label" style="font-size:11px;color:var(--text-hint);margin-bottom:8px">Configuring: <strong>Exp 1</strong></div>
+
       <!-- Run Config -->
       <div class="ab-run-bar">
         <span style="font-size:12px;font-weight:600;color:var(--text-sec)">Backtest Period</span>
@@ -1946,7 +2077,6 @@ function showPage(name) {
   const detailSuffix = { 'alert-details': 'alert', 'case-details': 'case', 'client-details': 'client' }[name];
   if (detailSuffix) {
     showInvSheet(detailSuffix);
-    setTimeout(() => setupScrollSentinel(detailSuffix), 100);
   } else {
     hideInvSheet();
   }
@@ -2642,6 +2772,38 @@ function publishVersionB() {
   setTimeout(() => t.remove(), 3000);
 }
 
+// ── Multi-version A/B Experiments ──
+let abExpCount = 1;
+function addABExperiment() {
+  abExpCount++;
+  const list = document.getElementById('ab-exp-list');
+  const div = document.createElement('div');
+  div.className = 'ab-exp-item';
+  div.id = 'ab-exp-' + abExpCount;
+  div.innerHTML = `
+    <span style="font-weight:600;color:var(--text)">Exp ${abExpCount}</span>
+    <span style="color:var(--text-hint)">—</span>
+    <span style="font-size:11px;color:var(--text-hint)">A vs B · period not set</span>
+    <span class="ab-exp-status-queued" style="margin-left:4px">○ Queued</span>
+    <div style="flex:1"></div>
+    <button class="btn btn-sm" style="font-size:11px" onclick="selectABExp(${abExpCount})">Configure ↓</button>
+    <span onclick="this.closest('.ab-exp-item').remove();abExpCount--" style="cursor:pointer;color:#aaa;font-size:16px;margin-left:6px;line-height:1">×</span>`;
+  list.appendChild(div);
+  selectABExp(abExpCount);
+  const t = document.createElement('div');
+  t.style.cssText = 'position:fixed;bottom:24px;right:24px;background:#001529;color:#ffe100;padding:10px 18px;border-radius:6px;font-size:13px;font-weight:500;z-index:9999;box-shadow:0 4px 12px rgba(0,0,0,.3)';
+  t.textContent = `Experiment ${abExpCount} added — configure parameters below`;
+  document.body.appendChild(t);
+  setTimeout(() => t.remove(), 2500);
+}
+function selectABExp(n) {
+  document.querySelectorAll('.ab-exp-item').forEach(el => el.style.outline = 'none');
+  const el = document.getElementById('ab-exp-' + n);
+  if (el) el.style.outline = '2px solid var(--primary)';
+  const label = document.getElementById('ab-exp-active-label');
+  if (label) label.innerHTML = `Configuring: <strong>Exp ${n}</strong>`;
+}
+
 // ── Add to Watchlist Modal ──
 function openWLModal(accountId) {
   document.getElementById('wl-modal-account').value = accountId;
@@ -2803,7 +2965,7 @@ function submitWLModal() {
         <div class="tab active" id="inv-tab-spread-alert" onclick="switchSheetTab('alert','spread')">Spread Analysis</div>
         <div class="tab" id="inv-tab-graph-alert" onclick="switchSheetTab('alert','graph')">Association Graph</div>
       </div>
-      <div class="tab-pane active" id="inv-spread-alert" style="display:flex;flex-direction:column;flex:1;overflow:hidden">
+      <div class="tab-pane active" id="inv-spread-alert" style="flex-direction:column;flex:1;overflow:hidden">
         <!-- Toolbar -->
         <div style="display:flex;flex-wrap:wrap;gap:6px;align-items:center;padding:7px 12px;border-bottom:1px solid #f0f0f0;background:#fafafa;flex-shrink:0">
           <span style="font-size:11px;color:var(--text-hint)">Symbol</span>
@@ -2859,7 +3021,7 @@ function submitWLModal() {
         <div class="tab active" id="inv-tab-spread-case" onclick="switchSheetTab('case','spread')">Spread Analysis</div>
         <div class="tab" id="inv-tab-graph-case" onclick="switchSheetTab('case','graph')">Association Graph</div>
       </div>
-      <div class="tab-pane active" id="inv-spread-case" style="display:flex;flex-direction:column;flex:1;overflow:hidden">
+      <div class="tab-pane active" id="inv-spread-case" style="flex-direction:column;flex:1;overflow:hidden">
         <!-- Toolbar -->
         <div style="display:flex;flex-wrap:wrap;gap:6px;align-items:center;padding:7px 12px;border-bottom:1px solid #f0f0f0;background:#fafafa;flex-shrink:0">
           <span style="font-size:11px;color:var(--text-hint)">Symbol</span>
@@ -2913,7 +3075,7 @@ function submitWLModal() {
         <div class="tab active" id="inv-tab-spread-client" onclick="switchSheetTab('client','spread')">Spread Analysis</div>
         <div class="tab" id="inv-tab-graph-client" onclick="switchSheetTab('client','graph')">Association Graph</div>
       </div>
-      <div class="tab-pane active" id="inv-spread-client" style="display:flex;flex-direction:column;flex:1;overflow:hidden">
+      <div class="tab-pane active" id="inv-spread-client" style="flex-direction:column;flex:1;overflow:hidden">
         <!-- Toolbar -->
         <div style="display:flex;flex-wrap:wrap;gap:6px;align-items:center;padding:7px 12px;border-bottom:1px solid #f0f0f0;background:#fafafa;flex-shrink:0">
           <span style="font-size:11px;color:var(--text-hint)">Symbol</span>
@@ -3235,6 +3397,152 @@ function submitAddRuleModal() {
     <input class="filter-input" style="width:100%;box-sizing:border-box" placeholder="Default value (e.g. 10000)">
     <span onclick="removeParamRow(this)" style="cursor:pointer;color:#aaa;font-size:16px;text-align:center;line-height:1">×</span>
   </div>`;
+}
+</script>
+
+<!-- ══ Manual Alert Modal ══ -->
+<div id="add-alert-modal-overlay" onclick="if(event.target===this)closeAddAlertModal()" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,.45);z-index:1000;align-items:center;justify-content:center">
+  <div style="background:#fff;border-radius:6px;width:560px;max-width:96vw;max-height:90vh;display:flex;flex-direction:column;box-shadow:0 8px 32px rgba(0,0,0,.2)">
+
+    <div style="padding:14px 20px;border-bottom:1px solid #f0f0f0;display:flex;align-items:center;justify-content:space-between;flex-shrink:0">
+      <div style="font-weight:600;font-size:14px">Create Manual Alert</div>
+      <span onclick="closeAddAlertModal()" style="cursor:pointer;font-size:20px;color:#aaa;line-height:1;padding:0 2px">×</span>
+    </div>
+
+    <div style="padding:16px 20px;overflow-y:auto;flex:1;display:flex;flex-direction:column;gap:14px;font-size:13px">
+
+      <div style="background:#fffbe6;border:1px solid #ffe58f;border-radius:4px;padding:8px 12px;font-size:12px;color:#7c4a00">
+        Manual alerts are created outside the automated rule engine — use for tips, external referrals, or pattern observations not yet covered by rules.
+      </div>
+
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px">
+        <div>
+          <div style="color:#555;margin-bottom:4px;font-size:12px">Account ID <span style="color:#cf1322">*</span></div>
+          <input id="ma-acct" class="filter-input" style="width:100%;box-sizing:border-box" placeholder="e.g. 3215451">
+        </div>
+        <div>
+          <div style="color:#555;margin-bottom:4px;font-size:12px">License</div>
+          <select id="ma-license" class="filter-select" style="width:100%">
+            <option>TBNZ</option><option>TBHK</option><option>TBSG</option><option>TBAU</option><option>TBUS</option>
+          </select>
+        </div>
+      </div>
+
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px">
+        <div>
+          <div style="color:#555;margin-bottom:4px;font-size:12px">Symbol</div>
+          <input id="ma-symbol" class="filter-input" style="width:100%;box-sizing:border-box" placeholder="e.g. SPXW 20260406 6615.0 C">
+        </div>
+        <div>
+          <div style="color:#555;margin-bottom:4px;font-size:12px">Alert Source <span style="color:#cf1322">*</span></div>
+          <select id="ma-source" class="filter-select" style="width:100%">
+            <option>Internal Observation</option>
+            <option>Regulator Tip-off</option>
+            <option>External Referral</option>
+            <option>Client Complaint</option>
+            <option>Media / News</option>
+          </select>
+        </div>
+      </div>
+
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px">
+        <div>
+          <div style="color:#555;margin-bottom:4px;font-size:12px">Policy Type <span style="color:#cf1322">*</span></div>
+          <select id="ma-policy" class="filter-select" style="width:100%">
+            <option value="">Select policy...</option>
+            <option>pre-arranged trading (Profit)</option>
+            <option>possible wash trade (A to A)</option>
+            <option>possible ramping</option>
+            <option>possible spoofing</option>
+            <option>insider trading</option>
+            <option>market manipulation</option>
+            <option>Other</option>
+          </select>
+        </div>
+        <div>
+          <div style="color:#555;margin-bottom:4px;font-size:12px">Risk Level</div>
+          <select id="ma-risk" class="filter-select" style="width:100%">
+            <option>High</option><option selected>Medium</option><option>Low</option>
+          </select>
+        </div>
+      </div>
+
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px">
+        <div>
+          <div style="color:#555;margin-bottom:4px;font-size:12px">Alert Date <span style="color:#cf1322">*</span></div>
+          <input type="date" id="ma-date" class="filter-input" style="width:100%;box-sizing:border-box" value="2026-04-13">
+        </div>
+        <div>
+          <div style="color:#555;margin-bottom:4px;font-size:12px">Assign To</div>
+          <input id="ma-owner" class="filter-input" style="width:100%;box-sizing:border-box" placeholder="e.g. houyuexuan">
+        </div>
+      </div>
+
+      <div>
+        <div style="color:#555;margin-bottom:4px;font-size:12px">Description / Evidence <span style="color:#cf1322">*</span></div>
+        <textarea id="ma-desc" class="filter-input" style="width:100%;box-sizing:border-box;height:72px;resize:vertical;padding:6px 8px;line-height:1.5" placeholder="Describe the suspicious activity and supporting evidence..."></textarea>
+      </div>
+
+      <div>
+        <div style="color:#555;margin-bottom:4px;font-size:12px">Link to Case (optional)</div>
+        <input id="ma-case" class="filter-input" style="width:100%;box-sizing:border-box" placeholder="e.g. TS_814 — leave blank to create without case">
+      </div>
+
+    </div>
+
+    <div style="padding:12px 20px;border-top:1px solid #f0f0f0;display:flex;align-items:center;justify-content:space-between;flex-shrink:0">
+      <span style="font-size:11px;color:var(--text-hint)">Manual alerts are tagged <strong>Manual</strong> and visible in Alert Viewer.</span>
+      <div style="display:flex;gap:8px">
+        <button class="btn btn-sm" onclick="closeAddAlertModal()">Cancel</button>
+        <button class="btn btn-primary btn-sm" onclick="submitAddAlertModal()">Create Alert</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+function openAddAlertModal() {
+  document.getElementById('add-alert-modal-overlay').style.display = 'flex';
+}
+function closeAddAlertModal() {
+  document.getElementById('add-alert-modal-overlay').style.display = 'none';
+}
+function submitAddAlertModal() {
+  const acct = document.getElementById('ma-acct').value.trim();
+  const policy = document.getElementById('ma-policy').value;
+  const desc = document.getElementById('ma-desc').value.trim();
+  if (!acct) { alert('Account ID is required.'); return; }
+  if (!policy) { alert('Policy type is required.'); return; }
+  if (!desc) { alert('Description is required.'); return; }
+
+  const newId = 19150110 + Math.floor(Math.random() * 100);
+  const tbody = document.querySelector('#page-alert-viewer tbody');
+  if (tbody) {
+    const tr = document.createElement('tr');
+    tr.innerHTML = `
+      <td><input type="checkbox"></td>
+      <td class="col-link">${newId}</td>
+      <td>${document.getElementById('ma-date').value} Manual</td>
+      <td>${acct}</td>
+      <td>${document.getElementById('ma-symbol').value || '—'}</td>
+      <td>${document.getElementById('ma-license').value}</td>
+      <td>${policy}</td>
+      <td><span class="tag tag-processing">Processing</span></td>
+      <td><span class="tag" style="background:#e6f4ff;color:#0958d9;border:1px solid #91caff;font-size:10px">Manual</span></td>
+      <td style="background:#fffdf0"><span class="ai-score" style="background:#f0f0f0;color:#595959">—</span></td>
+      <td>${document.getElementById('ma-owner').value || '—'}</td>
+      <td><button class="btn btn-sm">Detail</button></td>`;
+    tbody.insertBefore(tr, tbody.firstChild);
+  }
+
+  closeAddAlertModal();
+  const t = document.createElement('div');
+  t.style.cssText = 'position:fixed;bottom:24px;right:24px;background:#001529;color:#ffe100;padding:10px 18px;border-radius:6px;font-size:13px;font-weight:500;z-index:9999;box-shadow:0 4px 12px rgba(0,0,0,.3)';
+  t.textContent = `Manual Alert #${newId} created for ${acct}`;
+  document.body.appendChild(t);
+  setTimeout(() => t.remove(), 3000);
+  ['ma-acct','ma-symbol','ma-owner','ma-desc','ma-case'].forEach(id => document.getElementById(id).value = '');
+  document.getElementById('ma-policy').value = '';
 }
 </script>
 

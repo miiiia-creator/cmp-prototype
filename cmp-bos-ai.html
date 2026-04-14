@@ -1965,6 +1965,7 @@ tbody tr:hover td { background: #fffdf0; }
       <div class="tab active" onclick="switchTab(this,'rd-info')">Rule Info</div>
       <div class="tab" onclick="switchTab(this,'rd-params')">Parameters</div>
       <div class="tab" id="rd-tab-ab" onclick="switchTab(this,'rd-ab')">A/B Test <span class="new-badge">NEW</span></div>
+      <div class="tab" onclick="switchTab(this,'rd-sqltest')">SQL Test <span class="new-badge">NEW</span></div>
       <div class="tab" onclick="switchTab(this,'rd-changelog')">Change Log</div>
     </div>
 
@@ -2218,6 +2219,165 @@ tbody tr:hover td { background: #fffdf0; }
         </div>
       </div>
     </div>
+
+    <!-- Tab: SQL Test -->
+    <div class="tab-pane" id="rd-sqltest" style="padding:14px 16px">
+
+      <!-- SQL Editor -->
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:6px">
+        <div style="font-size:12px;font-weight:600;color:var(--text-hint);text-transform:uppercase;letter-spacing:.3px">Feature Expression Editor</div>
+        <div style="display:flex;gap:6px">
+          <button class="btn btn-sm" style="font-size:11px" onclick="sqlSyntaxCheck()">⚡ Syntax Check</button>
+          <button class="btn btn-sm" style="font-size:11px;color:#531dab;border-color:#b37feb" onclick="sqlFormatCode()">⌥ Format</button>
+        </div>
+      </div>
+      <textarea id="sql-editor" spellcheck="false" style="width:100%;box-sizing:border-box;height:160px;font-family:monospace;font-size:11px;line-height:1.7;background:#1e1e1e;color:#d4d4d4;border:1px solid #333;border-radius:5px;padding:12px;resize:vertical;outline:none">SELECT account, symbol, orderDate,
+    COUNT(orderId) AS orderCount,
+    SUM(CASE WHEN action='BUY' THEN tradeQty ELSE 0 END) AS buyTradeCount,
+    SUM(CASE WHEN action='SELL' THEN tradeQty ELSE 0 END) AS sellTradeCount
+FROM trade_events
+WHERE isProfit = TRUE
+  AND priceDiffRatio >= :priceDiffRatio
+  AND orderTradeInterval <= :orderTradeIntervalMinute
+GROUP BY account, symbol, orderDate
+HAVING buyTradeCount >= :orderTimes AND sellTradeCount >= :orderTimes</textarea>
+      <div id="sql-syntax-result" style="margin-top:4px;font-size:11px;min-height:18px"></div>
+
+      <!-- Backtest Config -->
+      <div style="margin-top:14px;padding-top:12px;border-top:1px solid var(--border)">
+        <div style="font-size:12px;font-weight:600;color:var(--text-hint);text-transform:uppercase;letter-spacing:.3px;margin-bottom:8px">Backtest Configuration</div>
+        <div style="display:grid;grid-template-columns:1fr 1fr 1fr 1fr auto;gap:8px;align-items:flex-end">
+          <div>
+            <div style="font-size:11px;color:var(--text-hint);margin-bottom:3px">Start Date</div>
+            <input type="date" id="sql-date-from" value="2026-01-01" class="filter-input" style="width:100%;box-sizing:border-box">
+          </div>
+          <div>
+            <div style="font-size:11px;color:var(--text-hint);margin-bottom:3px">End Date</div>
+            <input type="date" id="sql-date-to" value="2026-04-07" class="filter-input" style="width:100%;box-sizing:border-box">
+          </div>
+          <div>
+            <div style="font-size:11px;color:var(--text-hint);margin-bottom:3px">Asset Class</div>
+            <select id="sql-asset" class="filter-select" style="width:100%">
+              <option>All</option><option>STK</option><option selected>OPT</option><option>FUT</option>
+            </select>
+          </div>
+          <div>
+            <div style="font-size:11px;color:var(--text-hint);margin-bottom:3px">Market</div>
+            <select id="sql-market" class="filter-select" style="width:100%">
+              <option>All</option><option selected>US</option><option>HK</option><option>SG</option>
+            </select>
+          </div>
+          <button class="btn btn-primary btn-sm" style="white-space:nowrap" onclick="sqlRunBacktest()">▶ Run Test</button>
+        </div>
+
+        <!-- Param overrides -->
+        <div style="margin-top:8px">
+          <div style="font-size:11px;color:var(--text-hint);margin-bottom:4px">Parameter Overrides <span style="color:var(--text-dis)">(leave blank to use current production values)</span></div>
+          <div style="display:flex;flex-wrap:wrap;gap:6px" id="sql-param-overrides">
+            <div style="display:flex;align-items:center;gap:4px;font-size:11px">
+              <span style="color:rgba(0,0,0,.6);white-space:nowrap">orderTimes</span>
+              <input class="filter-input" style="width:52px;text-align:center" placeholder="2">
+            </div>
+            <div style="display:flex;align-items:center;gap:4px;font-size:11px">
+              <span style="color:rgba(0,0,0,.6);white-space:nowrap">priceDiffRatio</span>
+              <input class="filter-input" style="width:52px;text-align:center" placeholder="0.05">
+            </div>
+            <div style="display:flex;align-items:center;gap:4px;font-size:11px">
+              <span style="color:rgba(0,0,0,.6);white-space:nowrap">orderTradeIntervalMinute</span>
+              <input class="filter-input" style="width:52px;text-align:center" placeholder="1">
+            </div>
+            <div style="display:flex;align-items:center;gap:4px;font-size:11px">
+              <span style="color:rgba(0,0,0,.6);white-space:nowrap">perTradeAmountThreshold</span>
+              <input class="filter-input" style="width:60px;text-align:center" placeholder="1000">
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Results (hidden until run) -->
+      <div id="sql-test-results" style="display:none;margin-top:14px;padding-top:12px;border-top:1px solid var(--border)">
+
+        <!-- Summary KPIs -->
+        <div style="display:grid;grid-template-columns:repeat(5,1fr);gap:8px;margin-bottom:12px">
+          <div style="background:#fafafa;border:1px solid #f0f0f0;border-radius:4px;padding:8px;text-align:center">
+            <div style="font-size:10px;color:var(--text-hint)">Alerts Fired</div>
+            <div style="font-size:18px;font-weight:700;color:#d46b08" id="res-total">—</div>
+          </div>
+          <div style="background:#fafafa;border:1px solid #f0f0f0;border-radius:4px;padding:8px;text-align:center">
+            <div style="font-size:10px;color:var(--text-hint)">Accounts Hit</div>
+            <div style="font-size:18px;font-weight:700;color:#374151" id="res-accounts">—</div>
+          </div>
+          <div style="background:#fafafa;border:1px solid #f0f0f0;border-radius:4px;padding:8px;text-align:center">
+            <div style="font-size:10px;color:var(--text-hint)">Est. TP Rate</div>
+            <div style="font-size:18px;font-weight:700;color:#389e0d" id="res-tp">—</div>
+          </div>
+          <div style="background:#fff2f0;border:1px solid #ffa39e;border-radius:4px;padding:8px;text-align:center">
+            <div style="font-size:10px;color:var(--text-hint)">Est. FP Rate</div>
+            <div style="font-size:18px;font-weight:700;color:#cf1322" id="res-fp">—</div>
+          </div>
+          <div style="background:#fafafa;border:1px solid #f0f0f0;border-radius:4px;padding:8px;text-align:center">
+            <div style="font-size:10px;color:var(--text-hint)">vs Production</div>
+            <div style="font-size:14px;font-weight:700" id="res-vs">—</div>
+          </div>
+        </div>
+
+        <!-- Parameter sensitivity mini-chart -->
+        <div style="margin-bottom:12px">
+          <div style="font-size:11px;font-weight:600;color:var(--text-hint);margin-bottom:6px;text-transform:uppercase;letter-spacing:.3px">Parameter Sensitivity — orderTimes</div>
+          <div style="display:flex;align-items:flex-end;gap:4px;height:60px;padding:0 4px">
+            <div style="display:flex;flex-direction:column;align-items:center;gap:2px;flex:1">
+              <div style="font-size:9px;color:var(--text-hint)">89</div>
+              <div style="width:100%;background:#fa8c16;border-radius:2px 2px 0 0" id="sens-bar-1" title="orderTimes=1"></div>
+              <div style="font-size:10px;color:var(--text-hint)">1</div>
+            </div>
+            <div style="display:flex;flex-direction:column;align-items:center;gap:2px;flex:1">
+              <div style="font-size:9px;color:#389e0d;font-weight:600">47</div>
+              <div style="width:100%;background:#52c41a;border-radius:2px 2px 0 0;outline:2px solid #389e0d" id="sens-bar-2" title="orderTimes=2 (current)"></div>
+              <div style="font-size:10px;color:#389e0d;font-weight:600">2 ✓</div>
+            </div>
+            <div style="display:flex;flex-direction:column;align-items:center;gap:2px;flex:1">
+              <div style="font-size:9px;color:var(--text-hint)" id="sens-val-3">—</div>
+              <div style="width:100%;background:#2563eb;border-radius:2px 2px 0 0" id="sens-bar-3" title="orderTimes=3 (test)"></div>
+              <div style="font-size:10px;color:#2563eb;font-weight:600">3 ★</div>
+            </div>
+            <div style="display:flex;flex-direction:column;align-items:center;gap:2px;flex:1">
+              <div style="font-size:9px;color:var(--text-hint)">18</div>
+              <div style="width:100%;background:#9ca3af;border-radius:2px 2px 0 0" id="sens-bar-4" title="orderTimes=4"></div>
+              <div style="font-size:10px;color:var(--text-hint)">4</div>
+            </div>
+            <div style="display:flex;flex-direction:column;align-items:center;gap:2px;flex:1">
+              <div style="font-size:9px;color:var(--text-hint)">9</div>
+              <div style="width:100%;background:#9ca3af;border-radius:2px 2px 0 0" id="sens-bar-5" title="orderTimes=5"></div>
+              <div style="font-size:10px;color:var(--text-hint)">5</div>
+            </div>
+          </div>
+          <div style="font-size:10px;color:var(--text-dis);margin-top:2px">Green = current production · Blue = test params · Lower is not always better — check TP rate</div>
+        </div>
+
+        <!-- Sample hits table -->
+        <div>
+          <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:6px">
+            <div style="font-size:11px;font-weight:600;color:var(--text-hint);text-transform:uppercase;letter-spacing:.3px">Sample Matched Records <span style="font-weight:400;text-transform:none">(top 10)</span></div>
+            <button class="btn btn-sm" style="font-size:11px" onclick="sqlApplyToRule()">Apply params to rule →</button>
+          </div>
+          <table style="font-size:11px" id="sql-sample-table">
+            <thead><tr><th>Account</th><th>Symbol</th><th>Date</th><th>Orders</th><th>Buy Qty</th><th>Sell Qty</th><th>Est. Risk</th></tr></thead>
+            <tbody id="sql-sample-tbody"></tbody>
+          </table>
+        </div>
+
+      </div><!-- /results -->
+
+      <!-- Progress bar (shown while running) -->
+      <div id="sql-running" style="display:none;margin-top:14px;padding:16px;text-align:center">
+        <div style="font-size:12px;color:var(--text-hint);margin-bottom:8px">Running backtest against 2026-01-01 ~ 2026-04-07…</div>
+        <div style="height:4px;background:#f0f0f0;border-radius:2px;overflow:hidden">
+          <div id="sql-progress-bar" style="height:100%;width:0%;background:var(--ai-color);border-radius:2px;transition:width .3s ease"></div>
+        </div>
+        <div style="font-size:11px;color:var(--text-dis);margin-top:4px" id="sql-progress-label">Initializing…</div>
+      </div>
+
+    </div><!-- /rd-sqltest -->
 
     <!-- Tab: Change Log -->
     <div class="tab-pane" id="rd-changelog" style="padding:14px 16px">
@@ -3034,6 +3194,141 @@ function saveDraft() {
 }
 
 window.addEventListener('load', () => { setTimeout(drawDashTrend, 50); setTimeout(drawAccuracyTrend, 80); });
+
+// ── SQL Test Tab ──
+function sqlSyntaxCheck() {
+  const sql = document.getElementById('sql-editor').value.trim();
+  const el = document.getElementById('sql-syntax-result');
+  const errors = [];
+  if (!sql) { el.innerHTML = ''; return; }
+  if (!/SELECT/i.test(sql)) errors.push('Missing SELECT clause');
+  if (!/FROM\s+\w/i.test(sql)) errors.push('Missing FROM clause');
+  if ((sql.match(/\(/g)||[]).length !== (sql.match(/\)/g)||[]).length) errors.push('Unbalanced parentheses');
+  const params = sql.match(/:\w+/g) || [];
+  const known = ['priceDiffRatio','orderTradeIntervalMinute','orderTimes','priceDiffOrderThreshold','tradePairTimes','perTradeAmountThreshold'];
+  params.forEach(p => { if (!known.includes(p.slice(1))) errors.push(`Unknown parameter: ${p}`); });
+  if (errors.length === 0) {
+    el.innerHTML = '<span style="color:#389e0d;font-weight:500">✓ Syntax valid — no issues found</span>';
+  } else {
+    el.innerHTML = errors.map(e => `<span style="color:#cf1322">✗ ${e}</span>`).join(' &nbsp;·&nbsp; ');
+  }
+}
+
+function sqlFormatCode() {
+  const ta = document.getElementById('sql-editor');
+  let sql = ta.value;
+  sql = sql.replace(/\s+/g, ' ').trim()
+    .replace(/\bSELECT\b/gi, 'SELECT')
+    .replace(/\bFROM\b/gi, '\nFROM')
+    .replace(/\bWHERE\b/gi, '\nWHERE')
+    .replace(/\bAND\b/gi, '\n  AND')
+    .replace(/\bGROUP BY\b/gi, '\nGROUP BY')
+    .replace(/\bHAVING\b/gi, '\nHAVING')
+    .replace(/,\s*/g, ',\n    ');
+  ta.value = sql;
+  const el = document.getElementById('sql-syntax-result');
+  el.innerHTML = '<span style="color:#531dab">✓ Formatted</span>';
+}
+
+function sqlRunBacktest() {
+  document.getElementById('sql-test-results').style.display = 'none';
+  const running = document.getElementById('sql-running');
+  running.style.display = 'block';
+  const bar = document.getElementById('sql-progress-bar');
+  const label = document.getElementById('sql-progress-label');
+  const steps = [
+    [15, 'Parsing SQL expression…'],
+    [35, 'Loading trade_events (2026-01-01 ~ 2026-04-07)…'],
+    [55, 'Applying filters and GROUP BY…'],
+    [75, 'Evaluating HAVING conditions…'],
+    [90, 'Estimating TP/FP rates from historical labels…'],
+    [100, 'Done.']
+  ];
+  let i = 0;
+  const tick = () => {
+    if (i >= steps.length) {
+      setTimeout(() => {
+        running.style.display = 'none';
+        sqlShowResults();
+      }, 300);
+      return;
+    }
+    bar.style.width = steps[i][0] + '%';
+    label.textContent = steps[i][1];
+    i++;
+    setTimeout(tick, 340);
+  };
+  tick();
+}
+
+function sqlShowResults() {
+  // Read override values
+  const inputs = document.querySelectorAll('#sql-param-overrides input');
+  const orderTimes = parseInt(inputs[0].value) || 2;
+  // Simulate results based on orderTimes
+  const hitMap = {1:89,2:47,3:28,4:18,5:9};
+  const fpMap  = {1:72,2:58,3:41,4:35,5:30};
+  const hits = hitMap[orderTimes] || 28;
+  const fp   = fpMap[orderTimes]  || 41;
+  const tp   = 100 - fp;
+  const prodHits = 47, prodFP = 58;
+  const delta = hits - prodHits;
+
+  document.getElementById('res-total').textContent    = hits;
+  document.getElementById('res-accounts').textContent = Math.round(hits * 0.7);
+  document.getElementById('res-tp').textContent       = tp + '%';
+  document.getElementById('res-fp').textContent       = fp + '%';
+  const vsEl = document.getElementById('res-vs');
+  vsEl.textContent = (delta > 0 ? '+' : '') + delta + ' alerts';
+  vsEl.style.color = delta < 0 ? '#389e0d' : delta > 0 ? '#cf1322' : '#374151';
+
+  // Sensitivity bars (max height 50px)
+  const maxHits = 89;
+  const barIds = [1,2,3,4,5];
+  const barData = [89,47,28,18,9];
+  barIds.forEach((id, idx) => {
+    const el = document.getElementById('sens-bar-' + id);
+    const h = Math.round((barData[idx] / maxHits) * 50);
+    el.style.height = h + 'px';
+  });
+  const testBar = document.getElementById('sens-bar-3');
+  if (orderTimes === 3) {
+    document.getElementById('sens-val-3').textContent = hits;
+  }
+
+  // Sample table
+  const samples = [
+    ['3215451','SPXW 20260406 6615.0 C','2026-04-07',8,480,450,'High'],
+    ['4183296','SPXW 20250714 6235.0 P','2025-07-14',6,360,380,'High'],
+    ['2987631','NQ2506','2026-03-15',4,200,210,'Med'],
+    ['3215450','SPXW 20260321 6500.0 C','2026-03-21',5,300,290,'High'],
+    ['1829401','AAPL','2026-02-18',3,150,160,'Low'],
+    ['4412089','TSLA','2026-01-22',4,220,200,'Med'],
+    ['3381204','SPXW 20260207 6200.0 P','2026-02-07',6,400,420,'High'],
+    ['2201938','ES2506','2026-03-08',3,180,170,'Low'],
+    ['5510293','SPXW 20260314 6450.0 C','2026-03-14',7,560,540,'High'],
+    ['1102847','NVDA','2026-01-30',3,120,130,'Low'],
+  ].slice(0, orderTimes <= 2 ? 10 : 7);
+
+  const colorMap = {High:'#cf1322', Med:'#d46b08', Low:'#389e0d'};
+  document.getElementById('sql-sample-tbody').innerHTML = samples.map(r =>
+    `<tr><td class="col-link" onclick="showPage('client-details')">${r[0]}</td><td style="font-size:10px">${r[1]}</td><td>${r[2]}</td><td>${r[3]}</td><td>${r[4]}</td><td>${r[5]}</td><td><span style="color:${colorMap[r[6]]};font-weight:600">${r[6]}</span></td></tr>`
+  ).join('');
+
+  document.getElementById('sql-test-results').style.display = 'block';
+}
+
+function sqlApplyToRule() {
+  const inputs = document.querySelectorAll('#sql-param-overrides input');
+  const val = inputs[0].value;
+  if (val) {
+    const t = document.createElement('div');
+    t.style.cssText = 'position:fixed;bottom:24px;right:24px;background:#001529;color:#ffe100;padding:10px 18px;border-radius:6px;font-size:13px;font-weight:500;z-index:9999;box-shadow:0 4px 12px rgba(0,0,0,.3)';
+    t.textContent = `Test params applied to rule draft — review in Parameters tab before publishing`;
+    document.body.appendChild(t);
+    setTimeout(() => t.remove(), 3500);
+  }
+}
 
 // ── Rule Management ──
 function showRuleDetail(ruleId, tab) {

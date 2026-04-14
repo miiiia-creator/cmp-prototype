@@ -1647,62 +1647,8 @@ tbody tr:hover td { background: #fffdf0; }
     </div>
   </div>
 
-  <!-- AI Portrait + Lifecycle -->
-  <div class="profile-section">
-
-    <!-- AI Customer Risk Profile -->
-    <div class="ai-card" style="margin-bottom:0">
-      <div class="ai-card-head">
-        <div class="ai-card-title"><span class="ai-badge">AI</span> Customer Risk Profile</div>
-        <span style="font-size:11px;color:var(--text-dis)">Updated 2026-04-07</span>
-      </div>
-      <div class="ai-card-body">
-        <!-- Score -->
-        <div style="display:flex;align-items:flex-end;gap:12px;margin-bottom:12px;padding-bottom:12px;border-bottom:1px solid #e9d8fd;">
-          <div>
-            <div class="ai-score-big high">82</div>
-            <div style="font-size:11px;color:var(--text-hint);margin-top:2px;">Composite Risk Score</div>
-          </div>
-          <div style="flex:1">
-            <div class="gauge-wrap"><div class="gauge-fill high" style="width:82%"></div></div>
-            <div style="font-size:11px;color:var(--text-hint);">Confidence 74% · <span style="color:#cf1322">High Risk</span></div>
-          </div>
-        </div>
-        <!-- Dimensions -->
-        <div class="ai-evidence-title" style="margin-bottom:8px;">Risk Dimension Breakdown</div>
-        <div class="dim-row"><span class="dim-label">Trading Behavior Anomaly</span><div style="flex:1;margin:0 8px"><div class="gauge-wrap"><div class="gauge-fill high" style="width:88%"></div></div></div><span class="dim-score" style="color:#cf1322">88</span></div>
-        <div class="dim-row"><span class="dim-label">Account Network Risk</span><div style="flex:1;margin:0 8px"><div class="gauge-wrap"><div class="gauge-fill high" style="width:75%"></div></div></div><span class="dim-score" style="color:#d46b08">75</span></div>
-        <div class="dim-row"><span class="dim-label">Historical Violation Tendency</span><div style="flex:1;margin:0 8px"><div class="gauge-wrap"><div class="gauge-fill medium" style="width:62%"></div></div></div><span class="dim-score" style="color:#d46b08">62</span></div>
-        <div class="dim-row"><span class="dim-label">Fund Flow Anomaly</span><div style="flex:1;margin:0 8px"><div class="gauge-wrap"><div class="gauge-fill low" style="width:35%"></div></div></div><span class="dim-score" style="color:#389e0d">35</span></div>
-        <div class="divider"></div>
-        <!-- Behavior tags -->
-        <div class="ai-evidence-title" style="margin-bottom:6px;">Behavior Tags</div>
-        <div style="display:flex;flex-wrap:wrap;gap:4px;margin-bottom:12px;">
-          <span class="tag tag-high">Frequent Short-term Trading</span>
-          <span class="tag tag-medium">Concentrated Options Activity</span>
-          <span class="tag tag-ai">Associated Accounts Active</span>
-          <span class="tag tag-low">Normal Fund Flows</span>
-          <span class="tag tag-medium">Intraday Swing Trading</span>
-        </div>
-        <!-- Key observations -->
-        <div class="ai-evidence">
-          <div class="ai-evidence-title">Key Risk Observations</div>
-          <ul>
-            <li>Trading frequency has risen significantly since Q4 2025, concentrated on near-expiry SPXW options.</li>
-            <li>Same-IP associated accounts showed synchronized reverse trading on multiple alert trigger dates, suggesting potential counterparty activity.</li>
-            <li>1 historical Further Action record in the past 6 months (Case TS_798); no active disclosure on file.</li>
-          </ul>
-        </div>
-        <div style="display:flex;gap:6px;">
-          <button class="btn btn-ai btn-sm" onclick="openInvToTab('client','graph')">Association Graph</button>
-          <button class="btn btn-ai btn-sm" onclick="openInvToTab('client','spread')">Spread Analysis</button>
-          <button class="btn btn-ai btn-sm" onclick="openInvToTab('client','multi')">Associate Accounts</button>
-        </div>
-      </div>
-    </div>
-
-    <!-- Lifecycle -->
-    <div class="card" style="margin-bottom:0">
+  <!-- Lifecycle -->
+  <div class="card" style="margin-bottom:12px">
       <div class="card-head">
         🕐 Client Risk Lifecycle
         <span style="font-size:11px;font-weight:400;color:var(--text-hint);margin-left:4px">7 Events Total</span>
@@ -1754,13 +1700,15 @@ tbody tr:hover td { background: #fffdf0; }
         </div>
       </div>
     </div>
-  </div>
 
   <!-- AI User Profile Report -->
   <div class="ai-card" style="margin-top:12px">
     <div class="ai-card-head">
       <div class="ai-card-title"><span class="ai-badge">AI</span> User Profile Report</div>
-      <span style="font-size:11px;color:var(--text-dis)">Generated 2026-04-07 16:11 &nbsp;·&nbsp; Pending Review</span>
+      <div style="display:flex;align-items:center;gap:10px">
+        <span style="font-size:11px;color:var(--text-dis)">Generated 2026-04-07 16:11 &nbsp;·&nbsp; Pending Review</span>
+        <span style="background:#fff1f0;border:1px solid #ffa39e;border-radius:4px;padding:2px 10px;font-size:12px;font-weight:700;color:#cf1322">风险评分 82</span>
+      </div>
     </div>
     <div class="ai-card-body" style="padding:0">
 

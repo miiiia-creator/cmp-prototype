@@ -497,6 +497,160 @@ tbody tr:hover td { background: #fffdf0; }
     </div>
   </div>
 
+  <!-- Row 2: Rule Health + Alert Distribution -->
+  <div style="display:grid;grid-template-columns:1.4fr 1fr 1fr 1fr;gap:12px;margin-bottom:12px">
+
+    <!-- Rule Health -->
+    <div class="card" style="margin-bottom:0">
+      <div class="card-head">Rule Health <span class="section-subtitle">Top 4 FP Rate · This Week</span></div>
+      <div style="padding:0 16px 8px">
+        <div style="display:grid;grid-template-columns:1fr 56px auto;gap:4px 8px;align-items:center;font-size:11px;color:var(--text-hint);padding:5px 0;border-bottom:1px solid var(--border)">
+          <span>Rule Name</span><span></span><span>FP Rate</span>
+        </div>
+        <div style="display:grid;grid-template-columns:1fr 56px auto;gap:4px 8px;align-items:center;font-size:12px;padding:7px 0;border-bottom:1px solid #f5f5f5">
+          <span style="white-space:nowrap;overflow:hidden;text-overflow:ellipsis">pre-arranged (Profit)</span>
+          <div class="fp-bar-bg"><div class="fp-bar-fill" style="width:58%;background:#fa8c16"></div></div>
+          <span style="color:#fa8c16;font-weight:500">58%</span>
+        </div>
+        <div style="display:grid;grid-template-columns:1fr 56px auto;gap:4px 8px;align-items:center;font-size:12px;padding:7px 0;border-bottom:1px solid #f5f5f5">
+          <span style="white-space:nowrap;overflow:hidden;text-overflow:ellipsis">ramping (no tick data)</span>
+          <div class="fp-bar-bg"><div class="fp-bar-fill" style="width:72%;background:#cf1322"></div></div>
+          <span style="color:#cf1322;font-weight:500">72%</span>
+        </div>
+        <div style="display:grid;grid-template-columns:1fr 56px auto;gap:4px 8px;align-items:center;font-size:12px;padding:7px 0;border-bottom:1px solid #f5f5f5">
+          <span style="white-space:nowrap;overflow:hidden;text-overflow:ellipsis">wash trade (A to A)</span>
+          <div class="fp-bar-bg"><div class="fp-bar-fill" style="width:45%;background:#d97706"></div></div>
+          <span style="color:#d97706;font-weight:500">45%</span>
+        </div>
+        <div style="display:grid;grid-template-columns:1fr 56px auto;gap:4px 8px;align-items:center;font-size:12px;padding:7px 0">
+          <span style="white-space:nowrap;overflow:hidden;text-overflow:ellipsis">large single trade</span>
+          <div class="fp-bar-bg"><div class="fp-bar-fill" style="width:36%;background:#52c41a"></div></div>
+          <span style="color:#52c41a;font-weight:500">36%</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Top Symbol -->
+    <div class="card" style="margin-bottom:0">
+      <div class="card-head">Top Symbol
+        <span class="section-subtitle">By Alert Count · This Week</span>
+        <span onclick="showPage('alert-viewer')" style="margin-left:auto;font-size:11px;color:var(--text-hint);cursor:pointer;font-weight:400">View All →</span>
+      </div>
+      <div style="padding:6px 16px 10px;display:flex;flex-direction:column;gap:7px">
+        <div style="display:flex;align-items:center;gap:8px;font-size:12px">
+          <span style="width:14px;text-align:right;color:var(--text-hint);flex-shrink:0">1</span>
+          <span style="width:80px;flex-shrink:0;font-weight:500;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">SPXW</span>
+          <div style="flex:1;height:7px;background:#f0f0f0;border-radius:4px;overflow:hidden"><div style="height:100%;width:100%;background:#fa8c16;border-radius:4px"></div></div>
+          <span style="width:28px;text-align:right;color:rgba(0,0,0,.65)">47</span>
+        </div>
+        <div style="display:flex;align-items:center;gap:8px;font-size:12px">
+          <span style="width:14px;text-align:right;color:var(--text-hint);flex-shrink:0">2</span>
+          <span style="width:80px;flex-shrink:0;font-weight:500;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">TSLA OPT</span>
+          <div style="flex:1;height:7px;background:#f0f0f0;border-radius:4px;overflow:hidden"><div style="height:100%;width:68%;background:#2563eb;border-radius:4px"></div></div>
+          <span style="width:28px;text-align:right;color:rgba(0,0,0,.65)">32</span>
+        </div>
+        <div style="display:flex;align-items:center;gap:8px;font-size:12px">
+          <span style="width:14px;text-align:right;color:var(--text-hint);flex-shrink:0">3</span>
+          <span style="width:80px;flex-shrink:0;font-weight:500;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">NQ2506</span>
+          <div style="flex:1;height:7px;background:#f0f0f0;border-radius:4px;overflow:hidden"><div style="height:100%;width:60%;background:#2563eb;border-radius:4px"></div></div>
+          <span style="width:28px;text-align:right;color:rgba(0,0,0,.65)">28</span>
+        </div>
+        <div style="display:flex;align-items:center;gap:8px;font-size:12px">
+          <span style="width:14px;text-align:right;color:var(--text-hint);flex-shrink:0">4</span>
+          <span style="width:80px;flex-shrink:0;font-weight:500;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">AAPL</span>
+          <div style="flex:1;height:7px;background:#f0f0f0;border-radius:4px;overflow:hidden"><div style="height:100%;width:51%;background:#2563eb;border-radius:4px"></div></div>
+          <span style="width:28px;text-align:right;color:rgba(0,0,0,.65)">24</span>
+        </div>
+        <div style="display:flex;align-items:center;gap:8px;font-size:12px">
+          <span style="width:14px;text-align:right;color:var(--text-hint);flex-shrink:0">5</span>
+          <span style="width:80px;flex-shrink:0;font-weight:500;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">BQ</span>
+          <div style="flex:1;height:7px;background:#f0f0f0;border-radius:4px;overflow:hidden"><div style="height:100%;width:40%;background:#2563eb;border-radius:4px"></div></div>
+          <span style="width:28px;text-align:right;color:rgba(0,0,0,.65)">19</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Top Account -->
+    <div class="card" style="margin-bottom:0">
+      <div class="card-head">Top Account
+        <span class="section-subtitle">By Alert Count · This Week</span>
+        <span onclick="showPage('alert-viewer')" style="margin-left:auto;font-size:11px;color:var(--text-hint);cursor:pointer;font-weight:400">View All →</span>
+      </div>
+      <div style="padding:6px 16px 10px;display:flex;flex-direction:column;gap:7px">
+        <div style="display:flex;align-items:center;gap:8px;font-size:12px">
+          <span style="width:14px;text-align:right;color:var(--text-hint);flex-shrink:0">1</span>
+          <span class="col-link" style="width:72px;flex-shrink:0;font-weight:500" onclick="showPage('client-details')">3215451</span>
+          <div style="flex:1;height:7px;background:#f0f0f0;border-radius:4px;overflow:hidden"><div style="height:100%;width:100%;background:#cf1322;border-radius:4px"></div></div>
+          <span style="width:28px;text-align:right;color:rgba(0,0,0,.65)">12</span>
+        </div>
+        <div style="display:flex;align-items:center;gap:8px;font-size:12px">
+          <span style="width:14px;text-align:right;color:var(--text-hint);flex-shrink:0">2</span>
+          <span class="col-link" style="width:72px;flex-shrink:0;font-weight:500" onclick="showPage('client-details')">2353510</span>
+          <div style="flex:1;height:7px;background:#f0f0f0;border-radius:4px;overflow:hidden"><div style="height:100%;width:75%;background:#fa8c16;border-radius:4px"></div></div>
+          <span style="width:28px;text-align:right;color:rgba(0,0,0,.65)">9</span>
+        </div>
+        <div style="display:flex;align-items:center;gap:8px;font-size:12px">
+          <span style="width:14px;text-align:right;color:var(--text-hint);flex-shrink:0">3</span>
+          <span class="col-link" style="width:72px;flex-shrink:0;font-weight:500" onclick="showPage('client-details')">7526677</span>
+          <div style="flex:1;height:7px;background:#f0f0f0;border-radius:4px;overflow:hidden"><div style="height:100%;width:67%;background:#fa8c16;border-radius:4px"></div></div>
+          <span style="width:28px;text-align:right;color:rgba(0,0,0,.65)">8</span>
+        </div>
+        <div style="display:flex;align-items:center;gap:8px;font-size:12px">
+          <span style="width:14px;text-align:right;color:var(--text-hint);flex-shrink:0">4</span>
+          <span class="col-link" style="width:72px;flex-shrink:0;font-weight:500" onclick="showPage('client-details')">1441692</span>
+          <div style="flex:1;height:7px;background:#f0f0f0;border-radius:4px;overflow:hidden"><div style="height:100%;width:50%;background:#2563eb;border-radius:4px"></div></div>
+          <span style="width:28px;text-align:right;color:rgba(0,0,0,.65)">6</span>
+        </div>
+        <div style="display:flex;align-items:center;gap:8px;font-size:12px">
+          <span style="width:14px;text-align:right;color:var(--text-hint);flex-shrink:0">5</span>
+          <span class="col-link" style="width:72px;flex-shrink:0;font-weight:500" onclick="showPage('client-details')">5462118</span>
+          <div style="flex:1;height:7px;background:#f0f0f0;border-radius:4px;overflow:hidden"><div style="height:100%;width:42%;background:#2563eb;border-radius:4px"></div></div>
+          <span style="width:28px;text-align:right;color:rgba(0,0,0,.65)">5</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Market -->
+    <div class="card" style="margin-bottom:0">
+      <div class="card-head">Alert by Market
+        <span class="section-subtitle">Trading Market · This Week</span>
+      </div>
+      <div style="padding:6px 16px 10px;display:flex;flex-direction:column;gap:7px">
+        <div style="display:flex;align-items:center;gap:8px;font-size:12px">
+          <span style="width:28px;flex-shrink:0;font-weight:600;color:#2563eb">US</span>
+          <div style="flex:1;height:7px;background:#f0f0f0;border-radius:4px;overflow:hidden"><div style="height:100%;width:100%;background:#2563eb;border-radius:4px"></div></div>
+          <span style="width:28px;text-align:right;color:rgba(0,0,0,.65)">97</span>
+          <span style="width:32px;text-align:right;color:var(--text-hint);font-size:11px">34%</span>
+        </div>
+        <div style="display:flex;align-items:center;gap:8px;font-size:12px">
+          <span style="width:28px;flex-shrink:0;font-weight:600;color:#7c3aed">HK</span>
+          <div style="flex:1;height:7px;background:#f0f0f0;border-radius:4px;overflow:hidden"><div style="height:100%;width:71%;background:#7c3aed;border-radius:4px"></div></div>
+          <span style="width:28px;text-align:right;color:rgba(0,0,0,.65)">69</span>
+          <span style="width:32px;text-align:right;color:var(--text-hint);font-size:11px">24%</span>
+        </div>
+        <div style="display:flex;align-items:center;gap:8px;font-size:12px">
+          <span style="width:28px;flex-shrink:0;font-weight:600;color:#059669">SG</span>
+          <div style="flex:1;height:7px;background:#f0f0f0;border-radius:4px;overflow:hidden"><div style="height:100%;width:52%;background:#059669;border-radius:4px"></div></div>
+          <span style="width:28px;text-align:right;color:rgba(0,0,0,.65)">51</span>
+          <span style="width:32px;text-align:right;color:var(--text-hint);font-size:11px">18%</span>
+        </div>
+        <div style="display:flex;align-items:center;gap:8px;font-size:12px">
+          <span style="width:28px;flex-shrink:0;font-weight:600;color:#d97706">AU</span>
+          <div style="flex:1;height:7px;background:#f0f0f0;border-radius:4px;overflow:hidden"><div style="height:100%;width:38%;background:#d97706;border-radius:4px"></div></div>
+          <span style="width:28px;text-align:right;color:rgba(0,0,0,.65)">37</span>
+          <span style="width:32px;text-align:right;color:var(--text-hint);font-size:11px">13%</span>
+        </div>
+        <div style="display:flex;align-items:center;gap:8px;font-size:12px">
+          <span style="width:28px;flex-shrink:0;font-weight:600;color:#64748b">JP</span>
+          <div style="flex:1;height:7px;background:#f0f0f0;border-radius:4px;overflow:hidden"><div style="height:100%;width:31%;background:#64748b;border-radius:4px"></div></div>
+          <span style="width:28px;text-align:right;color:rgba(0,0,0,.65)">30</span>
+          <span style="width:32px;text-align:right;color:var(--text-hint);font-size:11px">11%</span>
+        </div>
+      </div>
+    </div>
+
+  </div><!-- /row2 -->
+
   <!-- Main 2-col -->
   <div class="dash-cols">
 
@@ -669,160 +823,6 @@ tbody tr:hover td { background: #fffdf0; }
 
     </div><!-- /right -->
   </div><!-- /dash-cols -->
-
-  <!-- Row 2: Rule Health + Alert Distribution -->
-  <div style="display:grid;grid-template-columns:1.4fr 1fr 1fr 1fr;gap:12px;margin-top:12px">
-
-    <!-- Rule Health -->
-    <div class="card">
-      <div class="card-head">Rule Health <span class="section-subtitle">Top 4 FP Rate · This Week</span></div>
-      <div style="padding:0 16px 8px">
-        <div style="display:grid;grid-template-columns:1fr 56px auto;gap:4px 8px;align-items:center;font-size:11px;color:var(--text-hint);padding:5px 0;border-bottom:1px solid var(--border)">
-          <span>Rule Name</span><span></span><span>FP Rate</span>
-        </div>
-        <div style="display:grid;grid-template-columns:1fr 56px auto;gap:4px 8px;align-items:center;font-size:12px;padding:7px 0;border-bottom:1px solid #f5f5f5">
-          <span style="white-space:nowrap;overflow:hidden;text-overflow:ellipsis">pre-arranged (Profit)</span>
-          <div class="fp-bar-bg"><div class="fp-bar-fill" style="width:58%;background:#fa8c16"></div></div>
-          <span style="color:#fa8c16;font-weight:500">58%</span>
-        </div>
-        <div style="display:grid;grid-template-columns:1fr 56px auto;gap:4px 8px;align-items:center;font-size:12px;padding:7px 0;border-bottom:1px solid #f5f5f5">
-          <span style="white-space:nowrap;overflow:hidden;text-overflow:ellipsis">ramping (no tick data)</span>
-          <div class="fp-bar-bg"><div class="fp-bar-fill" style="width:72%;background:#cf1322"></div></div>
-          <span style="color:#cf1322;font-weight:500">72%</span>
-        </div>
-        <div style="display:grid;grid-template-columns:1fr 56px auto;gap:4px 8px;align-items:center;font-size:12px;padding:7px 0;border-bottom:1px solid #f5f5f5">
-          <span style="white-space:nowrap;overflow:hidden;text-overflow:ellipsis">wash trade (A to A)</span>
-          <div class="fp-bar-bg"><div class="fp-bar-fill" style="width:45%;background:#d97706"></div></div>
-          <span style="color:#d97706;font-weight:500">45%</span>
-        </div>
-        <div style="display:grid;grid-template-columns:1fr 56px auto;gap:4px 8px;align-items:center;font-size:12px;padding:7px 0">
-          <span style="white-space:nowrap;overflow:hidden;text-overflow:ellipsis">large single trade</span>
-          <div class="fp-bar-bg"><div class="fp-bar-fill" style="width:36%;background:#52c41a"></div></div>
-          <span style="color:#52c41a;font-weight:500">36%</span>
-        </div>
-      </div>
-    </div>
-
-    <!-- Top Symbol -->
-    <div class="card">
-      <div class="card-head">Top Symbol
-        <span class="section-subtitle">By Alert Count · This Week</span>
-        <span onclick="showPage('alert-viewer')" style="margin-left:auto;font-size:11px;color:var(--text-hint);cursor:pointer;font-weight:400">View All →</span>
-      </div>
-      <div style="padding:6px 16px 10px;display:flex;flex-direction:column;gap:7px">
-        <div style="display:flex;align-items:center;gap:8px;font-size:12px">
-          <span style="width:14px;text-align:right;color:var(--text-hint);flex-shrink:0">1</span>
-          <span style="width:80px;flex-shrink:0;font-weight:500;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">SPXW</span>
-          <div style="flex:1;height:7px;background:#f0f0f0;border-radius:4px;overflow:hidden"><div style="height:100%;width:100%;background:#fa8c16;border-radius:4px"></div></div>
-          <span style="width:28px;text-align:right;color:rgba(0,0,0,.65)">47</span>
-        </div>
-        <div style="display:flex;align-items:center;gap:8px;font-size:12px">
-          <span style="width:14px;text-align:right;color:var(--text-hint);flex-shrink:0">2</span>
-          <span style="width:80px;flex-shrink:0;font-weight:500;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">TSLA OPT</span>
-          <div style="flex:1;height:7px;background:#f0f0f0;border-radius:4px;overflow:hidden"><div style="height:100%;width:68%;background:#2563eb;border-radius:4px"></div></div>
-          <span style="width:28px;text-align:right;color:rgba(0,0,0,.65)">32</span>
-        </div>
-        <div style="display:flex;align-items:center;gap:8px;font-size:12px">
-          <span style="width:14px;text-align:right;color:var(--text-hint);flex-shrink:0">3</span>
-          <span style="width:80px;flex-shrink:0;font-weight:500;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">NQ2506</span>
-          <div style="flex:1;height:7px;background:#f0f0f0;border-radius:4px;overflow:hidden"><div style="height:100%;width:60%;background:#2563eb;border-radius:4px"></div></div>
-          <span style="width:28px;text-align:right;color:rgba(0,0,0,.65)">28</span>
-        </div>
-        <div style="display:flex;align-items:center;gap:8px;font-size:12px">
-          <span style="width:14px;text-align:right;color:var(--text-hint);flex-shrink:0">4</span>
-          <span style="width:80px;flex-shrink:0;font-weight:500;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">AAPL</span>
-          <div style="flex:1;height:7px;background:#f0f0f0;border-radius:4px;overflow:hidden"><div style="height:100%;width:51%;background:#2563eb;border-radius:4px"></div></div>
-          <span style="width:28px;text-align:right;color:rgba(0,0,0,.65)">24</span>
-        </div>
-        <div style="display:flex;align-items:center;gap:8px;font-size:12px">
-          <span style="width:14px;text-align:right;color:var(--text-hint);flex-shrink:0">5</span>
-          <span style="width:80px;flex-shrink:0;font-weight:500;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">BQ</span>
-          <div style="flex:1;height:7px;background:#f0f0f0;border-radius:4px;overflow:hidden"><div style="height:100%;width:40%;background:#2563eb;border-radius:4px"></div></div>
-          <span style="width:28px;text-align:right;color:rgba(0,0,0,.65)">19</span>
-        </div>
-      </div>
-    </div>
-
-    <!-- Top Account -->
-    <div class="card">
-      <div class="card-head">Top Account
-        <span class="section-subtitle">By Alert Count · This Week</span>
-        <span onclick="showPage('alert-viewer')" style="margin-left:auto;font-size:11px;color:var(--text-hint);cursor:pointer;font-weight:400">View All →</span>
-      </div>
-      <div style="padding:6px 16px 10px;display:flex;flex-direction:column;gap:7px">
-        <div style="display:flex;align-items:center;gap:8px;font-size:12px">
-          <span style="width:14px;text-align:right;color:var(--text-hint);flex-shrink:0">1</span>
-          <span class="col-link" style="width:72px;flex-shrink:0;font-weight:500" onclick="showPage('client-details')">3215451</span>
-          <div style="flex:1;height:7px;background:#f0f0f0;border-radius:4px;overflow:hidden"><div style="height:100%;width:100%;background:#cf1322;border-radius:4px"></div></div>
-          <span style="width:28px;text-align:right;color:rgba(0,0,0,.65)">12</span>
-        </div>
-        <div style="display:flex;align-items:center;gap:8px;font-size:12px">
-          <span style="width:14px;text-align:right;color:var(--text-hint);flex-shrink:0">2</span>
-          <span class="col-link" style="width:72px;flex-shrink:0;font-weight:500" onclick="showPage('client-details')">2353510</span>
-          <div style="flex:1;height:7px;background:#f0f0f0;border-radius:4px;overflow:hidden"><div style="height:100%;width:75%;background:#fa8c16;border-radius:4px"></div></div>
-          <span style="width:28px;text-align:right;color:rgba(0,0,0,.65)">9</span>
-        </div>
-        <div style="display:flex;align-items:center;gap:8px;font-size:12px">
-          <span style="width:14px;text-align:right;color:var(--text-hint);flex-shrink:0">3</span>
-          <span class="col-link" style="width:72px;flex-shrink:0;font-weight:500" onclick="showPage('client-details')">7526677</span>
-          <div style="flex:1;height:7px;background:#f0f0f0;border-radius:4px;overflow:hidden"><div style="height:100%;width:67%;background:#fa8c16;border-radius:4px"></div></div>
-          <span style="width:28px;text-align:right;color:rgba(0,0,0,.65)">8</span>
-        </div>
-        <div style="display:flex;align-items:center;gap:8px;font-size:12px">
-          <span style="width:14px;text-align:right;color:var(--text-hint);flex-shrink:0">4</span>
-          <span class="col-link" style="width:72px;flex-shrink:0;font-weight:500" onclick="showPage('client-details')">1441692</span>
-          <div style="flex:1;height:7px;background:#f0f0f0;border-radius:4px;overflow:hidden"><div style="height:100%;width:50%;background:#2563eb;border-radius:4px"></div></div>
-          <span style="width:28px;text-align:right;color:rgba(0,0,0,.65)">6</span>
-        </div>
-        <div style="display:flex;align-items:center;gap:8px;font-size:12px">
-          <span style="width:14px;text-align:right;color:var(--text-hint);flex-shrink:0">5</span>
-          <span class="col-link" style="width:72px;flex-shrink:0;font-weight:500" onclick="showPage('client-details')">5462118</span>
-          <div style="flex:1;height:7px;background:#f0f0f0;border-radius:4px;overflow:hidden"><div style="height:100%;width:42%;background:#2563eb;border-radius:4px"></div></div>
-          <span style="width:28px;text-align:right;color:rgba(0,0,0,.65)">5</span>
-        </div>
-      </div>
-    </div>
-
-    <!-- Market -->
-    <div class="card">
-      <div class="card-head">Alert by Market
-        <span class="section-subtitle">Trading Market · This Week</span>
-      </div>
-      <div style="padding:6px 16px 10px;display:flex;flex-direction:column;gap:7px">
-        <div style="display:flex;align-items:center;gap:8px;font-size:12px">
-          <span style="width:28px;flex-shrink:0;font-weight:600;color:#2563eb">US</span>
-          <div style="flex:1;height:7px;background:#f0f0f0;border-radius:4px;overflow:hidden"><div style="height:100%;width:100%;background:#2563eb;border-radius:4px"></div></div>
-          <span style="width:28px;text-align:right;color:rgba(0,0,0,.65)">97</span>
-          <span style="width:32px;text-align:right;color:var(--text-hint);font-size:11px">34%</span>
-        </div>
-        <div style="display:flex;align-items:center;gap:8px;font-size:12px">
-          <span style="width:28px;flex-shrink:0;font-weight:600;color:#7c3aed">HK</span>
-          <div style="flex:1;height:7px;background:#f0f0f0;border-radius:4px;overflow:hidden"><div style="height:100%;width:71%;background:#7c3aed;border-radius:4px"></div></div>
-          <span style="width:28px;text-align:right;color:rgba(0,0,0,.65)">69</span>
-          <span style="width:32px;text-align:right;color:var(--text-hint);font-size:11px">24%</span>
-        </div>
-        <div style="display:flex;align-items:center;gap:8px;font-size:12px">
-          <span style="width:28px;flex-shrink:0;font-weight:600;color:#059669">SG</span>
-          <div style="flex:1;height:7px;background:#f0f0f0;border-radius:4px;overflow:hidden"><div style="height:100%;width:52%;background:#059669;border-radius:4px"></div></div>
-          <span style="width:28px;text-align:right;color:rgba(0,0,0,.65)">51</span>
-          <span style="width:32px;text-align:right;color:var(--text-hint);font-size:11px">18%</span>
-        </div>
-        <div style="display:flex;align-items:center;gap:8px;font-size:12px">
-          <span style="width:28px;flex-shrink:0;font-weight:600;color:#d97706">AU</span>
-          <div style="flex:1;height:7px;background:#f0f0f0;border-radius:4px;overflow:hidden"><div style="height:100%;width:38%;background:#d97706;border-radius:4px"></div></div>
-          <span style="width:28px;text-align:right;color:rgba(0,0,0,.65)">37</span>
-          <span style="width:32px;text-align:right;color:var(--text-hint);font-size:11px">13%</span>
-        </div>
-        <div style="display:flex;align-items:center;gap:8px;font-size:12px">
-          <span style="width:28px;flex-shrink:0;font-weight:600;color:#64748b">JP</span>
-          <div style="flex:1;height:7px;background:#f0f0f0;border-radius:4px;overflow:hidden"><div style="height:100%;width:31%;background:#64748b;border-radius:4px"></div></div>
-          <span style="width:28px;text-align:right;color:rgba(0,0,0,.65)">30</span>
-          <span style="width:32px;text-align:right;color:var(--text-hint);font-size:11px">11%</span>
-        </div>
-      </div>
-    </div>
-
-  </div><!-- /alert distribution row -->
 
 </div>
 

@@ -2975,6 +2975,7 @@ function submitWLModal() {
       <div class="tab-bar" style="flex-shrink:0">
         <div class="tab active" id="inv-tab-spread-alert" onclick="switchSheetTab('alert','spread')">Spread Analysis</div>
         <div class="tab" id="inv-tab-graph-alert" onclick="switchSheetTab('alert','graph')">Association Graph</div>
+        <div class="tab" id="inv-tab-multi-alert" onclick="switchSheetTab('alert','multi')">Multi-Account <span style="background:#cf1322;color:#fff;border-radius:8px;padding:0 5px;font-size:10px;margin-left:2px">2</span></div>
       </div>
       <div class="tab-pane active" id="inv-spread-alert" style="flex-direction:column;flex:1;overflow:hidden;min-height:0">
         <!-- Toolbar -->
@@ -3025,6 +3026,81 @@ function submitWLModal() {
         </div>
         <canvas id="assoc-canvas-alert" height="280" style="width:100%;display:block;border:1px solid var(--border);border-radius:4px"></canvas>
       </div>
+      <!-- Multi-Account Analysis -->
+      <div class="tab-pane" id="inv-multi-alert" style="flex:1;overflow-y:auto">
+        <div style="padding:6px 12px;background:#fafafa;border-bottom:1px solid #f0f0f0;display:flex;flex-wrap:wrap;align-items:center;gap:6px;flex-shrink:0">
+          <span style="font-size:11px;color:var(--text-hint)">Accounts</span>
+          <span style="background:#f0f7ff;color:#1677ff;border:1px solid #91caff;border-radius:3px;padding:0 6px;font-size:11px">3215451</span>
+          <span style="background:#f0f7ff;color:#1677ff;border:1px solid #91caff;border-radius:3px;padding:0 6px;font-size:11px">3215450</span>
+          <span style="font-size:11px;color:var(--text-hint)">· 2026-01-01 – 2026-04-07 · SPXW 20260406 6615.0 C</span>
+          <div style="margin-left:auto;display:flex;gap:5px">
+            <span style="font-size:10px;background:#f6ffed;color:#389e0d;border:1px solid #b7eb8f;padding:1px 6px;border-radius:3px">IP: None</span>
+            <span style="font-size:10px;background:#f6ffed;color:#389e0d;border:1px solid #b7eb8f;padding:1px 6px;border-radius:3px">Device: None</span>
+            <span style="font-size:10px;background:#fff2f0;color:#cf1322;border:1px solid #ffa39e;padding:1px 6px;border-radius:3px">Strategy: High</span>
+          </div>
+        </div>
+        <div style="padding:10px 12px">
+          <div style="font-size:11px;font-weight:600;margin-bottom:5px">Strategy Similarity Matrix</div>
+          <table style="width:100%;font-size:11px;border-collapse:collapse;margin-bottom:10px">
+            <thead><tr>
+              <th style="background:#fafafa;border:1px solid #f0f0f0;padding:3px 8px;text-align:left;font-weight:500;color:var(--text-hint)">Account</th>
+              <th style="background:#fafafa;border:1px solid #f0f0f0;padding:3px 8px;text-align:center;font-weight:500;color:var(--text-hint)">2026-01</th>
+              <th style="background:#fafafa;border:1px solid #f0f0f0;padding:3px 8px;text-align:center;font-weight:500;color:var(--text-hint)">2026-02</th>
+              <th style="background:#fafafa;border:1px solid #f0f0f0;padding:3px 8px;text-align:center;font-weight:500;color:var(--text-hint)">2026-03</th>
+              <th style="background:#fafafa;border:1px solid #f0f0f0;padding:3px 8px;text-align:center;font-weight:500;color:var(--text-hint)">2026-04</th>
+            </tr></thead>
+            <tbody>
+              <tr>
+                <td style="border:1px solid #f0f0f0;padding:3px 8px;font-weight:500">3215451</td>
+                <td style="border:1px solid #f0f0f0;padding:3px 8px;text-align:center;background:#fffbe6;color:#d46b08;font-weight:500">0.91</td>
+                <td style="border:1px solid #f0f0f0;padding:3px 8px;text-align:center;background:#fffbe6;color:#d46b08;font-weight:500">0.94</td>
+                <td style="border:1px solid #f0f0f0;padding:3px 8px;text-align:center;background:#fff2f0;color:#cf1322;font-weight:500">0.98</td>
+                <td style="border:1px solid #f0f0f0;padding:3px 8px;text-align:center;background:#fff2f0;color:#cf1322;font-weight:500">0.99</td>
+              </tr>
+              <tr>
+                <td style="border:1px solid #f0f0f0;padding:3px 8px;font-weight:500">3215450</td>
+                <td style="border:1px solid #f0f0f0;padding:3px 8px;text-align:center;background:#fff2f0;color:#cf1322;font-weight:500">0.99</td>
+                <td style="border:1px solid #f0f0f0;padding:3px 8px;text-align:center;background:#fff2f0;color:#cf1322;font-weight:500">1.00</td>
+                <td style="border:1px solid #f0f0f0;padding:3px 8px;text-align:center;background:#fff2f0;color:#cf1322;font-weight:500">0.99</td>
+                <td style="border:1px solid #f0f0f0;padding:3px 8px;text-align:center;background:#fff2f0;color:#cf1322;font-weight:500">0.98</td>
+              </tr>
+            </tbody>
+          </table>
+          <div style="font-size:11px;font-weight:600;margin-bottom:5px">Strategy Overlap</div>
+          <table style="width:100%;font-size:11px;border-collapse:collapse;margin-bottom:10px">
+            <thead><tr>
+              <th style="background:#fafafa;border:1px solid #f0f0f0;padding:3px 8px;text-align:left;font-weight:500;color:var(--text-hint)">Dimension</th>
+              <th style="background:#fafafa;border:1px solid #f0f0f0;padding:3px 8px;text-align:center;font-weight:500;color:var(--text-hint)">3215451</th>
+              <th style="background:#fafafa;border:1px solid #f0f0f0;padding:3px 8px;text-align:center;font-weight:500;color:var(--text-hint)">3215450</th>
+            </tr></thead>
+            <tbody>
+              <tr><td style="border:1px solid #f0f0f0;padding:3px 8px;color:var(--text-sec)">Large Order Bias</td><td style="border:1px solid #f0f0f0;padding:3px 8px;text-align:center;color:#cf1322;font-weight:500">Yes (100%)</td><td style="border:1px solid #f0f0f0;padding:3px 8px;text-align:center;color:#cf1322;font-weight:500">Yes (83%)</td></tr>
+              <tr><td style="border:1px solid #f0f0f0;padding:3px 8px;color:var(--text-sec)">Order Type</td><td style="border:1px solid #f0f0f0;padding:3px 8px;text-align:center">LMT (100%)</td><td style="border:1px solid #f0f0f0;padding:3px 8px;text-align:center">LMT (100%)</td></tr>
+              <tr><td style="border:1px solid #f0f0f0;padding:3px 8px;color:var(--text-sec)">Price Deviation</td><td style="border:1px solid #f0f0f0;padding:3px 8px;text-align:center;color:#cf1322">High</td><td style="border:1px solid #f0f0f0;padding:3px 8px;text-align:center;color:#cf1322">High</td></tr>
+              <tr><td style="border:1px solid #f0f0f0;padding:3px 8px;color:var(--text-sec)">PnL</td><td style="border:1px solid #f0f0f0;padding:3px 8px;text-align:center;color:#cf1322">Negative</td><td style="border:1px solid #f0f0f0;padding:3px 8px;text-align:center;color:#cf1322">Negative</td></tr>
+              <tr><td style="border:1px solid #f0f0f0;padding:3px 8px;color:var(--text-sec)">Intraday / HFT</td><td style="border:1px solid #f0f0f0;padding:3px 8px;text-align:center;color:var(--text-hint)">None</td><td style="border:1px solid #f0f0f0;padding:3px 8px;text-align:center;color:var(--text-hint)">None</td></tr>
+            </tbody>
+          </table>
+          <div style="font-size:11px;background:#fff2f0;border:1px solid #ffa39e;border-radius:4px;padding:5px 10px;margin-bottom:10px;color:#cf1322"><strong>⚠</strong> 2026-03-19 combined market share <strong>12.57%</strong> exceeds 10% threshold — account 3215450</div>
+          <div style="font-size:11px;font-weight:600;margin-bottom:5px">Account Summaries</div>
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px">
+            <div style="border:1px solid #f0f0f0;border-radius:4px;padding:8px;font-size:11px">
+              <div style="font-weight:600;margin-bottom:4px;color:var(--text)">3215451</div>
+              <div style="color:var(--text-sec);margin-bottom:2px">IP: <span style="color:#cf1322">Cross-city (Beijing, Anqing)</span></div>
+              <div style="color:var(--text-sec);margin-bottom:2px">PnL: <span style="color:#cf1322">−57,202.27</span></div>
+              <div style="color:var(--text-sec);margin-bottom:2px">Price: High deviation (max +227.55%)</div>
+              <div style="color:var(--text-hint)">No historical alerts</div>
+            </div>
+            <div style="border:1px solid #f0f0f0;border-radius:4px;padding:8px;font-size:11px">
+              <div style="font-weight:600;margin-bottom:4px;color:var(--text)">3215450</div>
+              <div style="color:var(--text-sec);margin-bottom:2px">IP: <span style="color:var(--text-hint)">No cross-city</span></div>
+              <div style="color:var(--text-sec);margin-bottom:2px">PnL: <span style="color:#cf1322">−159.92</span></div>
+              <div style="color:var(--text-sec);margin-bottom:2px">Price: Mixed (max +6.54%)</div>
+              <div style="color:var(--text-hint)">No historical alerts</div>
+            </div>
+          </div>
+        </div>
+      </div>
     </div>
 
     <!-- CASE content -->
@@ -3032,6 +3108,7 @@ function submitWLModal() {
       <div class="tab-bar" style="flex-shrink:0">
         <div class="tab active" id="inv-tab-spread-case" onclick="switchSheetTab('case','spread')">Spread Analysis</div>
         <div class="tab" id="inv-tab-graph-case" onclick="switchSheetTab('case','graph')">Association Graph</div>
+        <div class="tab" id="inv-tab-multi-case" onclick="switchSheetTab('case','multi')">Multi-Account <span style="background:#cf1322;color:#fff;border-radius:8px;padding:0 5px;font-size:10px;margin-left:2px">2</span></div>
       </div>
       <div class="tab-pane active" id="inv-spread-case" style="flex-direction:column;flex:1;overflow:hidden;min-height:0">
         <!-- Toolbar -->
@@ -3080,6 +3157,81 @@ function submitWLModal() {
         </div>
         <canvas id="assoc-canvas-case" height="280" style="width:100%;display:block;border:1px solid var(--border);border-radius:4px"></canvas>
       </div>
+      <!-- Multi-Account Analysis -->
+      <div class="tab-pane" id="inv-multi-case" style="flex:1;overflow-y:auto">
+        <div style="padding:6px 12px;background:#fafafa;border-bottom:1px solid #f0f0f0;display:flex;flex-wrap:wrap;align-items:center;gap:6px;flex-shrink:0">
+          <span style="font-size:11px;color:var(--text-hint)">Accounts</span>
+          <span style="background:#f0f7ff;color:#1677ff;border:1px solid #91caff;border-radius:3px;padding:0 6px;font-size:11px">4183296</span>
+          <span style="background:#f0f7ff;color:#1677ff;border:1px solid #91caff;border-radius:3px;padding:0 6px;font-size:11px">4183297</span>
+          <span style="font-size:11px;color:var(--text-hint)">· Case TS_814 · 2026-01-01 – 2026-04-07</span>
+          <div style="margin-left:auto;display:flex;gap:5px">
+            <span style="font-size:10px;background:#fff2f0;color:#cf1322;border:1px solid #ffa39e;padding:1px 6px;border-radius:3px">IP: Strong</span>
+            <span style="font-size:10px;background:#f6ffed;color:#389e0d;border:1px solid #b7eb8f;padding:1px 6px;border-radius:3px">Device: None</span>
+            <span style="font-size:10px;background:#fff2f0;color:#cf1322;border:1px solid #ffa39e;padding:1px 6px;border-radius:3px">Strategy: High</span>
+          </div>
+        </div>
+        <div style="padding:10px 12px">
+          <div style="font-size:11px;font-weight:600;margin-bottom:5px">Strategy Similarity Matrix</div>
+          <table style="width:100%;font-size:11px;border-collapse:collapse;margin-bottom:10px">
+            <thead><tr>
+              <th style="background:#fafafa;border:1px solid #f0f0f0;padding:3px 8px;text-align:left;font-weight:500;color:var(--text-hint)">Account</th>
+              <th style="background:#fafafa;border:1px solid #f0f0f0;padding:3px 8px;text-align:center;font-weight:500;color:var(--text-hint)">2026-01</th>
+              <th style="background:#fafafa;border:1px solid #f0f0f0;padding:3px 8px;text-align:center;font-weight:500;color:var(--text-hint)">2026-02</th>
+              <th style="background:#fafafa;border:1px solid #f0f0f0;padding:3px 8px;text-align:center;font-weight:500;color:var(--text-hint)">2026-03</th>
+              <th style="background:#fafafa;border:1px solid #f0f0f0;padding:3px 8px;text-align:center;font-weight:500;color:var(--text-hint)">2026-04</th>
+            </tr></thead>
+            <tbody>
+              <tr>
+                <td style="border:1px solid #f0f0f0;padding:3px 8px;font-weight:500">4183296</td>
+                <td style="border:1px solid #f0f0f0;padding:3px 8px;text-align:center;background:#fff2f0;color:#cf1322;font-weight:500">1.00</td>
+                <td style="border:1px solid #f0f0f0;padding:3px 8px;text-align:center;background:#fff2f0;color:#cf1322;font-weight:500">1.00</td>
+                <td style="border:1px solid #f0f0f0;padding:3px 8px;text-align:center;background:#fff2f0;color:#cf1322;font-weight:500">0.98</td>
+                <td style="border:1px solid #f0f0f0;padding:3px 8px;text-align:center;background:#fff2f0;color:#cf1322;font-weight:500">0.99</td>
+              </tr>
+              <tr>
+                <td style="border:1px solid #f0f0f0;padding:3px 8px;font-weight:500">4183297</td>
+                <td style="border:1px solid #f0f0f0;padding:3px 8px;text-align:center;background:#fff2f0;color:#cf1322;font-weight:500">1.00</td>
+                <td style="border:1px solid #f0f0f0;padding:3px 8px;text-align:center;background:#fff2f0;color:#cf1322;font-weight:500">0.99</td>
+                <td style="border:1px solid #f0f0f0;padding:3px 8px;text-align:center;background:#fff2f0;color:#cf1322;font-weight:500">1.00</td>
+                <td style="border:1px solid #f0f0f0;padding:3px 8px;text-align:center;background:#fff2f0;color:#cf1322;font-weight:500">0.98</td>
+              </tr>
+            </tbody>
+          </table>
+          <div style="font-size:11px;font-weight:600;margin-bottom:5px">Strategy Overlap</div>
+          <table style="width:100%;font-size:11px;border-collapse:collapse;margin-bottom:10px">
+            <thead><tr>
+              <th style="background:#fafafa;border:1px solid #f0f0f0;padding:3px 8px;text-align:left;font-weight:500;color:var(--text-hint)">Dimension</th>
+              <th style="background:#fafafa;border:1px solid #f0f0f0;padding:3px 8px;text-align:center;font-weight:500;color:var(--text-hint)">4183296</th>
+              <th style="background:#fafafa;border:1px solid #f0f0f0;padding:3px 8px;text-align:center;font-weight:500;color:var(--text-hint)">4183297</th>
+            </tr></thead>
+            <tbody>
+              <tr><td style="border:1px solid #f0f0f0;padding:3px 8px;color:var(--text-sec)">Large Order Bias</td><td style="border:1px solid #f0f0f0;padding:3px 8px;text-align:center;color:#cf1322;font-weight:500">Yes</td><td style="border:1px solid #f0f0f0;padding:3px 8px;text-align:center;color:#cf1322;font-weight:500">Yes</td></tr>
+              <tr><td style="border:1px solid #f0f0f0;padding:3px 8px;color:var(--text-sec)">Order Type</td><td style="border:1px solid #f0f0f0;padding:3px 8px;text-align:center">LMT</td><td style="border:1px solid #f0f0f0;padding:3px 8px;text-align:center">LMT</td></tr>
+              <tr><td style="border:1px solid #f0f0f0;padding:3px 8px;color:var(--text-sec)">Price Deviation</td><td style="border:1px solid #f0f0f0;padding:3px 8px;text-align:center;color:#cf1322">High</td><td style="border:1px solid #f0f0f0;padding:3px 8px;text-align:center;color:#cf1322">High</td></tr>
+              <tr><td style="border:1px solid #f0f0f0;padding:3px 8px;color:var(--text-sec)">PnL</td><td style="border:1px solid #f0f0f0;padding:3px 8px;text-align:center;color:#cf1322">Negative</td><td style="border:1px solid #f0f0f0;padding:3px 8px;text-align:center;color:#cf1322">Negative</td></tr>
+              <tr><td style="border:1px solid #f0f0f0;padding:3px 8px;color:var(--text-sec)">Intraday / HFT</td><td style="border:1px solid #f0f0f0;padding:3px 8px;text-align:center;color:var(--text-hint)">None</td><td style="border:1px solid #f0f0f0;padding:3px 8px;text-align:center;color:var(--text-hint)">None</td></tr>
+            </tbody>
+          </table>
+          <div style="font-size:11px;background:#fff2f0;border:1px solid #ffa39e;border-radius:4px;padding:5px 10px;margin-bottom:10px;color:#cf1322"><strong>⚠</strong> Shared IP detected across <strong>14 sessions</strong> — 2026-02-15 to 2026-03-28 · Same ISP (Shanghai Telecom)</div>
+          <div style="font-size:11px;font-weight:600;margin-bottom:5px">Account Summaries</div>
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px">
+            <div style="border:1px solid #f0f0f0;border-radius:4px;padding:8px;font-size:11px">
+              <div style="font-weight:600;margin-bottom:4px;color:var(--text)">4183296</div>
+              <div style="color:var(--text-sec);margin-bottom:2px">IP: <span style="color:#cf1322">Shared with 4183297</span></div>
+              <div style="color:var(--text-sec);margin-bottom:2px">PnL: <span style="color:#cf1322">−32,418.55</span></div>
+              <div style="color:var(--text-sec);margin-bottom:2px">Price: High deviation</div>
+              <div style="color:var(--text-hint)">1 historical alert</div>
+            </div>
+            <div style="border:1px solid #f0f0f0;border-radius:4px;padding:8px;font-size:11px">
+              <div style="font-weight:600;margin-bottom:4px;color:var(--text)">4183297</div>
+              <div style="color:var(--text-sec);margin-bottom:2px">IP: <span style="color:#cf1322">Shared with 4183296</span></div>
+              <div style="color:var(--text-sec);margin-bottom:2px">PnL: <span style="color:#cf1322">−8,021.30</span></div>
+              <div style="color:var(--text-sec);margin-bottom:2px">Price: High deviation</div>
+              <div style="color:var(--text-hint)">No historical alerts</div>
+            </div>
+          </div>
+        </div>
+      </div>
     </div>
 
     <!-- CLIENT content -->
@@ -3087,6 +3239,7 @@ function submitWLModal() {
       <div class="tab-bar" style="flex-shrink:0">
         <div class="tab active" id="inv-tab-spread-client" onclick="switchSheetTab('client','spread')">Spread Analysis</div>
         <div class="tab" id="inv-tab-graph-client" onclick="switchSheetTab('client','graph')">Association Graph</div>
+        <div class="tab" id="inv-tab-multi-client" onclick="switchSheetTab('client','multi')">Multi-Account <span style="background:#cf1322;color:#fff;border-radius:8px;padding:0 5px;font-size:10px;margin-left:2px">4</span></div>
       </div>
       <div class="tab-pane active" id="inv-spread-client" style="flex-direction:column;flex:1;overflow:hidden;min-height:0">
         <!-- Toolbar -->
@@ -3136,6 +3289,102 @@ function submitWLModal() {
           <span style="margin-left:auto;color:var(--ai-color);cursor:pointer;font-size:11px" onclick="sendChipClient('assoc_graph')"><span class="ai-badge" style="font-size:10px">AI</span> Deep Expand</span>
         </div>
         <canvas id="assoc-canvas-client" height="280" style="width:100%;display:block;border:1px solid var(--border);border-radius:4px"></canvas>
+      </div>
+      <!-- Multi-Account Analysis -->
+      <div class="tab-pane" id="inv-multi-client" style="flex:1;overflow-y:auto">
+        <div style="padding:6px 12px;background:#fafafa;border-bottom:1px solid #f0f0f0;display:flex;flex-wrap:wrap;align-items:center;gap:6px;flex-shrink:0">
+          <span style="font-size:11px;color:var(--text-hint)">Accounts</span>
+          <span style="background:#f0f7ff;color:#1677ff;border:1px solid #91caff;border-radius:3px;padding:0 6px;font-size:11px">1439633</span>
+          <span style="background:#f0f7ff;color:#1677ff;border:1px solid #91caff;border-radius:3px;padding:0 6px;font-size:11px">6510377</span>
+          <span style="background:#f0f7ff;color:#1677ff;border:1px solid #91caff;border-radius:3px;padding:0 6px;font-size:11px">647854</span>
+          <span style="background:#f0f7ff;color:#1677ff;border:1px solid #91caff;border-radius:3px;padding:0 6px;font-size:11px">3002539</span>
+          <div style="margin-left:auto;display:flex;gap:5px">
+            <span style="font-size:10px;background:#f6ffed;color:#389e0d;border:1px solid #b7eb8f;padding:1px 6px;border-radius:3px">IP: None</span>
+            <span style="font-size:10px;background:#f6ffed;color:#389e0d;border:1px solid #b7eb8f;padding:1px 6px;border-radius:3px">Device: None</span>
+            <span style="font-size:10px;background:#fff2f0;color:#cf1322;border:1px solid #ffa39e;padding:1px 6px;border-radius:3px">Strategy: Very High</span>
+          </div>
+        </div>
+        <div style="padding:10px 12px">
+          <div style="font-size:11px;font-weight:600;margin-bottom:5px">Strategy Similarity Matrix</div>
+          <table style="width:100%;font-size:11px;border-collapse:collapse;margin-bottom:10px">
+            <thead><tr>
+              <th style="background:#fafafa;border:1px solid #f0f0f0;padding:3px 8px;text-align:left;font-weight:500;color:var(--text-hint)">Account</th>
+              <th style="background:#fafafa;border:1px solid #f0f0f0;padding:3px 8px;text-align:center;font-weight:500;color:var(--text-hint)">2026-01</th>
+              <th style="background:#fafafa;border:1px solid #f0f0f0;padding:3px 8px;text-align:center;font-weight:500;color:var(--text-hint)">2026-02</th>
+              <th style="background:#fafafa;border:1px solid #f0f0f0;padding:3px 8px;text-align:center;font-weight:500;color:var(--text-hint)">2026-03</th>
+            </tr></thead>
+            <tbody>
+              <tr>
+                <td style="border:1px solid #f0f0f0;padding:3px 8px;font-weight:500">1439633</td>
+                <td style="border:1px solid #f0f0f0;padding:3px 8px;text-align:center;background:#fffbe6;color:#d46b08;font-weight:500">0.91</td>
+                <td style="border:1px solid #f0f0f0;padding:3px 8px;text-align:center;background:#fffbe6;color:#d46b08;font-weight:500">0.94</td>
+                <td style="border:1px solid #f0f0f0;padding:3px 8px;text-align:center;background:#fff2f0;color:#cf1322;font-weight:500">0.98</td>
+              </tr>
+              <tr>
+                <td style="border:1px solid #f0f0f0;padding:3px 8px;font-weight:500">6510377</td>
+                <td style="border:1px solid #f0f0f0;padding:3px 8px;text-align:center;background:#fff2f0;color:#cf1322;font-weight:500">1.00</td>
+                <td style="border:1px solid #f0f0f0;padding:3px 8px;text-align:center;background:#fff2f0;color:#cf1322;font-weight:500">1.00</td>
+                <td style="border:1px solid #f0f0f0;padding:3px 8px;text-align:center;background:#fff2f0;color:#cf1322;font-weight:500">1.00</td>
+              </tr>
+              <tr>
+                <td style="border:1px solid #f0f0f0;padding:3px 8px;font-weight:500">647854</td>
+                <td style="border:1px solid #f0f0f0;padding:3px 8px;text-align:center;color:var(--text-hint)">—</td>
+                <td style="border:1px solid #f0f0f0;padding:3px 8px;text-align:center;color:var(--text-hint)">—</td>
+                <td style="border:1px solid #f0f0f0;padding:3px 8px;text-align:center;background:#fff2f0;color:#cf1322;font-weight:500">1.00</td>
+              </tr>
+              <tr>
+                <td style="border:1px solid #f0f0f0;padding:3px 8px;font-weight:500">3002539</td>
+                <td style="border:1px solid #f0f0f0;padding:3px 8px;text-align:center;color:var(--text-hint)">—</td>
+                <td style="border:1px solid #f0f0f0;padding:3px 8px;text-align:center;color:var(--text-hint)">—</td>
+                <td style="border:1px solid #f0f0f0;padding:3px 8px;text-align:center;background:#fff2f0;color:#cf1322;font-weight:500">1.00</td>
+              </tr>
+            </tbody>
+          </table>
+          <div style="font-size:11px;font-weight:600;margin-bottom:5px">Strategy Overlap</div>
+          <table style="width:100%;font-size:11px;border-collapse:collapse;margin-bottom:10px">
+            <thead><tr>
+              <th style="background:#fafafa;border:1px solid #f0f0f0;padding:3px 8px;text-align:left;font-weight:500;color:var(--text-hint)">Dimension</th>
+              <th style="background:#fafafa;border:1px solid #f0f0f0;padding:3px 8px;text-align:center;font-weight:500;color:var(--text-hint)">1439633</th>
+              <th style="background:#fafafa;border:1px solid #f0f0f0;padding:3px 8px;text-align:center;font-weight:500;color:var(--text-hint)">6510377</th>
+              <th style="background:#fafafa;border:1px solid #f0f0f0;padding:3px 8px;text-align:center;font-weight:500;color:var(--text-hint)">647854</th>
+              <th style="background:#fafafa;border:1px solid #f0f0f0;padding:3px 8px;text-align:center;font-weight:500;color:var(--text-hint)">3002539</th>
+            </tr></thead>
+            <tbody>
+              <tr><td style="border:1px solid #f0f0f0;padding:3px 8px;color:var(--text-sec)">Large Order</td><td style="border:1px solid #f0f0f0;padding:3px 8px;text-align:center;color:#cf1322">Yes</td><td style="border:1px solid #f0f0f0;padding:3px 8px;text-align:center;color:#cf1322">Yes</td><td style="border:1px solid #f0f0f0;padding:3px 8px;text-align:center;color:#cf1322">Yes</td><td style="border:1px solid #f0f0f0;padding:3px 8px;text-align:center;color:#cf1322">Yes</td></tr>
+              <tr><td style="border:1px solid #f0f0f0;padding:3px 8px;color:var(--text-sec)">Order Type</td><td style="border:1px solid #f0f0f0;padding:3px 8px;text-align:center">LMT</td><td style="border:1px solid #f0f0f0;padding:3px 8px;text-align:center">LMT</td><td style="border:1px solid #f0f0f0;padding:3px 8px;text-align:center">LMT</td><td style="border:1px solid #f0f0f0;padding:3px 8px;text-align:center">LMT</td></tr>
+              <tr><td style="border:1px solid #f0f0f0;padding:3px 8px;color:var(--text-sec)">Price Dev.</td><td style="border:1px solid #f0f0f0;padding:3px 8px;text-align:center;color:#cf1322">High</td><td style="border:1px solid #f0f0f0;padding:3px 8px;text-align:center;color:#cf1322">High</td><td style="border:1px solid #f0f0f0;padding:3px 8px;text-align:center;color:#cf1322">High</td><td style="border:1px solid #f0f0f0;padding:3px 8px;text-align:center;color:#cf1322">High</td></tr>
+              <tr><td style="border:1px solid #f0f0f0;padding:3px 8px;color:var(--text-sec)">PnL</td><td style="border:1px solid #f0f0f0;padding:3px 8px;text-align:center;color:#cf1322">Neg.</td><td style="border:1px solid #f0f0f0;padding:3px 8px;text-align:center;color:#cf1322">Neg.</td><td style="border:1px solid #f0f0f0;padding:3px 8px;text-align:center;color:#cf1322">Neg.</td><td style="border:1px solid #f0f0f0;padding:3px 8px;text-align:center;color:#cf1322">Neg.</td></tr>
+            </tbody>
+          </table>
+          <div style="font-size:11px;background:#fff2f0;border:1px solid #ffa39e;border-radius:4px;padding:5px 10px;margin-bottom:10px;color:#cf1322"><strong>⚠</strong> All 4 accounts: 100% LMT orders · Large order bias · High price deviation · Negative PnL — strong coordinated pattern</div>
+          <div style="font-size:11px;font-weight:600;margin-bottom:5px">Account Summaries</div>
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:6px">
+            <div style="border:1px solid #f0f0f0;border-radius:4px;padding:7px;font-size:11px">
+              <div style="font-weight:600;margin-bottom:3px">1439633</div>
+              <div style="color:var(--text-sec)">IP: Cross-city (Beijing, Anqing)</div>
+              <div style="color:var(--text-sec)">PnL (JZ): −57,202.27</div>
+              <div style="color:var(--text-hint)">No historical alerts</div>
+            </div>
+            <div style="border:1px solid #f0f0f0;border-radius:4px;padding:7px;font-size:11px">
+              <div style="font-weight:600;margin-bottom:3px">6510377</div>
+              <div style="color:var(--text-sec)">IP: No cross-city</div>
+              <div style="color:var(--text-sec)">PnL (JZ): −1,204.50</div>
+              <div style="color:var(--text-hint)">No historical alerts</div>
+            </div>
+            <div style="border:1px solid #f0f0f0;border-radius:4px;padding:7px;font-size:11px">
+              <div style="font-weight:600;margin-bottom:3px">647854</div>
+              <div style="color:var(--text-sec)">IP: No cross-city</div>
+              <div style="color:var(--text-sec)">PnL (JZ): −832.14</div>
+              <div style="color:var(--text-hint)">No historical alerts</div>
+            </div>
+            <div style="border:1px solid #f0f0f0;border-radius:4px;padding:7px;font-size:11px">
+              <div style="font-weight:600;margin-bottom:3px">3002539</div>
+              <div style="color:var(--text-sec)">IP: No cross-city</div>
+              <div style="color:var(--text-sec)">PnL (JZ): −415.76</div>
+              <div style="color:var(--text-hint)">No historical alerts</div>
+            </div>
+          </div>
+        </div>
       </div>
     </div>
 
@@ -3197,19 +3446,26 @@ function toggleInvSheet() {
 }
 
 function switchSheetTab(suffix, type) {
-  const content = document.getElementById('inv-sheet-' + suffix);
-  const spreadTab = document.getElementById('inv-tab-spread-' + suffix);
-  const graphTab  = document.getElementById('inv-tab-graph-' + suffix);
+  const spreadTab  = document.getElementById('inv-tab-spread-' + suffix);
+  const graphTab   = document.getElementById('inv-tab-graph-' + suffix);
+  const multiTab   = document.getElementById('inv-tab-multi-' + suffix);
   const spreadPane = document.getElementById('inv-spread-' + suffix);
   const graphPane  = document.getElementById('inv-graph-' + suffix);
+  const multiPane  = document.getElementById('inv-multi-' + suffix);
+  // clear all
+  [spreadTab, graphTab, multiTab].forEach(t => t && t.classList.remove('active'));
+  [spreadPane, graphPane, multiPane].forEach(p => p && p.classList.remove('active'));
   if (type === 'spread') {
-    spreadTab.classList.add('active'); graphTab.classList.remove('active');
-    spreadPane.classList.add('active'); graphPane.classList.remove('active');
+    spreadTab.classList.add('active');
+    spreadPane.classList.add('active');
     setTimeout(() => { drawSpread(suffix); setupSpreadInteraction(suffix); }, 0);
-  } else {
-    graphTab.classList.add('active'); spreadTab.classList.remove('active');
-    graphPane.classList.add('active'); spreadPane.classList.remove('active');
+  } else if (type === 'graph') {
+    graphTab.classList.add('active');
+    graphPane.classList.add('active');
     setTimeout(() => drawAssocGraph(suffix), 0);
+  } else {
+    multiTab && multiTab.classList.add('active');
+    multiPane && multiPane.classList.add('active');
   }
 }
 

@@ -528,40 +528,6 @@ tbody tr:hover td { background: #fffdf0; }
         </div>
       </div>
 
-      <!-- Rule Health -->
-      <div class="card">
-        <div class="card-head">Rule Health <span class="section-subtitle">Top 4 FP Rate This Week</span></div>
-        <div style="padding:0 16px 8px">
-          <div style="display:grid;grid-template-columns:1fr auto 100px auto;gap:6px 10px;align-items:center;font-size:12px;color:var(--text-hint);padding:6px 0;border-bottom:1px solid var(--border)">
-            <span>Rule Name</span><span>Hits This Week</span><span></span><span>FP Rate</span>
-          </div>
-          <div style="display:grid;grid-template-columns:1fr auto 100px auto;gap:6px 10px;align-items:center;font-size:12px;padding:8px 0;border-bottom:1px solid #f5f5f5">
-            <span>pre-arranged trading (Profit)</span>
-            <span style="color:var(--text-hint)">47</span>
-            <div class="fp-bar-bg"><div class="fp-bar-fill" style="width:58%;background:#fa8c16"></div></div>
-            <span style="color:#fa8c16;font-weight:500">58%</span>
-          </div>
-          <div style="display:grid;grid-template-columns:1fr auto 100px auto;gap:6px 10px;align-items:center;font-size:12px;padding:8px 0;border-bottom:1px solid #f5f5f5">
-            <span>possible ramping (without tick data)</span>
-            <span style="color:var(--text-hint)">28</span>
-            <div class="fp-bar-bg"><div class="fp-bar-fill" style="width:72%;background:#cf1322"></div></div>
-            <span style="color:#cf1322;font-weight:500">72%</span>
-          </div>
-          <div style="display:grid;grid-template-columns:1fr auto 100px auto;gap:6px 10px;align-items:center;font-size:12px;padding:8px 0;border-bottom:1px solid #f5f5f5">
-            <span>possible wash trade (A to A)</span>
-            <span style="color:var(--text-hint)">19</span>
-            <div class="fp-bar-bg"><div class="fp-bar-fill" style="width:45%;background:#d97706"></div></div>
-            <span style="color:#d97706;font-weight:500">45%</span>
-          </div>
-          <div style="display:grid;grid-template-columns:1fr auto 100px auto;gap:6px 10px;align-items:center;font-size:12px;padding:8px 0">
-            <span>large single trade alert</span>
-            <span style="color:var(--text-hint)">11</span>
-            <div class="fp-bar-bg"><div class="fp-bar-fill" style="width:36%;background:#52c41a"></div></div>
-            <span style="color:#52c41a;font-weight:500">36%</span>
-          </div>
-        </div>
-      </div>
-
       <!-- TS-AI Module Status -->
       <div class="card">
         <div class="card-head"><span class="ai-badge">AI</span> TS-AI Module Status</div>
@@ -704,8 +670,38 @@ tbody tr:hover td { background: #fffdf0; }
     </div><!-- /right -->
   </div><!-- /dash-cols -->
 
-  <!-- Alert Distribution Row -->
-  <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px;margin-top:12px">
+  <!-- Row 2: Rule Health + Alert Distribution -->
+  <div style="display:grid;grid-template-columns:1.4fr 1fr 1fr 1fr;gap:12px;margin-top:12px">
+
+    <!-- Rule Health -->
+    <div class="card">
+      <div class="card-head">Rule Health <span class="section-subtitle">Top 4 FP Rate · This Week</span></div>
+      <div style="padding:0 16px 8px">
+        <div style="display:grid;grid-template-columns:1fr 56px auto;gap:4px 8px;align-items:center;font-size:11px;color:var(--text-hint);padding:5px 0;border-bottom:1px solid var(--border)">
+          <span>Rule Name</span><span></span><span>FP Rate</span>
+        </div>
+        <div style="display:grid;grid-template-columns:1fr 56px auto;gap:4px 8px;align-items:center;font-size:12px;padding:7px 0;border-bottom:1px solid #f5f5f5">
+          <span style="white-space:nowrap;overflow:hidden;text-overflow:ellipsis">pre-arranged (Profit)</span>
+          <div class="fp-bar-bg"><div class="fp-bar-fill" style="width:58%;background:#fa8c16"></div></div>
+          <span style="color:#fa8c16;font-weight:500">58%</span>
+        </div>
+        <div style="display:grid;grid-template-columns:1fr 56px auto;gap:4px 8px;align-items:center;font-size:12px;padding:7px 0;border-bottom:1px solid #f5f5f5">
+          <span style="white-space:nowrap;overflow:hidden;text-overflow:ellipsis">ramping (no tick data)</span>
+          <div class="fp-bar-bg"><div class="fp-bar-fill" style="width:72%;background:#cf1322"></div></div>
+          <span style="color:#cf1322;font-weight:500">72%</span>
+        </div>
+        <div style="display:grid;grid-template-columns:1fr 56px auto;gap:4px 8px;align-items:center;font-size:12px;padding:7px 0;border-bottom:1px solid #f5f5f5">
+          <span style="white-space:nowrap;overflow:hidden;text-overflow:ellipsis">wash trade (A to A)</span>
+          <div class="fp-bar-bg"><div class="fp-bar-fill" style="width:45%;background:#d97706"></div></div>
+          <span style="color:#d97706;font-weight:500">45%</span>
+        </div>
+        <div style="display:grid;grid-template-columns:1fr 56px auto;gap:4px 8px;align-items:center;font-size:12px;padding:7px 0">
+          <span style="white-space:nowrap;overflow:hidden;text-overflow:ellipsis">large single trade</span>
+          <div class="fp-bar-bg"><div class="fp-bar-fill" style="width:36%;background:#52c41a"></div></div>
+          <span style="color:#52c41a;font-weight:500">36%</span>
+        </div>
+      </div>
+    </div>
 
     <!-- Top Symbol -->
     <div class="card">
@@ -2850,98 +2846,115 @@ function drawSpread(suffix) {
 }
 
 
+// Store last-drawn node positions for click hit-testing
+const _graphNodes = {};
+
 function drawAssocGraph(suffix) {
   suffix = suffix || 'alert';
   const canvas = document.getElementById('assoc-canvas-' + suffix);
   if (!canvas) return;
+
+  // Attach pointer handlers once per canvas
+  if (!canvas._graphReady) {
+    canvas._graphReady = true;
+    canvas.style.cursor = 'default';
+    canvas.addEventListener('click', function(e) {
+      const mx = e.offsetX, my = e.offsetY;
+      for (const n of (_graphNodes[canvas.id] || [])) {
+        if ((mx - n.x) ** 2 + (my - n.y) ** 2 <= n.r ** 2) {
+          if (n.page) showPage(n.page);
+          break;
+        }
+      }
+    });
+    canvas.addEventListener('mousemove', function(e) {
+      const mx = e.offsetX, my = e.offsetY;
+      const hit = (_graphNodes[canvas.id] || []).some(
+        n => (mx - n.x) ** 2 + (my - n.y) ** 2 <= n.r ** 2
+      );
+      canvas.style.cursor = hit ? 'pointer' : 'default';
+    });
+  }
+
   const dpr = window.devicePixelRatio || 1;
   const cssW = canvas.offsetWidth || 560;
-  const cssH = 300;
+  const cssH = 340;
   canvas.width  = Math.round(cssW * dpr);
   canvas.height = Math.round(cssH * dpr);
   const ctx = canvas.getContext('2d');
   ctx.scale(dpr, dpr);
   const W = cssW, H = cssH;
 
-  // ── Node type visual style ──
   const TYPE = {
     alert:  { bg:'#fff7e6', border:'#fa8c16', text:'#d46b08', label:'ALERT'  },
     case:   { bg:'#f9f0ff', border:'#7c3aed', text:'#6d28d9', label:'CASE'   },
     client: { bg:'#e6f4ff', border:'#2563eb', text:'#1d4ed8', label:'CLIENT' },
   };
 
-  // ── Per-suffix graph data ──
-  // Positions stored as fractions of W/H; level: 0=center, 1=L1, 2=L2
   const GRAPHS = {
     alert: {
-      title: 'Alert 19150109',
       nodes: [
-        { id:'19150109', type:'alert',  level:0, fx:0.50, fy:0.50 },
-        { id:'3215451',  type:'client', level:1, fx:0.20, fy:0.72 },
-        { id:'TS_824',   type:'case',   level:1, fx:0.80, fy:0.72 },
-        { id:'19150101', type:'alert',  level:2, fx:0.06, fy:0.33 },
-        { id:'19147810', type:'alert',  level:2, fx:0.18, fy:0.93 },
-        { id:'3215450',  type:'client', level:2, fx:0.93, fy:0.22 },
+        { id:'19150109', type:'alert',  level:0, fx:0.50, fy:0.42, score:82, symbol:'SPXW',   rule:'Pre-arranged', page:'alert-details'  },
+        { id:'3215451',  type:'client', level:1, fx:0.20, fy:0.72, risk:'High', alerts:12, watchlist:true,         page:'client-details' },
+        { id:'TS_824',   type:'case',   level:1, fx:0.80, fy:0.72, status:'Processing', alerts:3,                  page:'case-details'   },
+        { id:'19150101', type:'alert',  level:2, fx:0.06, fy:0.27, score:79, symbol:'SPXW',                        page:'alert-details'  },
+        { id:'19147810', type:'alert',  level:2, fx:0.17, fy:0.83, score:45, symbol:'TSLA',                        page:'alert-details'  },
+        { id:'3215450',  type:'client', level:2, fx:0.93, fy:0.22, risk:'Med', alerts:5,                           page:'client-details' },
       ],
       edges: [
-        { a:0, b:1, label:'Account'     },
-        { a:0, b:2, label:'Escalated to'},
+        { a:0, b:1, label:'Account'      },
+        { a:0, b:2, label:'Escalated to' },
         { a:1, b:3, label:'Related Alert'},
-        { a:1, b:4, label:'Historical'  },
-        { a:2, b:5, label:'Co-Suspect'  },
+        { a:1, b:4, label:'Historical'   },
+        { a:2, b:5, label:'Co-Suspect'   },
       ],
     },
     case: {
-      title: 'Case TS_824',
       nodes: [
-        { id:'TS_824',   type:'case',   level:0, fx:0.50, fy:0.50 },
-        { id:'19150109', type:'alert',  level:1, fx:0.20, fy:0.22 },
-        { id:'19150101', type:'alert',  level:1, fx:0.20, fy:0.80 },
-        { id:'3215451',  type:'client', level:1, fx:0.80, fy:0.50 },
-        { id:'3215450',  type:'client', level:2, fx:0.06, fy:0.60 },
-        { id:'TS_798',   type:'case',   level:2, fx:0.94, fy:0.16 },
+        { id:'TS_824',   type:'case',   level:0, fx:0.50, fy:0.42, status:'Processing', alerts:3,                  page:'case-details'   },
+        { id:'19150109', type:'alert',  level:1, fx:0.20, fy:0.22, score:82, symbol:'SPXW',  rule:'Pre-arranged',  page:'alert-details'  },
+        { id:'19150101', type:'alert',  level:1, fx:0.20, fy:0.78, score:79, symbol:'SPXW',  rule:'Wash Trade',    page:'alert-details'  },
+        { id:'3215451',  type:'client', level:1, fx:0.80, fy:0.47, risk:'High', alerts:12, watchlist:true,         page:'client-details' },
+        { id:'3215450',  type:'client', level:2, fx:0.06, fy:0.62, risk:'Med', alerts:5,                           page:'client-details' },
+        { id:'TS_798',   type:'case',   level:2, fx:0.94, fy:0.16, status:'Closed', alerts:5,                      page:'case-details'   },
       ],
       edges: [
-        { a:0, b:1, label:'Trigger Alert' },
-        { a:0, b:2, label:'Related Alert' },
-        { a:0, b:3, label:'Primary Acct'  },
-        { a:2, b:4, label:'Account'       },
-        { a:3, b:5, label:'Prior Case'    },
+        { a:0, b:1, label:'Trigger Alert'},
+        { a:0, b:2, label:'Related Alert'},
+        { a:0, b:3, label:'Primary Acct' },
+        { a:2, b:4, label:'Account'      },
+        { a:3, b:5, label:'Prior Case'   },
       ],
     },
     client: {
-      title: 'Client 3215451',
       nodes: [
-        { id:'3215451',  type:'client', level:0, fx:0.50, fy:0.50 },
-        { id:'19150109', type:'alert',  level:1, fx:0.20, fy:0.22 },
-        { id:'19150101', type:'alert',  level:1, fx:0.20, fy:0.80 },
-        { id:'TS_824',   type:'case',   level:1, fx:0.80, fy:0.50 },
-        { id:'3215450',  type:'client', level:2, fx:0.06, fy:0.50 },
-        { id:'19149981', type:'alert',  level:2, fx:0.94, fy:0.20 },
+        { id:'3215451',  type:'client', level:0, fx:0.50, fy:0.42, risk:'High', alerts:12, watchlist:true,         page:'client-details' },
+        { id:'19150109', type:'alert',  level:1, fx:0.20, fy:0.22, score:82, symbol:'SPXW',  rule:'Pre-arranged',  page:'alert-details'  },
+        { id:'19150101', type:'alert',  level:1, fx:0.20, fy:0.78, score:79, symbol:'SPXW',  rule:'Wash Trade',    page:'alert-details'  },
+        { id:'TS_824',   type:'case',   level:1, fx:0.80, fy:0.47, status:'Processing', alerts:3,                  page:'case-details'   },
+        { id:'3215450',  type:'client', level:2, fx:0.06, fy:0.47, risk:'Med', alerts:5,                           page:'client-details' },
+        { id:'19149981', type:'alert',  level:2, fx:0.94, fy:0.20, score:67, symbol:'NQ2506',                      page:'alert-details'  },
       ],
       edges: [
-        { a:0, b:1, label:'Alert'         },
-        { a:0, b:2, label:'Alert'         },
-        { a:0, b:3, label:'Active Case'   },
-        { a:1, b:4, label:'Counterparty'  },
-        { a:3, b:5, label:'Related Alert' },
+        { a:0, b:1, label:'Alert'        },
+        { a:0, b:2, label:'Alert'        },
+        { a:0, b:3, label:'Active Case'  },
+        { a:1, b:4, label:'Counterparty' },
+        { a:3, b:5, label:'Related Alert'},
       ],
     },
   };
 
   const graph = GRAPHS[suffix] || GRAPHS.alert;
-
-  // Resolve pixel positions
-  graph.nodes.forEach(n => { n.x = n.fx * W; n.y = n.fy * H; });
-
-  // Node radius by level
-  const RADII = { 0: 36, 1: 27, 2: 21 };
+  const RADII = { 0: 38, 1: 29, 2: 22 };
+  graph.nodes.forEach(n => { n.x = n.fx * W; n.y = n.fy * H; n.r = RADII[n.level]; });
+  _graphNodes[canvas.id] = graph.nodes;
 
   ctx.clearRect(0, 0, W, H);
   ctx.fillStyle = '#fafafa';
   ctx.fillRect(0, 0, W, H);
 
-  // ── Edges ──
+  // Edges
   graph.edges.forEach(e => {
     const n1 = graph.nodes[e.a], n2 = graph.nodes[e.b];
     const isL2 = n1.level > 0 && n2.level > 0;
@@ -2950,42 +2963,90 @@ function drawAssocGraph(suffix) {
     ctx.setLineDash(isL2 ? [4, 3] : []);
     ctx.beginPath(); ctx.moveTo(n1.x, n1.y); ctx.lineTo(n2.x, n2.y); ctx.stroke();
     ctx.setLineDash([]);
-    // Edge label at midpoint, offset slightly perpendicular
     const mx = (n1.x + n2.x) / 2, my = (n1.y + n2.y) / 2;
-    ctx.fillStyle = '#9ca3af';
-    ctx.font = '10px system-ui,sans-serif';
-    ctx.textAlign = 'center';
+    ctx.fillStyle = '#9ca3af'; ctx.font = '10px system-ui,sans-serif'; ctx.textAlign = 'center';
     ctx.fillText(e.label, mx, my - 5);
   });
 
-  // ── Nodes ──
+  // Helper: rounded score badge
+  function drawScoreBadge(x, y, score) {
+    const c = score >= 75 ? '#cf1322' : score >= 50 ? '#d97706' : '#52c41a';
+    const bw = 26, bh = 14, bx = x - bw / 2, by = y - 11;
+    ctx.fillStyle = c;
+    if (ctx.roundRect) { ctx.beginPath(); ctx.roundRect(bx, by, bw, bh, 3); ctx.fill(); }
+    else { ctx.fillRect(bx, by, bw, bh); }
+    ctx.fillStyle = '#fff'; ctx.font = 'bold 9px system-ui,sans-serif'; ctx.textAlign = 'center';
+    ctx.fillText(score, x, y);
+  }
+
+  // Nodes
   graph.nodes.forEach(n => {
     const t = TYPE[n.type];
-    const r = RADII[n.level];
-    // Outer glow for center
+    const r = n.r;
+
+    // Glow ring for center
     if (n.level === 0) {
-      ctx.beginPath(); ctx.arc(n.x, n.y, r + 6, 0, Math.PI * 2);
-      ctx.fillStyle = t.bg.replace(')', ',.35)').replace('rgb', 'rgba');
-      ctx.fill();
+      ctx.beginPath(); ctx.arc(n.x, n.y, r + 7, 0, Math.PI * 2);
+      ctx.fillStyle = t.bg; ctx.fill();
     }
-    // Shadow
-    ctx.shadowColor = 'rgba(0,0,0,.12)'; ctx.shadowBlur = 8; ctx.shadowOffsetY = 2;
+    // Circle with shadow
+    ctx.shadowColor = 'rgba(0,0,0,.13)'; ctx.shadowBlur = 10; ctx.shadowOffsetY = 2;
     ctx.beginPath(); ctx.arc(n.x, n.y, r, 0, Math.PI * 2);
     ctx.fillStyle = t.bg; ctx.fill();
     ctx.strokeStyle = t.border; ctx.lineWidth = n.level === 0 ? 2.5 : 1.5; ctx.stroke();
     ctx.shadowColor = 'transparent';
 
-    // Type label (small caps, upper half)
-    const fontSize = n.level === 0 ? 9 : 8;
+    // Type label (upper inside)
     ctx.fillStyle = t.text;
-    ctx.font = `bold ${fontSize}px system-ui,sans-serif`;
+    ctx.font = `bold ${n.level === 0 ? 9 : 8}px system-ui,sans-serif`;
     ctx.textAlign = 'center';
-    ctx.fillText(t.label, n.x, n.y - 3);
+    ctx.fillText(t.label, n.x, n.y - 5);
 
-    // ID (lower half)
-    const idSize = n.level === 0 ? 11 : (n.id.length > 7 ? 9 : 10);
-    ctx.font = `bold ${idSize}px system-ui,sans-serif`;
-    ctx.fillText(n.id, n.x, n.y + 10);
+    // ID — blue + underline to signal clickability
+    const idFs = n.level === 0 ? 11 : (n.id.length > 7 ? 9 : 10);
+    ctx.font = `bold ${idFs}px system-ui,sans-serif`;
+    ctx.fillStyle = '#1d4ed8';
+    ctx.fillText(n.id, n.x, n.y + 8);
+    const idW = ctx.measureText(n.id).width;
+    ctx.strokeStyle = '#93c5fd'; ctx.lineWidth = 0.8; ctx.setLineDash([]);
+    ctx.beginPath(); ctx.moveTo(n.x - idW / 2, n.y + 10); ctx.lineTo(n.x + idW / 2, n.y + 10); ctx.stroke();
+
+    // Sub-info below circle
+    if (n.level <= 1) {
+      const sy = n.y + r + 13;
+      if (n.type === 'alert') {
+        if (n.score !== undefined) drawScoreBadge(n.x, sy, n.score);
+        if (n.symbol) { ctx.fillStyle = '#374151'; ctx.font = '9px system-ui,sans-serif'; ctx.textAlign = 'center'; ctx.fillText(n.symbol, n.x, sy + 13); }
+        if (n.rule)   { ctx.fillStyle = '#9ca3af'; ctx.font = '9px system-ui,sans-serif'; ctx.fillText(n.rule, n.x, sy + 24); }
+      } else if (n.type === 'case') {
+        const sc = n.status === 'Processing' ? '#d97706' : n.status === 'Escalated' ? '#cf1322' : '#6b7280';
+        ctx.fillStyle = sc; ctx.font = 'bold 9px system-ui,sans-serif'; ctx.textAlign = 'center';
+        ctx.fillText(n.status || '', n.x, sy);
+        if (n.alerts !== undefined) { ctx.fillStyle = '#9ca3af'; ctx.font = '9px system-ui,sans-serif'; ctx.fillText(n.alerts + ' alerts', n.x, sy + 13); }
+      } else if (n.type === 'client') {
+        const rc = n.risk === 'High' ? '#cf1322' : n.risk === 'Med' ? '#d97706' : '#52c41a';
+        ctx.fillStyle = rc; ctx.font = 'bold 9px system-ui,sans-serif'; ctx.textAlign = 'center';
+        ctx.fillText('Risk: ' + (n.risk || ''), n.x, sy);
+        if (n.alerts !== undefined) { ctx.fillStyle = '#9ca3af'; ctx.font = '9px system-ui,sans-serif'; ctx.fillText(n.alerts + ' alerts', n.x, sy + 13); }
+        if (n.watchlist) { ctx.fillStyle = '#d97706'; ctx.font = '9px system-ui,sans-serif'; ctx.fillText('● Watchlist', n.x, sy + 26); }
+      }
+    } else {
+      // L2: small corner badge
+      const bx = n.x + r - 7, by = n.y - r + 3;
+      if (n.type === 'alert' && n.score !== undefined) {
+        const c = n.score >= 75 ? '#cf1322' : n.score >= 50 ? '#d97706' : '#52c41a';
+        ctx.beginPath(); ctx.arc(bx, by, 9, 0, Math.PI * 2); ctx.fillStyle = c; ctx.fill();
+        ctx.fillStyle = '#fff'; ctx.font = 'bold 8px system-ui,sans-serif'; ctx.textAlign = 'center'; ctx.fillText(n.score, bx, by + 3);
+      } else if (n.type === 'client' && n.risk) {
+        const c = n.risk === 'High' ? '#cf1322' : n.risk === 'Med' ? '#d97706' : '#52c41a';
+        ctx.beginPath(); ctx.arc(bx, by, 9, 0, Math.PI * 2); ctx.fillStyle = c; ctx.fill();
+        ctx.fillStyle = '#fff'; ctx.font = 'bold 7px system-ui,sans-serif'; ctx.textAlign = 'center'; ctx.fillText(n.risk[0], bx, by + 3);
+      } else if (n.type === 'case' && n.status) {
+        const c = n.status === 'Closed' ? '#6b7280' : '#d97706';
+        ctx.beginPath(); ctx.arc(bx, by, 9, 0, Math.PI * 2); ctx.fillStyle = c; ctx.fill();
+        ctx.fillStyle = '#fff'; ctx.font = 'bold 7px system-ui,sans-serif'; ctx.textAlign = 'center'; ctx.fillText(n.status[0], bx, by + 3);
+      }
+    }
   });
 }
 
@@ -3389,7 +3450,7 @@ function submitWLModal() {
           <span style="display:flex;align-items:center;gap:3px"><span style="width:9px;height:9px;border-radius:50%;background:#e6f4ff;border:1.5px solid #2563eb;display:inline-block"></span>Client</span>
           <span style="margin-left:auto;color:var(--ai-color);cursor:pointer;font-size:11px" onclick="sendChip('deep_expand')"><span class="ai-badge" style="font-size:10px">AI</span> Deep Expand</span>
         </div>
-        <canvas id="assoc-canvas-alert" height="300" style="width:100%;display:block;border:1px solid var(--border);border-radius:4px"></canvas>
+        <canvas id="assoc-canvas-alert" height="340" style="width:100%;display:block;border:1px solid var(--border);border-radius:4px"></canvas>
       </div>
       <!-- Associate Accounts Analysis -->
       <div class="tab-pane" id="inv-multi-alert" style="flex:1;overflow-y:auto">
@@ -3554,7 +3615,7 @@ function submitWLModal() {
           <span style="display:flex;align-items:center;gap:3px"><span style="width:9px;height:9px;border-radius:50%;background:#e6f4ff;border:1.5px solid #2563eb;display:inline-block"></span>Client</span>
           <span style="margin-left:auto;color:var(--ai-color);cursor:pointer;font-size:11px"><span class="ai-badge" style="font-size:10px">AI</span> Deep Expand</span>
         </div>
-        <canvas id="assoc-canvas-case" height="300" style="width:100%;display:block;border:1px solid var(--border);border-radius:4px"></canvas>
+        <canvas id="assoc-canvas-case" height="340" style="width:100%;display:block;border:1px solid var(--border);border-radius:4px"></canvas>
       </div>
       <!-- Associate Accounts Analysis -->
       <div class="tab-pane" id="inv-multi-case" style="flex:1;overflow-y:auto">
@@ -3721,7 +3782,7 @@ function submitWLModal() {
           <span style="display:flex;align-items:center;gap:3px"><span style="width:9px;height:9px;border-radius:50%;background:#e6f4ff;border:1.5px solid #2563eb;display:inline-block"></span>Client</span>
           <span style="margin-left:auto;color:var(--ai-color);cursor:pointer;font-size:11px" onclick="sendChipClient('assoc_graph')"><span class="ai-badge" style="font-size:10px">AI</span> Deep Expand</span>
         </div>
-        <canvas id="assoc-canvas-client" height="300" style="width:100%;display:block;border:1px solid var(--border);border-radius:4px"></canvas>
+        <canvas id="assoc-canvas-client" height="340" style="width:100%;display:block;border:1px solid var(--border);border-radius:4px"></canvas>
       </div>
       <!-- Associate Accounts Analysis -->
       <div class="tab-pane" id="inv-multi-client" style="flex:1;overflow-y:auto">

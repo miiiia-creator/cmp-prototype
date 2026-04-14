@@ -2856,70 +2856,136 @@ function drawAssocGraph(suffix) {
   if (!canvas) return;
   const dpr = window.devicePixelRatio || 1;
   const cssW = canvas.offsetWidth || 560;
-  const cssH = 260;
-  canvas.width = Math.round(cssW * dpr);
+  const cssH = 300;
+  canvas.width  = Math.round(cssW * dpr);
   canvas.height = Math.round(cssH * dpr);
   const ctx = canvas.getContext('2d');
   ctx.scale(dpr, dpr);
   const W = cssW, H = cssH;
 
-  // Node definitions
-  const nodes = [
-    { id:'3215451', sub:'Primary · AI 82 · Alert', x:W*0.5,  y:H*0.5,  r:32, bg:'#d97706', fg:'#fff', alert:true  },
-    { id:'3215450', sub:'Same IP · Reverse Trade', x:W*0.2,  y:H*0.25, r:26, bg:'#7c3aed', fg:'#fff', alert:false },
-    { id:'3215452', sub:'Same IP · Close Reg.',    x:W*0.78, y:H*0.25, r:22, bg:'#7c3aed', fg:'#fff', alert:false },
-    { id:'5509871', sub:'Same Device',             x:W*0.15, y:H*0.78, r:19, bg:'#fff',    fg:'#9ca3af', border:'#9ca3af', alert:false },
-    { id:'6614220', sub:'Same IP',                 x:W*0.82, y:H*0.75, r:17, bg:'#fff',    fg:'#9ca3af', border:'#9ca3af', alert:false },
-  ];
+  // ── Node type visual style ──
+  const TYPE = {
+    alert:  { bg:'#fff7e6', border:'#fa8c16', text:'#d46b08', label:'ALERT'  },
+    case:   { bg:'#f9f0ff', border:'#7c3aed', text:'#6d28d9', label:'CASE'   },
+    client: { bg:'#e6f4ff', border:'#2563eb', text:'#1d4ed8', label:'CLIENT' },
+  };
 
-  const edges = [
-    { a:0, b:1, label:'Same IP', sub:'218.82.19.9', color:'#7c3aed' },
-    { a:0, b:2, label:'Same IP', sub:'218.82.19.9', color:'#7c3aed' },
-    { a:1, b:3, label:'Same Device', color:'#d1d5db' },
-    { a:2, b:4, label:'Same IP', sub:'61.49.207.4', color:'#d1d5db' },
-  ];
+  // ── Per-suffix graph data ──
+  // Positions stored as fractions of W/H; level: 0=center, 1=L1, 2=L2
+  const GRAPHS = {
+    alert: {
+      title: 'Alert 19150109',
+      nodes: [
+        { id:'19150109', type:'alert',  level:0, fx:0.50, fy:0.50 },
+        { id:'3215451',  type:'client', level:1, fx:0.20, fy:0.72 },
+        { id:'TS_824',   type:'case',   level:1, fx:0.80, fy:0.72 },
+        { id:'19150101', type:'alert',  level:2, fx:0.06, fy:0.33 },
+        { id:'19147810', type:'alert',  level:2, fx:0.18, fy:0.93 },
+        { id:'3215450',  type:'client', level:2, fx:0.93, fy:0.22 },
+      ],
+      edges: [
+        { a:0, b:1, label:'Account'     },
+        { a:0, b:2, label:'Escalated to'},
+        { a:1, b:3, label:'Related Alert'},
+        { a:1, b:4, label:'Historical'  },
+        { a:2, b:5, label:'Co-Suspect'  },
+      ],
+    },
+    case: {
+      title: 'Case TS_824',
+      nodes: [
+        { id:'TS_824',   type:'case',   level:0, fx:0.50, fy:0.50 },
+        { id:'19150109', type:'alert',  level:1, fx:0.20, fy:0.22 },
+        { id:'19150101', type:'alert',  level:1, fx:0.20, fy:0.80 },
+        { id:'3215451',  type:'client', level:1, fx:0.80, fy:0.50 },
+        { id:'3215450',  type:'client', level:2, fx:0.06, fy:0.60 },
+        { id:'TS_798',   type:'case',   level:2, fx:0.94, fy:0.16 },
+      ],
+      edges: [
+        { a:0, b:1, label:'Trigger Alert' },
+        { a:0, b:2, label:'Related Alert' },
+        { a:0, b:3, label:'Primary Acct'  },
+        { a:2, b:4, label:'Account'       },
+        { a:3, b:5, label:'Prior Case'    },
+      ],
+    },
+    client: {
+      title: 'Client 3215451',
+      nodes: [
+        { id:'3215451',  type:'client', level:0, fx:0.50, fy:0.50 },
+        { id:'19150109', type:'alert',  level:1, fx:0.20, fy:0.22 },
+        { id:'19150101', type:'alert',  level:1, fx:0.20, fy:0.80 },
+        { id:'TS_824',   type:'case',   level:1, fx:0.80, fy:0.50 },
+        { id:'3215450',  type:'client', level:2, fx:0.06, fy:0.50 },
+        { id:'19149981', type:'alert',  level:2, fx:0.94, fy:0.20 },
+      ],
+      edges: [
+        { a:0, b:1, label:'Alert'         },
+        { a:0, b:2, label:'Alert'         },
+        { a:0, b:3, label:'Active Case'   },
+        { a:1, b:4, label:'Counterparty'  },
+        { a:3, b:5, label:'Related Alert' },
+      ],
+    },
+  };
+
+  const graph = GRAPHS[suffix] || GRAPHS.alert;
+
+  // Resolve pixel positions
+  graph.nodes.forEach(n => { n.x = n.fx * W; n.y = n.fy * H; });
+
+  // Node radius by level
+  const RADII = { 0: 36, 1: 27, 2: 21 };
 
   ctx.clearRect(0, 0, W, H);
   ctx.fillStyle = '#fafafa';
   ctx.fillRect(0, 0, W, H);
 
-  // Edges
-  edges.forEach(e => {
-    const n1 = nodes[e.a], n2 = nodes[e.b];
-    const mx = (n1.x + n2.x) / 2, my = (n1.y + n2.y) / 2;
-    ctx.strokeStyle = e.color; ctx.lineWidth = e.color === '#d1d5db' ? 1 : 1.5;
-    ctx.setLineDash(e.color === '#d1d5db' ? [4,3] : []);
+  // ── Edges ──
+  graph.edges.forEach(e => {
+    const n1 = graph.nodes[e.a], n2 = graph.nodes[e.b];
+    const isL2 = n1.level > 0 && n2.level > 0;
+    ctx.strokeStyle = isL2 ? '#d1d5db' : '#b0b7c3';
+    ctx.lineWidth   = isL2 ? 1 : 1.5;
+    ctx.setLineDash(isL2 ? [4, 3] : []);
     ctx.beginPath(); ctx.moveTo(n1.x, n1.y); ctx.lineTo(n2.x, n2.y); ctx.stroke();
     ctx.setLineDash([]);
-    // Edge label
-    ctx.fillStyle = '#9ca3af'; ctx.font = '10px system-ui,sans-serif'; ctx.textAlign = 'center';
+    // Edge label at midpoint, offset slightly perpendicular
+    const mx = (n1.x + n2.x) / 2, my = (n1.y + n2.y) / 2;
+    ctx.fillStyle = '#9ca3af';
+    ctx.font = '10px system-ui,sans-serif';
+    ctx.textAlign = 'center';
     ctx.fillText(e.label, mx, my - 5);
-    if (e.sub) { ctx.font = '9px system-ui,sans-serif'; ctx.fillStyle = '#c4c4c4'; ctx.fillText(e.sub, mx, my + 6); }
   });
 
-  // Nodes
-  nodes.forEach(n => {
+  // ── Nodes ──
+  graph.nodes.forEach(n => {
+    const t = TYPE[n.type];
+    const r = RADII[n.level];
+    // Outer glow for center
+    if (n.level === 0) {
+      ctx.beginPath(); ctx.arc(n.x, n.y, r + 6, 0, Math.PI * 2);
+      ctx.fillStyle = t.bg.replace(')', ',.35)').replace('rgb', 'rgba');
+      ctx.fill();
+    }
+    // Shadow
     ctx.shadowColor = 'rgba(0,0,0,.12)'; ctx.shadowBlur = 8; ctx.shadowOffsetY = 2;
-    ctx.beginPath(); ctx.arc(n.x, n.y, n.r, 0, Math.PI * 2);
-    ctx.fillStyle = n.bg; ctx.fill();
-    if (n.border) { ctx.strokeStyle = n.border; ctx.lineWidth = 2; ctx.stroke(); }
+    ctx.beginPath(); ctx.arc(n.x, n.y, r, 0, Math.PI * 2);
+    ctx.fillStyle = t.bg; ctx.fill();
+    ctx.strokeStyle = t.border; ctx.lineWidth = n.level === 0 ? 2.5 : 1.5; ctx.stroke();
     ctx.shadowColor = 'transparent';
 
-    // Alert badge
-    if (n.alert) {
-      ctx.beginPath(); ctx.arc(n.x + n.r - 5, n.y - n.r + 5, 9, 0, Math.PI * 2);
-      ctx.fillStyle = '#ef4444'; ctx.fill();
-      ctx.fillStyle = '#fff'; ctx.font = 'bold 9px system-ui,sans-serif'; ctx.textAlign = 'center';
-      ctx.fillText('!', n.x + n.r - 5, n.y - n.r + 8);
-    }
+    // Type label (small caps, upper half)
+    const fontSize = n.level === 0 ? 9 : 8;
+    ctx.fillStyle = t.text;
+    ctx.font = `bold ${fontSize}px system-ui,sans-serif`;
+    ctx.textAlign = 'center';
+    ctx.fillText(t.label, n.x, n.y - 3);
 
-    // ID label inside node
-    ctx.fillStyle = n.fg; ctx.font = `bold ${n.r > 25 ? 11 : 10}px system-ui,sans-serif`; ctx.textAlign = 'center';
-    ctx.fillText(n.id, n.x, n.y + 4);
-
-    // Sub-label below
-    ctx.fillStyle = '#6b7280'; ctx.font = '10px system-ui,sans-serif';
-    ctx.fillText(n.sub, n.x, n.y + n.r + 14);
+    // ID (lower half)
+    const idSize = n.level === 0 ? 11 : (n.id.length > 7 ? 9 : 10);
+    ctx.font = `bold ${idSize}px system-ui,sans-serif`;
+    ctx.fillText(n.id, n.x, n.y + 10);
   });
 }
 
@@ -3316,14 +3382,14 @@ function submitWLModal() {
         </div>
       </div>
       <div class="tab-pane" id="inv-graph-alert" style="padding:12px 16px;overflow-y:auto;flex:1">
-        <div style="font-size:11px;color:var(--text-hint);background:#fafafa;border:1px solid var(--border);border-radius:4px;padding:5px 8px;margin-bottom:10px">Account 3215451 &nbsp;·&nbsp; 3 Associated Accounts</div>
+        <div style="font-size:11px;color:var(--text-hint);background:#fafafa;border:1px solid var(--border);border-radius:4px;padding:5px 8px;margin-bottom:10px">Center: <strong style="color:rgba(0,0,0,.75)">Alert 19150109</strong> &nbsp;·&nbsp; 2 L1 nodes &nbsp;·&nbsp; 3 L2 nodes</div>
         <div style="display:flex;flex-wrap:wrap;gap:8px;margin-bottom:8px;font-size:11px;color:var(--text-hint)">
-          <span style="display:flex;align-items:center;gap:3px"><span style="width:9px;height:9px;border-radius:50%;background:#d97706;display:inline-block"></span>Primary</span>
-          <span style="display:flex;align-items:center;gap:3px"><span style="width:9px;height:9px;border-radius:50%;background:#7c3aed;display:inline-block"></span>Associated</span>
-          <span style="display:flex;align-items:center;gap:3px"><span style="width:9px;height:9px;border-radius:50%;background:#fff;border:1.5px solid #9ca3af;display:inline-block"></span>Extended</span>
+          <span style="display:flex;align-items:center;gap:3px"><span style="width:9px;height:9px;border-radius:50%;background:#fff7e6;border:1.5px solid #fa8c16;display:inline-block"></span>Alert</span>
+          <span style="display:flex;align-items:center;gap:3px"><span style="width:9px;height:9px;border-radius:50%;background:#f9f0ff;border:1.5px solid #7c3aed;display:inline-block"></span>Case</span>
+          <span style="display:flex;align-items:center;gap:3px"><span style="width:9px;height:9px;border-radius:50%;background:#e6f4ff;border:1.5px solid #2563eb;display:inline-block"></span>Client</span>
           <span style="margin-left:auto;color:var(--ai-color);cursor:pointer;font-size:11px" onclick="sendChip('deep_expand')"><span class="ai-badge" style="font-size:10px">AI</span> Deep Expand</span>
         </div>
-        <canvas id="assoc-canvas-alert" height="280" style="width:100%;display:block;border:1px solid var(--border);border-radius:4px"></canvas>
+        <canvas id="assoc-canvas-alert" height="300" style="width:100%;display:block;border:1px solid var(--border);border-radius:4px"></canvas>
       </div>
       <!-- Multi-Account Analysis -->
       <div class="tab-pane" id="inv-multi-alert" style="flex:1;overflow-y:auto">
@@ -3481,14 +3547,14 @@ function submitWLModal() {
         </div>
       </div>
       <div class="tab-pane" id="inv-graph-case" style="padding:12px 16px;overflow-y:auto;flex:1">
-        <div style="font-size:11px;color:var(--text-hint);background:#fafafa;border:1px solid var(--border);border-radius:4px;padding:5px 8px;margin-bottom:10px">Account 4183296 · Case TS_814 · 2 Associated Accounts</div>
+        <div style="font-size:11px;color:var(--text-hint);background:#fafafa;border:1px solid var(--border);border-radius:4px;padding:5px 8px;margin-bottom:10px">Center: <strong style="color:rgba(0,0,0,.75)">Case TS_824</strong> &nbsp;·&nbsp; 3 L1 nodes &nbsp;·&nbsp; 2 L2 nodes</div>
         <div style="display:flex;flex-wrap:wrap;gap:8px;margin-bottom:8px;font-size:11px;color:var(--text-hint)">
-          <span style="display:flex;align-items:center;gap:3px"><span style="width:9px;height:9px;border-radius:50%;background:#d97706;display:inline-block"></span>Primary</span>
-          <span style="display:flex;align-items:center;gap:3px"><span style="width:9px;height:9px;border-radius:50%;background:#7c3aed;display:inline-block"></span>Associated</span>
-          <span style="display:flex;align-items:center;gap:3px"><span style="width:9px;height:9px;border-radius:50%;background:#fff;border:1.5px solid #9ca3af;display:inline-block"></span>Extended</span>
+          <span style="display:flex;align-items:center;gap:3px"><span style="width:9px;height:9px;border-radius:50%;background:#fff7e6;border:1.5px solid #fa8c16;display:inline-block"></span>Alert</span>
+          <span style="display:flex;align-items:center;gap:3px"><span style="width:9px;height:9px;border-radius:50%;background:#f9f0ff;border:1.5px solid #7c3aed;display:inline-block"></span>Case</span>
+          <span style="display:flex;align-items:center;gap:3px"><span style="width:9px;height:9px;border-radius:50%;background:#e6f4ff;border:1.5px solid #2563eb;display:inline-block"></span>Client</span>
           <span style="margin-left:auto;color:var(--ai-color);cursor:pointer;font-size:11px"><span class="ai-badge" style="font-size:10px">AI</span> Deep Expand</span>
         </div>
-        <canvas id="assoc-canvas-case" height="280" style="width:100%;display:block;border:1px solid var(--border);border-radius:4px"></canvas>
+        <canvas id="assoc-canvas-case" height="300" style="width:100%;display:block;border:1px solid var(--border);border-radius:4px"></canvas>
       </div>
       <!-- Multi-Account Analysis -->
       <div class="tab-pane" id="inv-multi-case" style="flex:1;overflow-y:auto">
@@ -3648,14 +3714,14 @@ function submitWLModal() {
         </div>
       </div>
       <div class="tab-pane" id="inv-graph-client" style="padding:12px 16px;overflow-y:auto;flex:1">
-        <div style="font-size:11px;color:var(--text-hint);background:#fafafa;border:1px solid var(--border);border-radius:4px;padding:5px 8px;margin-bottom:10px">Account 3215451 &nbsp;·&nbsp; 3 Associated Accounts</div>
+        <div style="font-size:11px;color:var(--text-hint);background:#fafafa;border:1px solid var(--border);border-radius:4px;padding:5px 8px;margin-bottom:10px">Center: <strong style="color:rgba(0,0,0,.75)">Client 3215451</strong> &nbsp;·&nbsp; 3 L1 nodes &nbsp;·&nbsp; 2 L2 nodes</div>
         <div style="display:flex;flex-wrap:wrap;gap:8px;margin-bottom:8px;font-size:11px;color:var(--text-hint)">
-          <span style="display:flex;align-items:center;gap:3px"><span style="width:9px;height:9px;border-radius:50%;background:#d97706;display:inline-block"></span>Primary</span>
-          <span style="display:flex;align-items:center;gap:3px"><span style="width:9px;height:9px;border-radius:50%;background:#7c3aed;display:inline-block"></span>Associated</span>
-          <span style="display:flex;align-items:center;gap:3px"><span style="width:9px;height:9px;border-radius:50%;background:#fff;border:1.5px solid #9ca3af;display:inline-block"></span>Extended</span>
+          <span style="display:flex;align-items:center;gap:3px"><span style="width:9px;height:9px;border-radius:50%;background:#fff7e6;border:1.5px solid #fa8c16;display:inline-block"></span>Alert</span>
+          <span style="display:flex;align-items:center;gap:3px"><span style="width:9px;height:9px;border-radius:50%;background:#f9f0ff;border:1.5px solid #7c3aed;display:inline-block"></span>Case</span>
+          <span style="display:flex;align-items:center;gap:3px"><span style="width:9px;height:9px;border-radius:50%;background:#e6f4ff;border:1.5px solid #2563eb;display:inline-block"></span>Client</span>
           <span style="margin-left:auto;color:var(--ai-color);cursor:pointer;font-size:11px" onclick="sendChipClient('assoc_graph')"><span class="ai-badge" style="font-size:10px">AI</span> Deep Expand</span>
         </div>
-        <canvas id="assoc-canvas-client" height="280" style="width:100%;display:block;border:1px solid var(--border);border-radius:4px"></canvas>
+        <canvas id="assoc-canvas-client" height="300" style="width:100%;display:block;border:1px solid var(--border);border-radius:4px"></canvas>
       </div>
       <!-- Multi-Account Analysis -->
       <div class="tab-pane" id="inv-multi-client" style="flex:1;overflow-y:auto">

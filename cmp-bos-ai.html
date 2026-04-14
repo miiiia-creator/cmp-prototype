@@ -1339,35 +1339,6 @@ tbody tr:hover td { background: #fffdf0; }
   <div class="breadcrumb"><a onclick="showPage('case-management')">Case Management</a> › TS_814</div>
   <div class="page-actions"><button class="btn btn-sm" onclick="showPage('case-management')">← Back</button></div>
 
-  <!-- Case Status Stepper -->
-  <div class="status-stepper" id="case-stepper">
-    <div class="sf-step done" onclick="setStepperStatus('case-stepper',0)" style="cursor:pointer">
-      <div class="sf-dot done"></div>
-      <div class="sf-label done">Created</div>
-      <div class="sf-date">2025-09-19</div>
-    </div>
-    <div class="sf-step done" onclick="setStepperStatus('case-stepper',1)" style="cursor:pointer">
-      <div class="sf-dot done"></div>
-      <div class="sf-label done">Processing</div>
-      <div class="sf-date">2025-09-19</div>
-    </div>
-    <div class="sf-step done" onclick="setStepperStatus('case-stepper',2)" style="cursor:pointer">
-      <div class="sf-dot done"></div>
-      <div class="sf-label done">Escalated</div>
-      <div class="sf-date">2025-09-19</div>
-    </div>
-    <div class="sf-step done" onclick="setStepperStatus('case-stepper',3)" style="cursor:pointer">
-      <div class="sf-dot done"></div>
-      <div class="sf-label done">Pending Review</div>
-      <div class="sf-date">2025-09-19</div>
-    </div>
-    <div class="sf-step current" onclick="setStepperStatus('case-stepper',4)" style="cursor:pointer">
-      <div class="sf-dot done" style="background:#52c41a;border-color:#52c41a"></div>
-      <div class="sf-label current" style="color:#389e0d">Closed</div>
-      <div class="sf-date">2025-09-19</div>
-    </div>
-  </div>
-
   <div class="card">
     <div class="meta-grid">
       <div class="meta-item"><div class="meta-label">Case Name</div><div class="meta-val">SPXW Option - 4183296</div></div>
@@ -1381,6 +1352,34 @@ tbody tr:hover td { background: #fffdf0; }
       <div class="meta-item span2"><div class="meta-label">Data Period</div><div class="meta-val">2025-05-10 ~ 2025-07-14</div></div>
       <div class="meta-item"><div class="meta-label">Case Tag</div><div class="meta-val"><span class="tag tag-cleared">No Further Action</span></div></div>
       <div class="meta-item"><div class="meta-label">Created Time</div><div class="meta-val">2025-09-19 17:42 GMT+8</div></div>
+    </div>
+  </div>
+
+  <!-- ✦ AI Compliance Investigation Report ✦ -->
+  <div class="ai-card" style="margin-bottom:12px">
+    <div class="ai-card-head">
+      <div class="ai-card-title"><span class="ai-badge">AI</span> Compliance Investigation Report</div>
+      <div style="display:flex;align-items:center;gap:10px">
+        <span style="font-size:11px;color:var(--text-dis)">Generated 2025-09-19 14:23 &nbsp;·&nbsp; Pending Review</span>
+        <span style="background:#fff1f0;border:1px solid #ffa39e;border-radius:4px;padding:2px 10px;font-size:12px;font-weight:700;color:#cf1322">存在异常</span>
+      </div>
+    </div>
+
+    <!-- Input params bar -->
+    <div style="padding:8px 16px;background:#fdf8ff;border-bottom:1px solid var(--ai-border)">
+      <div style="display:grid;grid-template-columns:repeat(4,1fr) repeat(3,auto);gap:6px 12px;font-size:11px;align-items:center">
+        <div><span style="color:var(--text-hint)">Accounts&nbsp;</span><strong>4183296, 4183297</strong></div>
+        <div><span style="color:var(--text-hint)">Symbol&nbsp;</span><strong>SPXW</strong></div>
+        <div><span style="color:var(--text-hint)">Period&nbsp;</span><strong>2025-05-10 ~ 2025-07-14</strong></div>
+        <div><span style="color:var(--text-hint)">Market&nbsp;</span><strong>US</strong></div>
+        <div><span style="color:var(--text-hint)">Category&nbsp;</span><strong>Wash Trade</strong></div>
+        <div><span style="color:var(--text-hint)">Target&nbsp;</span><strong style="color:#cf1322">存在异常</strong></div>
+        <button class="btn btn-ai btn-sm" onclick="renderCaseReport(CASE_REPORT)">↻ Regenerate</button>
+      </div>
+    </div>
+
+    <div class="ai-card-body" style="padding:0">
+      <div id="case-report-content"></div>
     </div>
   </div>
 
@@ -4472,7 +4471,101 @@ function _prSummary(s) {
   </div>`;
 }
 
-document.addEventListener('DOMContentLoaded', () => renderProfileReport(PROFILE_REPORT));
+document.addEventListener('DOMContentLoaded', () => {
+  renderProfileReport(PROFILE_REPORT);
+  renderCaseReport(CASE_REPORT);
+});
+
+// ══ Case Report JSON data ══
+const CASE_REPORT = {
+  meta: {
+    accounts: ['4183296', '4183297'], symbol: 'SPXW', market: 'US',
+    since: '2025-05-10', end: '2025-07-14',
+    category: '对敲交易 Wash Trade', target: '存在异常', generated_at: '2025-09-19 14:23'
+  },
+  pairs: [
+    { id:1, time:'2025-05-12 10:23:41', buy_acct:'4183297', sell_acct:'4183296', symbol:'SPXW 20250509 5825.0 C', qty:100, price:12.50, amount:1250, interval_s:3 },
+    { id:2, time:'2025-05-15 14:07:22', buy_acct:'4183296', sell_acct:'4183297', symbol:'SPXW 20250516 5850.0 P', qty:150, price:8.30,  amount:1245, interval_s:7 },
+    { id:3, time:'2025-05-22 09:34:05', buy_acct:'4183297', sell_acct:'4183296', symbol:'SPXW 20250521 5900.0 C', qty:200, price:6.75,  amount:1350, interval_s:2 },
+    { id:4, time:'2025-06-03 11:15:48', buy_acct:'4183296', sell_acct:'4183297', symbol:'SPXW 20250530 5950.0 C', qty:120, price:15.20, amount:1824, interval_s:5 },
+    { id:5, time:'2025-06-11 10:02:33', buy_acct:'4183297', sell_acct:'4183296', symbol:'SPXW 20250611 6050.0 P', qty:180, price:9.40,  amount:1692, interval_s:4 },
+    { id:6, time:'2025-06-18 13:44:19', buy_acct:'4183296', sell_acct:'4183297', symbol:'SPXW 20250618 6100.0 C', qty:100, price:11.80, amount:1180, interval_s:6 },
+    { id:7, time:'2025-07-02 09:31:07', buy_acct:'4183297', sell_acct:'4183296', symbol:'SPXW 20250630 6150.0 C', qty:250, price:7.20,  amount:1800, interval_s:3 },
+    { id:8, time:'2025-07-14 14:58:44', buy_acct:'4183296', sell_acct:'4183297', symbol:'SPXW 20250714 6235.0 P', qty:130, price:13.60, amount:1768, interval_s:8 }
+  ],
+  pairs_analysis: [
+    '8对对敲交易全部发生在盘中时段（09:30~16:00 ET），均为账户 4183296 与 4183297 之间的 SPXW 期权买卖对冲。两账户成交时间差均在 10 秒以内（最短 2 秒，最长 8 秒），不符合正常市场撮合规律。',
+    '两账户注册地址不同，但共享相同 IP 段（192.168.43.x），历史登录记录存在多次同一设备交替使用情形，疑似同一实际控制人。成交价格与同时段市场中间价偏差均在 0.5% 以内，不存在显著价格操纵痕迹，主要目的可能为刷量、制造虚假交易活跃度或转移持仓。',
+    '统计期间总对敲涉及合约 1,230 份，名义金额合计 $121,090，盈亏合计接近零（差额 < 0.3%），符合典型 Wash Trade 特征。建议上报监管并对两账户实施交易限制。'
+  ],
+  investigation_result: '综合以上分析，账户 4183296 与 4183297 在 2025-05-10 至 2025-07-14 期间存在明显对敲交易行为，共计 8 对、涉及 SPXW 期权 1,230 张，名义金额 $121,090。两账户具有高度关联性（共享 IP / 设备），交易呈现出明显的对冲特征（成交时间差 2~8 秒，盈亏接近零）。建议：① 将本案列为 Further Action；② 提交 FINRA STR；③ 对两账户启动交易限制评估。'
+};
+
+function renderCaseReport(data) {
+  const el = document.getElementById('case-report-content');
+  if (!el) return;
+  const m = data.meta;
+
+  // Section 1: Unusual Identification Detail
+  let html = `<div style="padding:10px 16px 8px;border-bottom:1px solid #f0e8ff">
+    <div style="font-size:12px;font-weight:600;color:#6d28d9;margin-bottom:8px">1. Unusual Identification Detail</div>
+    <div style="background:#fafafa;border:1px solid #f0f0f0;border-radius:4px;padding:8px 12px;font-size:11px;color:var(--text-hint);margin-bottom:8px;display:flex;flex-wrap:wrap;gap:4px 20px">
+      <span><strong style="color:rgba(0,0,0,.75)">accountIdList</strong>: [${m.accounts.map(a=>`'${a}'`).join(', ')}]</span>
+      <span><strong style="color:rgba(0,0,0,.75)">symbolList</strong>: ['${m.symbol}']</span>
+      <span><strong style="color:rgba(0,0,0,.75)">sinceDate</strong>: ${m.since}</span>
+      <span><strong style="color:rgba(0,0,0,.75)">endDate</strong>: ${m.end}</span>
+      <span><strong style="color:rgba(0,0,0,.75)">unusualCategory</strong>: ${m.category}</span>
+      <span><strong style="color:rgba(0,0,0,.75)">market</strong>: ${m.market}</span>
+    </div>
+    <div style="font-size:11px;color:rgba(0,0,0,.75);margin-bottom:6px">共发现对敲交易 <strong style="color:#cf1322">${data.pairs.length} 对</strong>，明细如下：</div>
+    <div style="overflow-x:auto">
+    <table style="width:100%;border-collapse:collapse;font-size:11px">
+      <thead><tr style="background:#f5f0ff;color:#6d28d9">
+        <th style="padding:4px 8px;text-align:left;font-weight:600;white-space:nowrap;border-bottom:1px solid #e9d8fd">配对</th>
+        <th style="padding:4px 8px;text-align:left;font-weight:600;white-space:nowrap;border-bottom:1px solid #e9d8fd">时间</th>
+        <th style="padding:4px 8px;text-align:left;font-weight:600;white-space:nowrap;border-bottom:1px solid #e9d8fd">买入账户</th>
+        <th style="padding:4px 8px;text-align:left;font-weight:600;white-space:nowrap;border-bottom:1px solid #e9d8fd">卖出账户</th>
+        <th style="padding:4px 8px;text-align:left;font-weight:600;white-space:nowrap;border-bottom:1px solid #e9d8fd">标的</th>
+        <th style="padding:4px 8px;text-align:right;font-weight:600;white-space:nowrap;border-bottom:1px solid #e9d8fd">数量</th>
+        <th style="padding:4px 8px;text-align:right;font-weight:600;white-space:nowrap;border-bottom:1px solid #e9d8fd">价格</th>
+        <th style="padding:4px 8px;text-align:right;font-weight:600;white-space:nowrap;border-bottom:1px solid #e9d8fd">成交金额</th>
+        <th style="padding:4px 8px;text-align:right;font-weight:600;white-space:nowrap;border-bottom:1px solid #e9d8fd">时间差(s)</th>
+      </tr></thead>
+      <tbody>` +
+    data.pairs.map((p, i) => `<tr style="background:${i%2===0?'#fff':'#fdf8ff'}">
+        <td style="padding:4px 8px;border-bottom:1px solid #f0e8ff;color:#6d28d9;font-weight:600">#${p.id}</td>
+        <td style="padding:4px 8px;border-bottom:1px solid #f0e8ff;white-space:nowrap;color:var(--text-hint)">${p.time}</td>
+        <td style="padding:4px 8px;border-bottom:1px solid #f0e8ff"><span style="color:#059669;font-weight:500">BUY</span> <span class="col-link" onclick="showPage('client-details')">${p.buy_acct}</span></td>
+        <td style="padding:4px 8px;border-bottom:1px solid #f0e8ff"><span style="color:#cf1322;font-weight:500">SELL</span> <span class="col-link" onclick="showPage('client-details')">${p.sell_acct}</span></td>
+        <td style="padding:4px 8px;border-bottom:1px solid #f0e8ff;white-space:nowrap;font-size:10px">${p.symbol}</td>
+        <td style="padding:4px 8px;border-bottom:1px solid #f0e8ff;text-align:right">${p.qty}</td>
+        <td style="padding:4px 8px;border-bottom:1px solid #f0e8ff;text-align:right">$${p.price.toFixed(2)}</td>
+        <td style="padding:4px 8px;border-bottom:1px solid #f0e8ff;text-align:right;color:rgba(0,0,0,.75)">$${(p.amount).toLocaleString()}</td>
+        <td style="padding:4px 8px;border-bottom:1px solid #f0e8ff;text-align:right;color:${p.interval_s<=3?'#cf1322':p.interval_s<=6?'#d46b08':'#374151'};font-weight:600">${p.interval_s}s</td>
+      </tr>`).join('') +
+    `</tbody></table></div></div>`;
+
+  // Section 2: Pairs Analysis
+  html += `<div style="padding:10px 16px 8px;border-bottom:1px solid #f0e8ff">
+    <div style="font-size:12px;font-weight:600;color:#6d28d9;margin-bottom:8px">2. Pairs Analysis</div>` +
+    data.pairs_analysis.map((txt, i) => `<div style="display:flex;gap:8px;margin-bottom:6px;font-size:11px;color:rgba(0,0,0,.7);line-height:1.7">
+      <span style="flex-shrink:0;width:18px;height:18px;background:#6d28d9;color:#fff;border-radius:50%;font-size:10px;font-weight:700;display:flex;align-items:center;justify-content:center;margin-top:1px">${i+1}</span>
+      <span>${txt}</span>
+    </div>`).join('') +
+    `</div>`;
+
+  // Section 3: Investigation Result
+  html += `<div style="padding:10px 16px 12px">
+    <div style="font-size:12px;font-weight:600;color:#6d28d9;margin-bottom:8px">3. Investigation Result</div>
+    <div style="background:#fff1f0;border:1px solid #ffa39e;border-radius:4px;padding:10px 12px;font-size:11px;color:rgba(0,0,0,.75);line-height:1.8">${data.investigation_result}</div>
+    <div style="margin-top:8px;display:flex;gap:6px">
+      <button class="btn btn-ai btn-sm">Apply to Investigation Draft</button>
+      <button class="btn btn-sm">Export PDF</button>
+    </div>
+  </div>`;
+
+  el.innerHTML = html;
+}
 </script>
 
 </body>

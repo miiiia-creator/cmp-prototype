@@ -1590,62 +1590,8 @@ tbody tr:hover td { background: #fffdf0; }
     </div>
   </div>
 
-  <!-- Lifecycle -->
-  <div class="card" style="margin-bottom:12px">
-      <div class="card-head">
-        🕐 Client Risk Lifecycle
-        <span style="font-size:11px;font-weight:400;color:var(--text-hint);margin-left:4px">7 Events Total</span>
-      </div>
-      <div style="padding:16px;">
-        <div class="timeline">
-          <div class="tl-item">
-            <div class="tl-dot gray"></div>
-            <div class="tl-date">2023-08-12</div>
-            <div class="tl-title">Account Registered</div>
-            <div class="tl-desc">TBNZ License, Individual Investor</div>
-          </div>
-          <div class="tl-item">
-            <div class="tl-dot yellow"></div>
-            <div class="tl-date">2025-08-03</div>
-            <div class="tl-title">First Alert Triggered</div>
-            <div class="tl-desc">Rule: possible ramping (without tick data), Status Processing → Cleared</div>
-          </div>
-          <div class="tl-item">
-            <div class="tl-dot red"></div>
-            <div class="tl-date">2025-11-02</div>
-            <div class="tl-title">Case TS_798 Opened</div>
-            <div class="tl-desc">Involving possible wash trade, assigned to mayimeng for investigation</div>
-          </div>
-          <div class="tl-item">
-            <div class="tl-dot green"></div>
-            <div class="tl-date">2025-11-28</div>
-            <div class="tl-title">Case TS_798 Closed</div>
-            <div class="tl-desc">Conclusion: Further Action, reported to regulator</div>
-          </div>
-          <div class="tl-item">
-            <div class="tl-dot yellow"></div>
-            <div class="tl-date">2025-12-02</div>
-            <div class="tl-title">Added to Watchlist</div>
-            <div class="tl-desc">Risk Level: Medium, Expiry: 2026-06-02, Added by houyuexuan</div>
-          </div>
-          <div class="tl-item">
-            <div class="tl-dot yellow"></div>
-            <div class="tl-date">2025-12-18</div>
-            <div class="tl-title">Alert 19149230 Triggered</div>
-            <div class="tl-desc">pre-arranged trading → Processing → Cleared</div>
-          </div>
-          <div class="tl-item">
-            <div class="tl-dot red"></div>
-            <div class="tl-date">2026-04-07 <span style="background:var(--primary);color:rgba(0,0,0,.85);font-size:10px;padding:1px 5px;border-radius:3px;margin-left:4px">Today</span></div>
-            <div class="tl-title">Alert 19150109 Triggered (Current)</div>
-            <div class="tl-desc">pre-arranged trading (Profit) · AI Score 82 · Recommend Escalate · Processing</div>
-          </div>
-        </div>
-      </div>
-    </div>
-
   <!-- AI User Profile Report -->
-  <div class="ai-card" style="margin-top:12px">
+  <div class="ai-card" style="margin-bottom:12px">
     <div class="ai-card-head">
       <div class="ai-card-title"><span class="ai-badge">AI</span> User Profile Report</div>
       <div style="display:flex;align-items:center;gap:10px">
@@ -1657,6 +1603,60 @@ tbody tr:hover td { background: #fffdf0; }
       <div id="profile-report-content"></div>
     </div><!-- /ai-card-body -->
   </div><!-- /AI User Profile Report -->
+
+  <!-- Lifecycle -->
+  <div class="card" style="margin-bottom:12px">
+    <div class="card-head">
+      🕐 Client Risk Lifecycle
+      <span style="font-size:11px;font-weight:400;color:var(--text-hint);margin-left:4px">7 Events Total</span>
+    </div>
+    <div style="padding:16px;">
+      <div class="timeline">
+        <div class="tl-item">
+          <div class="tl-dot gray"></div>
+          <div class="tl-date">2023-08-12</div>
+          <div class="tl-title">Account Registered</div>
+          <div class="tl-desc">TBNZ License, Individual Investor</div>
+        </div>
+        <div class="tl-item">
+          <div class="tl-dot yellow"></div>
+          <div class="tl-date">2025-08-03</div>
+          <div class="tl-title">First Alert Triggered</div>
+          <div class="tl-desc">Rule: possible ramping (without tick data), Status Processing → Cleared</div>
+        </div>
+        <div class="tl-item">
+          <div class="tl-dot red"></div>
+          <div class="tl-date">2025-11-02</div>
+          <div class="tl-title">Case TS_798 Opened</div>
+          <div class="tl-desc">Involving possible wash trade, assigned to mayimeng for investigation</div>
+        </div>
+        <div class="tl-item">
+          <div class="tl-dot green"></div>
+          <div class="tl-date">2025-11-28</div>
+          <div class="tl-title">Case TS_798 Closed</div>
+          <div class="tl-desc">Conclusion: Further Action, reported to regulator</div>
+        </div>
+        <div class="tl-item">
+          <div class="tl-dot yellow"></div>
+          <div class="tl-date">2025-12-02</div>
+          <div class="tl-title">Added to Watchlist</div>
+          <div class="tl-desc">Risk Level: Medium, Expiry: 2026-06-02, Added by houyuexuan</div>
+        </div>
+        <div class="tl-item">
+          <div class="tl-dot yellow"></div>
+          <div class="tl-date">2025-12-18</div>
+          <div class="tl-title">Alert 19149230 Triggered</div>
+          <div class="tl-desc">pre-arranged trading → Processing → Cleared</div>
+        </div>
+        <div class="tl-item">
+          <div class="tl-dot red"></div>
+          <div class="tl-date">2026-04-07 <span style="background:var(--primary);color:rgba(0,0,0,.85);font-size:10px;padding:1px 5px;border-radius:3px;margin-left:4px">Today</span></div>
+          <div class="tl-title">Alert 19150109 Triggered (Current)</div>
+          <div class="tl-desc">pre-arranged trading (Profit) · AI Score 82 · Recommend Escalate · Processing</div>
+        </div>
+      </div>
+    </div>
+  </div>
 
   <!-- Tabs: Alert History / Watchlist / Inquiries -->
   <div class="card" style="margin-top:12px">

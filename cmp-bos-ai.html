@@ -1142,7 +1142,7 @@ tbody tr:hover td { background: #fffdf0; }
       <div class="ai-actions-row">
         <button class="btn btn-ai btn-sm" onclick="openInvToTab('alert','graph')">Association Graph</button>
         <button class="btn btn-ai btn-sm" onclick="openInvToTab('alert','spread')">Spread Analysis</button>
-        <button class="btn btn-ai btn-sm" onclick="openInvToTab('alert','multi')">Multi-Account</button>
+        <button class="btn btn-ai btn-sm" onclick="openInvToTab('alert','multi')">Associate Accounts</button>
         <button class="btn btn-ai btn-sm" onclick="sendChip('re_evaluate')">Re-evaluate</button>
         <div style="flex:1"></div>
         <button class="ask-ai-toggle" onclick="toggleAsk()"><span id="ask-toggle-label">Ask AI ↓</span></button>
@@ -1700,7 +1700,7 @@ tbody tr:hover td { background: #fffdf0; }
         <div style="display:flex;gap:6px;">
           <button class="btn btn-ai btn-sm" onclick="openInvToTab('client','graph')">Association Graph</button>
           <button class="btn btn-ai btn-sm" onclick="openInvToTab('client','spread')">Spread Analysis</button>
-          <button class="btn btn-ai btn-sm" onclick="openInvToTab('client','multi')">Multi-Account</button>
+          <button class="btn btn-ai btn-sm" onclick="openInvToTab('client','multi')">Associate Accounts</button>
         </div>
       </div>
     </div>
@@ -3340,7 +3340,7 @@ function submitWLModal() {
       <div class="tab-bar" style="flex-shrink:0">
         <div class="tab active" id="inv-tab-spread-alert" onclick="switchSheetTab('alert','spread')">Spread Analysis</div>
         <div class="tab" id="inv-tab-graph-alert" onclick="switchSheetTab('alert','graph')">Association Graph</div>
-        <div class="tab" id="inv-tab-multi-alert" onclick="switchSheetTab('alert','multi')">Multi-Account <span class="tag tag-ai" style="font-size:9px;padding:0 4px;margin-left:3px;vertical-align:middle">AI</span> <span style="background:#cf1322;color:#fff;border-radius:8px;padding:0 5px;font-size:10px;margin-left:2px">2</span></div>
+        <div class="tab" id="inv-tab-multi-alert" onclick="switchSheetTab('alert','multi')">Associate Accounts <span class="tag tag-ai" style="font-size:9px;padding:0 4px;margin-left:3px;vertical-align:middle">AI</span> <span style="background:#cf1322;color:#fff;border-radius:8px;padding:0 5px;font-size:10px;margin-left:2px">2</span></div>
       </div>
       <div class="tab-pane active" id="inv-spread-alert" style="flex-direction:column;flex:1;overflow:hidden;min-height:0">
         <!-- Toolbar -->
@@ -3391,7 +3391,7 @@ function submitWLModal() {
         </div>
         <canvas id="assoc-canvas-alert" height="300" style="width:100%;display:block;border:1px solid var(--border);border-radius:4px"></canvas>
       </div>
-      <!-- Multi-Account Analysis -->
+      <!-- Associate Accounts Analysis -->
       <div class="tab-pane" id="inv-multi-alert" style="flex:1;overflow-y:auto">
         <div style="padding:6px 12px;background:#fafafa;border-bottom:1px solid #f0f0f0;display:flex;flex-wrap:wrap;align-items:center;gap:6px;flex-shrink:0">
           <span style="font-size:11px;color:var(--text-hint)">Accounts</span>
@@ -3507,7 +3507,7 @@ function submitWLModal() {
       <div class="tab-bar" style="flex-shrink:0">
         <div class="tab active" id="inv-tab-spread-case" onclick="switchSheetTab('case','spread')">Spread Analysis</div>
         <div class="tab" id="inv-tab-graph-case" onclick="switchSheetTab('case','graph')">Association Graph</div>
-        <div class="tab" id="inv-tab-multi-case" onclick="switchSheetTab('case','multi')">Multi-Account <span class="tag tag-ai" style="font-size:9px;padding:0 4px;margin-left:3px;vertical-align:middle">AI</span> <span style="background:#cf1322;color:#fff;border-radius:8px;padding:0 5px;font-size:10px;margin-left:2px">2</span></div>
+        <div class="tab" id="inv-tab-multi-case" onclick="switchSheetTab('case','multi')">Associate Accounts <span class="tag tag-ai" style="font-size:9px;padding:0 4px;margin-left:3px;vertical-align:middle">AI</span> <span style="background:#cf1322;color:#fff;border-radius:8px;padding:0 5px;font-size:10px;margin-left:2px">2</span></div>
       </div>
       <div class="tab-pane active" id="inv-spread-case" style="flex-direction:column;flex:1;overflow:hidden;min-height:0">
         <!-- Toolbar -->
@@ -3556,7 +3556,7 @@ function submitWLModal() {
         </div>
         <canvas id="assoc-canvas-case" height="300" style="width:100%;display:block;border:1px solid var(--border);border-radius:4px"></canvas>
       </div>
-      <!-- Multi-Account Analysis -->
+      <!-- Associate Accounts Analysis -->
       <div class="tab-pane" id="inv-multi-case" style="flex:1;overflow-y:auto">
         <div style="padding:6px 12px;background:#fafafa;border-bottom:1px solid #f0f0f0;display:flex;flex-wrap:wrap;align-items:center;gap:6px;flex-shrink:0">
           <span style="font-size:11px;color:var(--text-hint)">Accounts</span>
@@ -3672,7 +3672,7 @@ function submitWLModal() {
       <div class="tab-bar" style="flex-shrink:0">
         <div class="tab active" id="inv-tab-spread-client" onclick="switchSheetTab('client','spread')">Spread Analysis</div>
         <div class="tab" id="inv-tab-graph-client" onclick="switchSheetTab('client','graph')">Association Graph</div>
-        <div class="tab" id="inv-tab-multi-client" onclick="switchSheetTab('client','multi')">Multi-Account <span class="tag tag-ai" style="font-size:9px;padding:0 4px;margin-left:3px;vertical-align:middle">AI</span> <span style="background:#cf1322;color:#fff;border-radius:8px;padding:0 5px;font-size:10px;margin-left:2px">4</span></div>
+        <div class="tab" id="inv-tab-multi-client" onclick="switchSheetTab('client','multi')">Associate Accounts <span class="tag tag-ai" style="font-size:9px;padding:0 4px;margin-left:3px;vertical-align:middle">AI</span> <span style="background:#cf1322;color:#fff;border-radius:8px;padding:0 5px;font-size:10px;margin-left:2px">4</span></div>
       </div>
       <div class="tab-pane active" id="inv-spread-client" style="flex-direction:column;flex:1;overflow:hidden;min-height:0">
         <!-- Toolbar -->
@@ -3723,7 +3723,7 @@ function submitWLModal() {
         </div>
         <canvas id="assoc-canvas-client" height="300" style="width:100%;display:block;border:1px solid var(--border);border-radius:4px"></canvas>
       </div>
-      <!-- Multi-Account Analysis -->
+      <!-- Associate Accounts Analysis -->
       <div class="tab-pane" id="inv-multi-client" style="flex:1;overflow-y:auto">
         <div style="padding:6px 12px;background:#fafafa;border-bottom:1px solid #f0f0f0;display:flex;flex-wrap:wrap;align-items:center;gap:6px;flex-shrink:0">
           <span style="font-size:11px;color:var(--text-hint)">Accounts</span>

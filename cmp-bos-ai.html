@@ -874,33 +874,135 @@ tbody tr:hover td { background: #fffdf0; }
       <span style="font-size:11px;color:var(--text-dis)">Generated 2026-04-07 09:02 · Model v2.4</span>
     </div>
     <div class="ai-card-body">
+
+      <!-- ① Verdict Banner -->
+      <div style="background:#fff2f0;border:1px solid #ffa39e;border-radius:5px;padding:9px 14px;margin-bottom:14px;display:flex;align-items:flex-start;gap:10px">
+        <span style="font-size:20px;line-height:1;flex-shrink:0">⚠️</span>
+        <div>
+          <div style="font-weight:700;font-size:13px;color:#820014;margin-bottom:2px">检测到可疑交易行为 · 建议升级处理</div>
+          <div style="font-size:11px;color:#cf1322">发现账户 3215451 与关联账户 3215450 在 08:38–08:49 窗口内存在高度同步的对向交易，共用 IP，符合 Pre-Arranged Trading 典型特征（历史案例相似度 87%）</div>
+        </div>
+      </div>
+
+      <!-- ② Score + Recommendation + Behavior Tags -->
       <div class="ai-score-row">
         <div>
           <div class="ai-score-big high">82</div>
-          <div style="font-size:11px;color:var(--text-hint);margin-top:3px;">Risk Score / 100</div>
-          <div style="font-size:11px;color:var(--text-hint);">Confidence 74%</div>
+          <div style="font-size:11px;color:var(--text-hint);margin-top:3px">Risk Score / 100</div>
+          <div style="font-size:11px;color:var(--text-hint)">Confidence 74%</div>
         </div>
         <div>
-          <div style="font-size:11px;color:var(--text-hint);margin-bottom:4px;">Disposition Recommendation</div>
+          <div style="font-size:11px;color:var(--text-hint);margin-bottom:4px">Disposition Recommendation</div>
           <span class="ai-recommend ai-recommend-escalate">⬆ Recommend Escalate</span>
         </div>
-        <div style="margin-left:auto;">
-          <div style="font-size:11px;color:var(--text-hint);margin-bottom:4px;">Client Behavior Tags</div>
-          <div style="display:flex;flex-wrap:wrap;gap:4px;">
-            <span class="tag tag-high">Frequent Short-term Trading</span>
-            <span class="tag tag-medium">Concentrated Options Activity</span>
-            <span class="tag tag-ai">Associated Accounts Active</span>
+        <div style="margin-left:auto">
+          <div style="font-size:11px;color:var(--text-hint);margin-bottom:4px">Behavior Tags</div>
+          <div style="display:flex;flex-wrap:wrap;gap:4px">
+            <span class="tag tag-high">Synchronized Reverse Trading</span>
+            <span class="tag tag-medium">Concentrated Options Window</span>
+            <span class="tag tag-ai">Shared IP · Same Session</span>
           </div>
         </div>
       </div>
-      <div class="ai-evidence">
-        <div class="ai-evidence-title">Detection Basis</div>
-        <ul>
-          <li>Account concentrated buys on SPXW around 10:23, closing positions rapidly after price rises; the buy-sell spread pattern closely matches historical pre-arranged trading cases (similarity 87%).</li>
-          <li>2 associated accounts (3215450, 3215452) share the same IP (218.82.19.9) and showed reverse trading on the same day, potentially acting as counterparties.</li>
-          <li>Account triggered 3 similar alerts in the past 6 months; 1 was escalated to a case with a Further Action conclusion. No current Watchlist flag.</li>
-        </ul>
+
+      <!-- ③ Anomaly Category Scores -->
+      <div style="margin-bottom:14px">
+        <div style="font-size:11px;font-weight:600;color:var(--text);margin-bottom:6px">Anomaly Category Scores <span style="font-size:10px;font-weight:400;color:var(--text-hint)">(1–10 · ≥7 high · 4–6 medium · ≤3 low)</span></div>
+        <div style="display:grid;grid-template-columns:repeat(5,1fr);gap:6px">
+          <div style="text-align:center;background:#fff2f0;border:1px solid #ffa39e;border-radius:4px;padding:7px 4px">
+            <div style="font-size:22px;font-weight:700;color:#cf1322;line-height:1">9</div>
+            <div style="font-size:10px;color:#cf1322;margin-top:3px;line-height:1.3">Pre-Arranged<br>Trading</div>
+          </div>
+          <div style="text-align:center;background:#fff2f0;border:1px solid #ffa39e;border-radius:4px;padding:7px 4px">
+            <div style="font-size:22px;font-weight:700;color:#cf1322;line-height:1">8</div>
+            <div style="font-size:10px;color:#cf1322;margin-top:3px;line-height:1.3">Price<br>Driver</div>
+          </div>
+          <div style="text-align:center;background:#fffbe6;border:1px solid #ffe58f;border-radius:4px;padding:7px 4px">
+            <div style="font-size:22px;font-weight:700;color:#d46b08;line-height:1">5</div>
+            <div style="font-size:10px;color:#d46b08;margin-top:3px;line-height:1.3">Order<br>Manipulation</div>
+          </div>
+          <div style="text-align:center;background:#f6ffed;border:1px solid #b7eb8f;border-radius:4px;padding:7px 4px">
+            <div style="font-size:22px;font-weight:700;color:#389e0d;line-height:1">3</div>
+            <div style="font-size:10px;color:#389e0d;margin-top:3px;line-height:1.3">Wash<br>Trade</div>
+          </div>
+          <div style="text-align:center;background:#f6ffed;border:1px solid #b7eb8f;border-radius:4px;padding:7px 4px">
+            <div style="font-size:22px;font-weight:700;color:#389e0d;line-height:1">2</div>
+            <div style="font-size:10px;color:#389e0d;margin-top:3px;line-height:1.3">Layering /<br>Spoofing</div>
+          </div>
+        </div>
       </div>
+
+      <!-- ④ Data Analysis (collapsible) -->
+      <div style="border:1px solid var(--ai-border);border-radius:4px;overflow:hidden;margin-bottom:14px">
+        <div style="padding:7px 12px;background:var(--ai-bg);font-size:11px;font-weight:600;color:var(--ai-dark);cursor:pointer;display:flex;align-items:center;justify-content:space-between;user-select:none" onclick="var b=document.getElementById('ai-da-body');var a=document.getElementById('ai-da-arrow');var open=b.style.display!=='none';b.style.display=open?'none':'block';a.textContent=open?'▶':'▼'">
+          <span>Data Analysis</span><span id="ai-da-arrow">▼</span>
+        </div>
+        <div id="ai-da-body">
+          <div style="padding:8px 12px;border-top:1px solid #ede0ff">
+            <div style="font-size:11px;font-weight:600;color:var(--ai-dark);margin-bottom:4px">订单数据特征</div>
+            <ul style="margin:0;padding-left:16px;font-size:11px;color:var(--text-sec);line-height:1.85">
+              <li>账户 3215451 于 08:38–08:49 集中提交 5 笔 LMT 买单，均针对 SPXW 6615C，时间窗口高度压缩（11 分钟）</li>
+              <li>关联账户 3215450 同时段下出 6 笔方向相反的卖单，买卖时间戳差值 &lt; 90 秒，方向完全对称</li>
+              <li>两账户在其他时段无活跃下单记录，行为孤立性强，非正常市场参与模式</li>
+            </ul>
+          </div>
+          <div style="padding:8px 12px;border-top:1px solid #ede0ff">
+            <div style="font-size:11px;font-weight:600;color:var(--ai-dark);margin-bottom:4px">交易数据特征</div>
+            <ul style="margin:0;padding-left:16px;font-size:11px;color:var(--text-sec);line-height:1.85">
+              <li>全部成交发生于 08:43–08:49，共 29 手，平均成交价偏离同期中间价 +4.2%</li>
+              <li>3215451 实现盈利 +1,691.53 USD（单次盈利率 +12.1%）；3215450 对应亏损 −1,702.20 USD，形成典型"一赢一亏"配对结构</li>
+            </ul>
+          </div>
+          <div style="padding:8px 12px;border-top:1px solid #ede0ff">
+            <div style="font-size:11px;font-weight:600;color:var(--ai-dark);margin-bottom:4px">操作数据特征</div>
+            <ul style="margin:0;padding-left:16px;font-size:11px;color:var(--text-sec);line-height:1.85">
+              <li>两账户 Login IP 完全一致（218.82.19.9），登录时间差 &lt; 3 分钟，均使用 Web 客户端</li>
+              <li>操作序列相似度 91%（基于按键行为分析），高度一致</li>
+            </ul>
+          </div>
+          <div style="padding:8px 12px;border-top:1px solid #ede0ff">
+            <div style="font-size:11px;font-weight:600;color:var(--ai-dark);margin-bottom:4px">行情数据关联性</div>
+            <ul style="margin:0;padding-left:16px;font-size:11px;color:var(--text-sec);line-height:1.85">
+              <li>SPXW 6615C 在该时段流动性偏低，盘口宽度约 0.35 USD，两账户合计成交量占当日市场份额 9.3%</li>
+              <li>成交价持续偏高于中间价，无法由正常市场滑点解释</li>
+            </ul>
+          </div>
+          <div style="padding:8px 12px;border-top:1px solid #ede0ff">
+            <div style="font-size:11px;font-weight:600;color:var(--ai-dark);margin-bottom:4px">盈亏情况特征</div>
+            <ul style="margin:0;padding-left:16px;font-size:11px;color:var(--text-sec);line-height:1.85">
+              <li>3215451 本笔盈利 +1,691.53，为该账户近 90 天最大单笔收益，历史盈利率分布 top 3%</li>
+              <li>3215450 主动承担全部亏损，与其近 6 个月持续亏损模式（−8 笔）高度吻合</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+
+      <!-- ⑤ Per-category Anomaly Analysis -->
+      <div style="margin-bottom:14px">
+        <div style="font-size:11px;font-weight:600;color:var(--text);margin-bottom:6px">Anomaly Analysis</div>
+        <div style="border:1px solid #ffa39e;border-radius:4px;margin-bottom:6px;overflow:hidden">
+          <div style="background:#fff2f0;padding:6px 12px;display:flex;align-items:center;justify-content:space-between">
+            <span style="font-size:11px;font-weight:600;color:#cf1322">Pre-Arranged Trading</span>
+            <span style="background:#cf1322;color:#fff;font-size:10px;font-weight:600;padding:1px 8px;border-radius:8px">Score 9 · HIGH</span>
+          </div>
+          <div style="padding:8px 12px;font-size:11px;color:var(--text-sec);line-height:1.8">
+            账户 3215451 与 3215450 在 08:38–08:49 窗口内呈高度同步对向交易，结合共用 IP 及操作序列相似性（91%），符合预先安排交易的典型特征，历史案例相似度 87%。两账户间盈亏完全转移，疑似为人为收益转移行为。
+            <div style="margin-top:5px;color:#820014;font-weight:600">结论：高风险 · 建议立案调查，冻结账户并调取完整操作日志</div>
+          </div>
+        </div>
+        <div style="border:1px solid #ffe58f;border-radius:4px;overflow:hidden">
+          <div style="background:#fffbe6;padding:6px 12px;display:flex;align-items:center;justify-content:space-between">
+            <span style="font-size:11px;font-weight:600;color:#d46b08">Price Driver</span>
+            <span style="background:#d46b08;color:#fff;font-size:10px;font-weight:600;padding:1px 8px;border-radius:8px">Score 8 · MEDIUM-HIGH</span>
+          </div>
+          <div style="padding:8px 12px;font-size:11px;color:var(--text-sec);line-height:1.8">
+            成交价持续偏高于市场中间价约 4.2%，但鉴于 SPXW 末日期权流动性低，单独判断不足以构成价格操纵。需结合 Pre-Arranged 证据综合认定。
+            <div style="margin-top:5px;color:#d46b08;font-weight:600">结论：中高风险 · 与主案合并处理，无需单独立案</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ⑥ Actions + Ask AI -->
       <div class="ai-actions-row">
         <button class="btn btn-ai btn-sm" onclick="sendChip('associated_accounts')">Associated Accounts</button>
         <button class="btn btn-ai btn-sm" onclick="sendChip('alert_history')">Alert History</button>
@@ -914,7 +1016,7 @@ tbody tr:hover td { background: #fffdf0; }
           <div class="ai-messages" id="ai-messages">
             <div class="ai-msg bot">
               <div class="ai-msg-icon bot">AI</div>
-              <div class="ai-msg-bubble">Analysis of Alert 19150109 complete. You may ask questions directly or use the quick-action buttons below.</div>
+              <div class="ai-msg-bubble">Alert 19150109 分析完成。检测到 Pre-Arranged Trading 高风险信号，主要证据：共用 IP、同步对向交易、操作序列相似度 91%。可进一步询问详情或使用下方快捷按钮。</div>
             </div>
           </div>
           <div class="chips-row">

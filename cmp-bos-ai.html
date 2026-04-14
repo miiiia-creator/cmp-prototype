@@ -723,6 +723,8 @@ tbody tr:hover td { background: #fffdf0; }
   <div class="filter-bar">
     <span class="filter-label">Status</span>
     <select id="alert-status-filter" class="filter-select" onchange="filterAlertTable(this.value)"><option value="">All</option><option value="New">New</option><option value="Processing">Processing</option><option value="Pending">Pending</option><option value="Closed">Closed</option></select>
+    <span class="filter-label">Source</span>
+    <select class="filter-select" style="width:96px"><option>All</option><option>System</option><option>Manual</option><option>Email</option><option>Watchlist</option></select>
     <span class="filter-label">Rule Name</span>
     <select class="filter-select" style="width:170px"><option>Please select</option><option>pre-arranged trading (Profit)</option><option>possible ramping</option><option>possible wash trade (A to A)</option></select>
     <span class="filter-label">Account</span>
@@ -768,7 +770,7 @@ tbody tr:hover td { background: #fffdf0; }
         <tr data-status="New">
           <td><input type="checkbox"></td>
           <td class="col-link" onclick="showPage('alert-details')">19150108</td>
-          <td>2026-04-07 08:40 EDT</td><td><span class="tag" style="font-size:10px;background:#f9f0ff;color:#531dab;border:1px solid #d3adf7">System</span></td>
+          <td>2026-04-07 08:40 EDT</td><td><span class="tag" style="font-size:10px;background:#f6ffed;color:#389e0d;border:1px solid #b7eb8f">Watchlist</span></td>
           <td class="col-link" onclick="showPage('client-details')">3465714</td><td>PN</td><td>TBNZ</td>
           <td>trade to trade (without tick data)</td>
           <td><span class="tag tag-new">New</span></td>
@@ -780,7 +782,7 @@ tbody tr:hover td { background: #fffdf0; }
         <tr data-status="Processing">
           <td><input type="checkbox"></td>
           <td class="col-link" onclick="showPage('alert-details')">19150107</td>
-          <td>2026-04-07 08:40 EDT</td><td><span class="tag" style="font-size:10px;background:#f9f0ff;color:#531dab;border:1px solid #d3adf7">System</span></td>
+          <td>2026-04-07 08:40 EDT</td><td><span class="tag" style="font-size:10px;background:#e6f7ff;color:#0958d9;border:1px solid #91caff">Email</span></td>
           <td class="col-link" onclick="showPage('client-details')">5462118</td><td>FUBO</td><td>TBNZ</td>
           <td>possible ramping (without tick data)</td>
           <td><span class="tag tag-processing">Processing</span></td>
@@ -873,7 +875,6 @@ tbody tr:hover td { background: #fffdf0; }
       <div class="meta-item"><div class="meta-label">Alert Tag</div><div class="meta-val empty">—</div></div>
       <div class="meta-item"><div class="meta-label">Client Tag</div><div class="meta-val empty">—</div></div>
       <div class="meta-item"><div class="meta-label">Linked Case</div><div class="meta-val empty">—</div></div>
-      <div class="meta-item"><div class="meta-label">Risk Level</div><div class="meta-val empty">—</div></div>
     </div>
   </div>
 
@@ -1014,9 +1015,9 @@ tbody tr:hover td { background: #fffdf0; }
 
       <!-- ⑥ Actions + Ask AI -->
       <div class="ai-actions-row">
-        <button class="btn btn-ai btn-sm" onclick="sendChip('associated_accounts')">Associated Accounts</button>
-        <button class="btn btn-ai btn-sm" onclick="sendChip('alert_history')">Alert History</button>
-        <button class="btn btn-ai btn-sm" onclick="sendChip('compare_cases')">Compare Similar Cases</button>
+        <button class="btn btn-ai btn-sm" onclick="openInvToTab('alert','graph')">Association Graph</button>
+        <button class="btn btn-ai btn-sm" onclick="openInvToTab('alert','spread')">Spread Analysis</button>
+        <button class="btn btn-ai btn-sm" onclick="openInvToTab('alert','multi')">Multi-Account</button>
         <button class="btn btn-ai btn-sm" onclick="sendChip('re_evaluate')">Re-evaluate</button>
         <div style="flex:1"></div>
         <button class="ask-ai-toggle" onclick="toggleAsk()"><span id="ask-toggle-label">Ask AI ↓</span></button>
@@ -1572,9 +1573,9 @@ tbody tr:hover td { background: #fffdf0; }
           </ul>
         </div>
         <div style="display:flex;gap:6px;">
-          <button class="btn btn-ai btn-sm" onclick="sendChipClient('assoc_graph')">Association Graph</button>
-          <button class="btn btn-ai btn-sm" onclick="sendChipClient('fund_flow')">Fund Flow Analysis</button>
-          <button class="btn btn-ai btn-sm" onclick="sendChipClient('compare_clients')">Compare Similar Clients</button>
+          <button class="btn btn-ai btn-sm" onclick="openInvToTab('client','graph')">Association Graph</button>
+          <button class="btn btn-ai btn-sm" onclick="openInvToTab('client','spread')">Spread Analysis</button>
+          <button class="btn btn-ai btn-sm" onclick="openInvToTab('client','multi')">Multi-Account</button>
         </div>
       </div>
     </div>
@@ -2550,8 +2551,10 @@ function drawSpread(suffix) {
   const canvas = document.getElementById('spread-canvas-' + suffix);
   if (!canvas) return;
   const dpr = window.devicePixelRatio || 1;
-  const cssW = canvas.offsetWidth || 640;
-  const cssH = canvas.offsetHeight || 260;
+  const cssW = canvas.offsetWidth;
+  const cssH = canvas.offsetHeight;
+  // Canvas not yet laid out — retry after next paint
+  if (!cssW || !cssH) { requestAnimationFrame(() => drawSpread(suffix)); return; }
   canvas.width = Math.round(cssW * dpr);
   canvas.height = Math.round(cssH * dpr);
   const ctx = canvas.getContext('2d');
@@ -3146,7 +3149,7 @@ function submitWLModal() {
       <div class="tab-bar" style="flex-shrink:0">
         <div class="tab active" id="inv-tab-spread-alert" onclick="switchSheetTab('alert','spread')">Spread Analysis</div>
         <div class="tab" id="inv-tab-graph-alert" onclick="switchSheetTab('alert','graph')">Association Graph</div>
-        <div class="tab" id="inv-tab-multi-alert" onclick="switchSheetTab('alert','multi')">Multi-Account <span style="background:#cf1322;color:#fff;border-radius:8px;padding:0 5px;font-size:10px;margin-left:2px">2</span></div>
+        <div class="tab" id="inv-tab-multi-alert" onclick="switchSheetTab('alert','multi')">Multi-Account <span class="tag tag-ai" style="font-size:9px;padding:0 4px;margin-left:3px;vertical-align:middle">AI</span> <span style="background:#cf1322;color:#fff;border-radius:8px;padding:0 5px;font-size:10px;margin-left:2px">2</span></div>
       </div>
       <div class="tab-pane active" id="inv-spread-alert" style="flex-direction:column;flex:1;overflow:hidden;min-height:0">
         <!-- Toolbar -->
@@ -3313,7 +3316,7 @@ function submitWLModal() {
       <div class="tab-bar" style="flex-shrink:0">
         <div class="tab active" id="inv-tab-spread-case" onclick="switchSheetTab('case','spread')">Spread Analysis</div>
         <div class="tab" id="inv-tab-graph-case" onclick="switchSheetTab('case','graph')">Association Graph</div>
-        <div class="tab" id="inv-tab-multi-case" onclick="switchSheetTab('case','multi')">Multi-Account <span style="background:#cf1322;color:#fff;border-radius:8px;padding:0 5px;font-size:10px;margin-left:2px">2</span></div>
+        <div class="tab" id="inv-tab-multi-case" onclick="switchSheetTab('case','multi')">Multi-Account <span class="tag tag-ai" style="font-size:9px;padding:0 4px;margin-left:3px;vertical-align:middle">AI</span> <span style="background:#cf1322;color:#fff;border-radius:8px;padding:0 5px;font-size:10px;margin-left:2px">2</span></div>
       </div>
       <div class="tab-pane active" id="inv-spread-case" style="flex-direction:column;flex:1;overflow:hidden;min-height:0">
         <!-- Toolbar -->
@@ -3478,7 +3481,7 @@ function submitWLModal() {
       <div class="tab-bar" style="flex-shrink:0">
         <div class="tab active" id="inv-tab-spread-client" onclick="switchSheetTab('client','spread')">Spread Analysis</div>
         <div class="tab" id="inv-tab-graph-client" onclick="switchSheetTab('client','graph')">Association Graph</div>
-        <div class="tab" id="inv-tab-multi-client" onclick="switchSheetTab('client','multi')">Multi-Account <span style="background:#cf1322;color:#fff;border-radius:8px;padding:0 5px;font-size:10px;margin-left:2px">4</span></div>
+        <div class="tab" id="inv-tab-multi-client" onclick="switchSheetTab('client','multi')">Multi-Account <span class="tag tag-ai" style="font-size:9px;padding:0 4px;margin-left:3px;vertical-align:middle">AI</span> <span style="background:#cf1322;color:#fff;border-radius:8px;padding:0 5px;font-size:10px;margin-left:2px">4</span></div>
       </div>
       <div class="tab-pane active" id="inv-spread-client" style="flex-direction:column;flex:1;overflow:hidden;min-height:0">
         <!-- Toolbar -->
@@ -3675,7 +3678,7 @@ function openInvSheet() {
     sheet.classList.add('open');
     document.getElementById('inv-sheet-toggle-btn').textContent = 'Collapse ↓';
     document.querySelectorAll('.detail-page.active').forEach(p => p.classList.add('sheet-open'));
-    // Draw active canvas + wire interactions
+    // Draw after CSS transition completes (transition: height .28s)
     setTimeout(() => {
       const content = document.querySelector('.inv-sheet-content.active');
       if (!content) return;
@@ -3687,7 +3690,7 @@ function openInvSheet() {
       } else {
         drawAssocGraph(invSheetSuffix);
       }
-    }, 50);
+    }, 300);
   }
 }
 
@@ -3702,6 +3705,20 @@ function hideInvSheet() {
   collapseInvSheet();
   document.getElementById('inv-sheet').classList.remove('visible');
   invSheetSuffix = null;
+}
+
+// Open investigation sheet and jump directly to a specific tab
+function openInvToTab(suffix, tabType) {
+  const sheet = document.getElementById('inv-sheet');
+  if (!sheet.classList.contains('open')) {
+    sheet.classList.add('open');
+    document.getElementById('inv-sheet-toggle-btn').textContent = 'Collapse ↓';
+    document.querySelectorAll('.detail-page.active').forEach(p => p.classList.add('sheet-open'));
+    setTimeout(() => switchSheetTab(suffix, tabType), 300);
+  } else {
+    switchSheetTab(suffix, tabType);
+  }
+  sheet.scrollIntoView({ behavior: 'smooth', block: 'end' });
 }
 
 function toggleInvSheet() {

@@ -713,16 +713,16 @@ tbody tr:hover td { background: #fffdf0; }
   <div class="breadcrumb"><span>Compliance Monitoring</span> › <span>Alert Viewer</span></div>
 
   <div class="stats-bar">
-    <div class="stat-card" style="cursor:pointer" onclick="document.querySelector('#page-alert-viewer .filter-select').value='';"><div class="stat-num" style="color:rgba(0,0,0,.45)">1,503</div><div class="stat-label">All</div></div>
-    <div class="stat-card"><div class="stat-num orange">3</div><div class="stat-label">New</div></div>
-    <div class="stat-card"><div class="stat-num" style="color:rgba(0,0,0,.85)">284</div><div class="stat-label">Processing</div></div>
-    <div class="stat-card"><div class="stat-num dim">12</div><div class="stat-label">Pending</div></div>
-    <div class="stat-card"><div class="stat-num dim">1,204</div><div class="stat-label">Closed</div></div>
+    <div class="stat-card" style="cursor:pointer" onclick="setAlertFilter('')"><div class="stat-num" style="color:rgba(0,0,0,.45)">1,503</div><div class="stat-label">All</div></div>
+    <div class="stat-card" style="cursor:pointer" onclick="setAlertFilter('New')"><div class="stat-num orange">3</div><div class="stat-label">New</div></div>
+    <div class="stat-card" style="cursor:pointer" onclick="setAlertFilter('Processing')"><div class="stat-num" style="color:rgba(0,0,0,.85)">284</div><div class="stat-label">Processing</div></div>
+    <div class="stat-card" style="cursor:pointer" onclick="setAlertFilter('Pending')"><div class="stat-num dim">12</div><div class="stat-label">Pending</div></div>
+    <div class="stat-card" style="cursor:pointer" onclick="setAlertFilter('Closed')"><div class="stat-num dim">1,204</div><div class="stat-label">Closed</div></div>
   </div>
 
   <div class="filter-bar">
     <span class="filter-label">Status</span>
-    <select class="filter-select"><option>All</option><option>New</option><option>Processing</option><option>Pending</option><option>Closed</option></select>
+    <select id="alert-status-filter" class="filter-select" onchange="filterAlertTable(this.value)"><option value="">All</option><option value="New">New</option><option value="Processing">Processing</option><option value="Pending">Pending</option><option value="Closed">Closed</option></select>
     <span class="filter-label">Rule Name</span>
     <select class="filter-select" style="width:170px"><option>Please select</option><option>pre-arranged trading (Profit)</option><option>possible ramping</option><option>possible wash trade (A to A)</option></select>
     <span class="filter-label">Account</span>
@@ -753,7 +753,7 @@ tbody tr:hover td { background: #fffdf0; }
         </tr>
       </thead>
       <tbody>
-        <tr>
+        <tr data-status="Processing">
           <td><input type="checkbox"></td>
           <td class="col-link" onclick="showPage('alert-details')">19150109</td>
           <td>2026-04-07 08:43 EDT</td><td>3215451</td><td>SPXW 20260406 6615.0 C</td><td>TBNZ</td>
@@ -763,17 +763,17 @@ tbody tr:hover td { background: #fffdf0; }
           <td>houyuexuan</td>
           <td><button class="btn btn-sm" onclick="showPage('alert-details')">Detail</button></td>
         </tr>
-        <tr>
+        <tr data-status="New">
           <td><input type="checkbox"></td>
           <td class="col-link">19150108</td>
           <td>2026-04-07 08:40 EDT</td><td>3465714</td><td>PN</td><td>TBNZ</td>
           <td>trade to trade (without tick data)</td>
-          <td><span class="tag tag-processing">Processing</span></td><td>—</td>
+          <td><span class="tag tag-new">New</span></td><td>—</td>
           <td style="background:#fffdf0"><span class="ai-score ai-score-mid">58</span></td>
           <td>houyuexuan</td>
           <td><button class="btn btn-sm">Detail</button></td>
         </tr>
-        <tr>
+        <tr data-status="Processing">
           <td><input type="checkbox"></td>
           <td class="col-link">19150107</td>
           <td>2026-04-07 08:40 EDT</td><td>5462118</td><td>FUBO</td><td>TBNZ</td>
@@ -783,22 +783,22 @@ tbody tr:hover td { background: #fffdf0; }
           <td>houyuexuan</td>
           <td><button class="btn btn-sm">Detail</button></td>
         </tr>
-        <tr>
+        <tr data-status="Pending">
           <td><input type="checkbox"></td>
           <td class="col-link">19150101</td>
           <td>2026-04-06 20:44 EDT</td><td>2353510</td><td>NQ2606</td><td>TBNZ</td>
           <td>possible wash trade (A to A)</td>
-          <td><span class="tag tag-processing">Processing</span></td><td>—</td>
+          <td><span class="tag tag-pending">Pending</span></td><td>—</td>
           <td style="background:#fffdf0"><span class="ai-score ai-score-high">79</span></td>
           <td>houyuexuan</td>
           <td><button class="btn btn-sm">Detail</button></td>
         </tr>
-        <tr>
+        <tr data-status="Closed">
           <td><input type="checkbox"></td>
           <td class="col-link">19150096</td>
           <td>2026-04-03 20:42 EDT</td><td>7526677</td><td>SOXL</td><td>TBNZ</td>
           <td>possible ramping (without tick data)</td>
-          <td><span class="tag tag-processing">Processing</span></td><td>—</td>
+          <td><span class="tag tag-closed">Closed</span></td><td>—</td>
           <td style="background:#fffdf0"><span class="ai-score ai-score-mid">64</span></td>
           <td>houyuexuan</td>
           <td><button class="btn btn-sm">Detail</button></td>
@@ -2257,6 +2257,17 @@ function setClientFilter(status) {
   if (sel) sel.value = status;
   filterClientTable(status);
 }
+function filterAlertTable(status) {
+  document.querySelectorAll('#page-alert-viewer tbody tr').forEach(row => {
+    row.style.display = (!status || row.dataset.status === status) ? '' : 'none';
+  });
+}
+function setAlertFilter(status) {
+  showPage('alert-viewer');
+  const sel = document.getElementById('alert-status-filter');
+  if (sel) sel.value = status;
+  filterAlertTable(status);
+}
 
 // ── Investigation Tools (inline) ──
 function switchInvTab(el, paneId, suffix, type) {
@@ -2965,7 +2976,7 @@ function submitWLModal() {
         <div class="tab active" id="inv-tab-spread-alert" onclick="switchSheetTab('alert','spread')">Spread Analysis</div>
         <div class="tab" id="inv-tab-graph-alert" onclick="switchSheetTab('alert','graph')">Association Graph</div>
       </div>
-      <div class="tab-pane active" id="inv-spread-alert" style="flex-direction:column;flex:1;overflow:hidden">
+      <div class="tab-pane active" id="inv-spread-alert" style="flex-direction:column;flex:1;overflow:hidden;min-height:0">
         <!-- Toolbar -->
         <div style="display:flex;flex-wrap:wrap;gap:6px;align-items:center;padding:7px 12px;border-bottom:1px solid #f0f0f0;background:#fafafa;flex-shrink:0">
           <span style="font-size:11px;color:var(--text-hint)">Symbol</span>
@@ -2993,14 +3004,15 @@ function submitWLModal() {
         <!-- Alert bar -->
         <div style="background:#fff2f0;border-bottom:1px solid #ffccc7;padding:5px 12px;font-size:11px;color:#cf1322;flex-shrink:0"><strong>⚠</strong> 08:38–08:49 EDT Suspicious Window · 3215450 Reverse Trading</div>
         <!-- Canvas -->
-        <div style="flex:1;padding:8px 12px 4px;display:flex;flex-direction:column;overflow:hidden">
-          <canvas id="spread-canvas-alert" style="width:100%;flex:1;display:block;border:1px solid var(--border);border-radius:4px;cursor:crosshair"></canvas>
-          <div style="display:flex;flex-wrap:wrap;gap:8px;font-size:11px;color:var(--text-hint);margin-top:5px;justify-content:center">
-            <span>● Buy</span><span>○ Sell</span>
-            <span style="display:inline-flex;align-items:center;gap:3px"><span style="width:14px;height:2px;background:#ef4444;display:inline-block"></span>Hit time</span>
-            <span style="display:inline-flex;align-items:center;gap:3px"><span style="width:14px;height:2px;background:#d1d5db;display:inline-block"></span>Mid price</span>
-            <span style="font-size:10px;color:#9ca3af">Scroll to zoom · Drag to pan</span>
-          </div>
+        <div style="flex:1;padding:8px 12px 0;min-height:0;overflow:hidden">
+          <canvas id="spread-canvas-alert" style="width:100%;height:100%;display:block;border:1px solid var(--border);border-radius:4px;cursor:crosshair"></canvas>
+        </div>
+        <!-- Legend -->
+        <div style="display:flex;flex-wrap:wrap;gap:8px;font-size:11px;color:var(--text-hint);padding:4px 12px 6px;justify-content:center;flex-shrink:0">
+          <span>● Buy</span><span>○ Sell</span>
+          <span style="display:inline-flex;align-items:center;gap:3px"><span style="width:14px;height:2px;background:#ef4444;display:inline-block"></span>Hit time</span>
+          <span style="display:inline-flex;align-items:center;gap:3px"><span style="width:14px;height:2px;background:#d1d5db;display:inline-block"></span>Mid price</span>
+          <span style="font-size:10px;color:#9ca3af">Scroll to zoom · Drag to pan</span>
         </div>
       </div>
       <div class="tab-pane" id="inv-graph-alert" style="padding:12px 16px;overflow-y:auto;flex:1">
@@ -3021,7 +3033,7 @@ function submitWLModal() {
         <div class="tab active" id="inv-tab-spread-case" onclick="switchSheetTab('case','spread')">Spread Analysis</div>
         <div class="tab" id="inv-tab-graph-case" onclick="switchSheetTab('case','graph')">Association Graph</div>
       </div>
-      <div class="tab-pane active" id="inv-spread-case" style="flex-direction:column;flex:1;overflow:hidden">
+      <div class="tab-pane active" id="inv-spread-case" style="flex-direction:column;flex:1;overflow:hidden;min-height:0">
         <!-- Toolbar -->
         <div style="display:flex;flex-wrap:wrap;gap:6px;align-items:center;padding:7px 12px;border-bottom:1px solid #f0f0f0;background:#fafafa;flex-shrink:0">
           <span style="font-size:11px;color:var(--text-hint)">Symbol</span>
@@ -3047,14 +3059,15 @@ function submitWLModal() {
           </div>
         </div>
         <!-- Canvas -->
-        <div style="flex:1;padding:8px 12px 4px;display:flex;flex-direction:column;overflow:hidden">
-          <canvas id="spread-canvas-case" style="width:100%;flex:1;display:block;border:1px solid var(--border);border-radius:4px;cursor:crosshair"></canvas>
-          <div style="display:flex;flex-wrap:wrap;gap:8px;font-size:11px;color:var(--text-hint);margin-top:5px;justify-content:center">
-            <span>● Buy</span><span>○ Sell</span>
-            <span style="display:inline-flex;align-items:center;gap:3px"><span style="width:14px;height:2px;background:#ef4444;display:inline-block"></span>Hit time</span>
-            <span style="display:inline-flex;align-items:center;gap:3px"><span style="width:14px;height:2px;background:#d1d5db;display:inline-block"></span>Mid price</span>
-            <span style="font-size:10px;color:#9ca3af">Scroll to zoom · Drag to pan</span>
-          </div>
+        <div style="flex:1;padding:8px 12px 0;min-height:0;overflow:hidden">
+          <canvas id="spread-canvas-case" style="width:100%;height:100%;display:block;border:1px solid var(--border);border-radius:4px;cursor:crosshair"></canvas>
+        </div>
+        <!-- Legend -->
+        <div style="display:flex;flex-wrap:wrap;gap:8px;font-size:11px;color:var(--text-hint);padding:4px 12px 6px;justify-content:center;flex-shrink:0">
+          <span>● Buy</span><span>○ Sell</span>
+          <span style="display:inline-flex;align-items:center;gap:3px"><span style="width:14px;height:2px;background:#ef4444;display:inline-block"></span>Hit time</span>
+          <span style="display:inline-flex;align-items:center;gap:3px"><span style="width:14px;height:2px;background:#d1d5db;display:inline-block"></span>Mid price</span>
+          <span style="font-size:10px;color:#9ca3af">Scroll to zoom · Drag to pan</span>
         </div>
       </div>
       <div class="tab-pane" id="inv-graph-case" style="padding:12px 16px;overflow-y:auto;flex:1">
@@ -3075,7 +3088,7 @@ function submitWLModal() {
         <div class="tab active" id="inv-tab-spread-client" onclick="switchSheetTab('client','spread')">Spread Analysis</div>
         <div class="tab" id="inv-tab-graph-client" onclick="switchSheetTab('client','graph')">Association Graph</div>
       </div>
-      <div class="tab-pane active" id="inv-spread-client" style="flex-direction:column;flex:1;overflow:hidden">
+      <div class="tab-pane active" id="inv-spread-client" style="flex-direction:column;flex:1;overflow:hidden;min-height:0">
         <!-- Toolbar -->
         <div style="display:flex;flex-wrap:wrap;gap:6px;align-items:center;padding:7px 12px;border-bottom:1px solid #f0f0f0;background:#fafafa;flex-shrink:0">
           <span style="font-size:11px;color:var(--text-hint)">Symbol</span>
@@ -3103,14 +3116,15 @@ function submitWLModal() {
         <!-- Alert bar -->
         <div style="background:#fff2f0;border-bottom:1px solid #ffccc7;padding:5px 12px;font-size:11px;color:#cf1322;flex-shrink:0"><strong>⚠</strong> 08:38–08:49 EDT Suspicious Window · 3215450 Reverse Trading</div>
         <!-- Canvas -->
-        <div style="flex:1;padding:8px 12px 4px;display:flex;flex-direction:column;overflow:hidden">
-          <canvas id="spread-canvas-client" style="width:100%;flex:1;display:block;border:1px solid var(--border);border-radius:4px;cursor:crosshair"></canvas>
-          <div style="display:flex;flex-wrap:wrap;gap:8px;font-size:11px;color:var(--text-hint);margin-top:5px;justify-content:center">
-            <span>● Buy</span><span>○ Sell</span>
-            <span style="display:inline-flex;align-items:center;gap:3px"><span style="width:14px;height:2px;background:#ef4444;display:inline-block"></span>Hit time</span>
-            <span style="display:inline-flex;align-items:center;gap:3px"><span style="width:14px;height:2px;background:#d1d5db;display:inline-block"></span>Mid price</span>
-            <span style="font-size:10px;color:#9ca3af">Scroll to zoom · Drag to pan</span>
-          </div>
+        <div style="flex:1;padding:8px 12px 0;min-height:0;overflow:hidden">
+          <canvas id="spread-canvas-client" style="width:100%;height:100%;display:block;border:1px solid var(--border);border-radius:4px;cursor:crosshair"></canvas>
+        </div>
+        <!-- Legend -->
+        <div style="display:flex;flex-wrap:wrap;gap:8px;font-size:11px;color:var(--text-hint);padding:4px 12px 6px;justify-content:center;flex-shrink:0">
+          <span>● Buy</span><span>○ Sell</span>
+          <span style="display:inline-flex;align-items:center;gap:3px"><span style="width:14px;height:2px;background:#ef4444;display:inline-block"></span>Hit time</span>
+          <span style="display:inline-flex;align-items:center;gap:3px"><span style="width:14px;height:2px;background:#d1d5db;display:inline-block"></span>Mid price</span>
+          <span style="font-size:10px;color:#9ca3af">Scroll to zoom · Drag to pan</span>
         </div>
       </div>
       <div class="tab-pane" id="inv-graph-client" style="padding:12px 16px;overflow-y:auto;flex:1">

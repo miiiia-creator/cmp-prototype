@@ -845,7 +845,7 @@ tbody tr:hover td { background: #fffdf0; }
     <span class="filter-label">Status</span>
     <select id="alert-status-filter" class="filter-select" onchange="filterAlertTable(this.value)"><option value="">All</option><option value="New">New</option><option value="Processing">Processing</option><option value="Pending">Pending</option><option value="Closed">Closed</option></select>
     <span class="filter-label">Source</span>
-    <select class="filter-select" style="width:96px"><option>All</option><option>System</option><option>Manual</option><option>Email</option><option>Watchlist</option></select>
+    <select class="filter-select" style="width:96px"><option>All</option><option>System</option><option>Manual</option><option>Email</option><option>Watchlist</option><option>AI Generate</option></select>
     <span class="filter-label">Rule Name</span>
     <select class="filter-select" style="width:170px"><option>Please select</option><option>pre-arranged trading (Profit)</option><option>possible ramping</option><option>possible wash trade (A to A)</option></select>
     <span class="filter-label">Account</span>
@@ -924,6 +924,18 @@ tbody tr:hover td { background: #fffdf0; }
           <td>houyuexuan</td>
           <td><button class="btn btn-sm" onclick="showPage('alert-details')">Detail</button></td>
         </tr>
+        <tr data-status="New">
+          <td><input type="checkbox"></td>
+          <td class="col-link" onclick="showPage('alert-details')">19150111</td>
+          <td>2026-04-07 09:05 EDT</td><td><span class="tag" style="font-size:10px;background:#f9f0ff;color:#531dab;border:1px solid #d3adf7;display:inline-flex;align-items:center;gap:3px"><span style="font-size:9px">✦</span>AI Generate</span></td>
+          <td class="col-link" onclick="showPage('client-details')">3215451</td><td>SPXW 20260406 6615.0 C</td><td>TBNZ</td>
+          <td>pre-arranged trading (Profit)</td>
+          <td><span class="tag tag-new">New</span></td>
+          <td style="color:var(--text-dis)">—</td>
+          <td style="background:#fffdf0"><span class="ai-score ai-score-high">88</span></td>
+          <td>houyuexuan</td>
+          <td><button class="btn btn-sm" onclick="showPage('alert-details')">Detail</button></td>
+        </tr>
         <tr data-status="Closed">
           <td><input type="checkbox"></td>
           <td class="col-link" onclick="showPage('alert-details')">19150096</td>
@@ -980,7 +992,10 @@ tbody tr:hover td { background: #fffdf0; }
   <div class="ai-card">
     <div class="ai-card-head">
       <div class="ai-card-title"><span class="ai-badge">AI</span> TS-AI Analysis <span class="new-badge">NEW</span></div>
-      <span style="font-size:11px;color:var(--text-dis)">Generated 2026-04-07 09:02 · Model v2.4</span>
+      <div style="display:flex;align-items:center;gap:8px">
+        <span id="alert-ai-ts" style="font-size:11px;color:var(--text-dis)">Generated 2026-04-07 09:02 · Model v2.4 · Cached</span>
+        <button class="btn btn-ai btn-sm" id="alert-rerun-btn" onclick="rerunAlertAI()">↻ Re-run</button>
+      </div>
     </div>
     <div class="ai-card-body">
 
@@ -1337,7 +1352,7 @@ tbody tr:hover td { background: #fffdf0; }
     <div class="ai-card-head">
       <div class="ai-card-title"><span class="ai-badge">AI</span> Compliance Investigation Report</div>
       <div style="display:flex;align-items:center;gap:10px">
-        <span style="font-size:11px;color:var(--text-dis)">Generated 2025-09-19 14:23 &nbsp;·&nbsp; Pending Review</span>
+        <span id="case-ai-ts" style="font-size:11px;color:var(--text-dis)">Generated 2025-09-19 14:23 &nbsp;·&nbsp; Cached</span>
         <span style="background:#fff1f0;border:1px solid #ffa39e;border-radius:4px;padding:2px 10px;font-size:12px;font-weight:700;color:#cf1322">存在异常</span>
       </div>
     </div>
@@ -1351,7 +1366,7 @@ tbody tr:hover td { background: #fffdf0; }
         <div><span style="color:var(--text-hint)">Market&nbsp;</span><strong>US</strong></div>
         <div><span style="color:var(--text-hint)">Category&nbsp;</span><strong>Wash Trade</strong></div>
         <div><span style="color:var(--text-hint)">Target&nbsp;</span><strong style="color:#cf1322">存在异常</strong></div>
-        <button class="btn btn-ai btn-sm" onclick="renderCaseReport(CASE_REPORT)">↻ Regenerate</button>
+        <button class="btn btn-ai btn-sm" id="case-rerun-btn" onclick="rerunCaseAI()">↻ Re-run</button>
       </div>
     </div>
 
@@ -1595,8 +1610,9 @@ tbody tr:hover td { background: #fffdf0; }
     <div class="ai-card-head">
       <div class="ai-card-title"><span class="ai-badge">AI</span> User Profile Report</div>
       <div style="display:flex;align-items:center;gap:10px">
-        <span style="font-size:11px;color:var(--text-dis)">Generated 2026-04-07 16:11 &nbsp;·&nbsp; Pending Review</span>
+        <span id="client-ai-ts" style="font-size:11px;color:var(--text-dis)">Generated 2026-04-07 16:11 &nbsp;·&nbsp; Cached</span>
         <span style="background:#fff1f0;border:1px solid #ffa39e;border-radius:4px;padding:2px 10px;font-size:12px;font-weight:700;color:#cf1322">风险评分 82</span>
+        <button class="btn btn-ai btn-sm" id="client-rerun-btn" onclick="rerunClientAI()">↻ Re-run</button>
       </div>
     </div>
     <div class="ai-card-body" style="padding:0">
@@ -2000,41 +2016,29 @@ tbody tr:hover td { background: #fffdf0; }
 
     <!-- Tab: Parameters -->
     <div class="tab-pane" id="rd-params" style="padding:14px 16px">
-      <div class="two-col">
-        <!-- STK -->
-        <div>
-          <div style="font-size:12px;font-weight:600;margin-bottom:8px;color:var(--text-hint);text-transform:uppercase;letter-spacing:.3px">STK / Equities</div>
-          <div class="table-wrap-full">
-            <table style="font-size:12px">
-              <thead><tr><th>Parameter</th><th>Value</th><th>Description</th></tr></thead>
-              <tbody>
-                <tr><td>orderTimes</td><td><strong>2</strong></td><td>Min buy/sell order count</td></tr>
-                <tr><td>orderTradeIntervalMinute</td><td><strong>1</strong></td><td>Max interval between orders (min)</td></tr>
-                <tr><td>priceDiffRatio</td><td><strong>0.05</strong></td><td>Min price spread ratio</td></tr>
-                <tr><td>priceDiffOrderThreshold</td><td><strong>2</strong></td><td>Min orders meeting price diff</td></tr>
-                <tr><td>tradePairTimes</td><td><strong>3</strong></td><td>Min paired trade count</td></tr>
-                <tr><td>perTradeAmountThreshold</td><td><strong>1,000</strong></td><td>Min per-trade value (USD)</td></tr>
-              </tbody>
-            </table>
-          </div>
-        </div>
-        <!-- Derivatives -->
-        <div>
-          <div style="font-size:12px;font-weight:600;margin-bottom:8px;color:var(--text-hint);text-transform:uppercase;letter-spacing:.3px">Derivatives (OPT / FUT)</div>
-          <div class="table-wrap-full">
-            <table style="font-size:12px">
-              <thead><tr><th>Parameter</th><th>Value</th><th>Description</th></tr></thead>
-              <tbody>
-                <tr><td>orderTimes</td><td><strong>3</strong></td><td>Min buy/sell order count</td></tr>
-                <tr><td>orderTradeIntervalMinute</td><td><strong>1</strong></td><td>Max interval between orders (min)</td></tr>
-                <tr><td>priceDiffRatio</td><td><strong>0.03</strong></td><td>Min price spread ratio</td></tr>
-                <tr><td>priceDiffOrderThreshold</td><td><strong>2</strong></td><td>Min orders meeting price diff</td></tr>
-                <tr><td>tradePairTimes</td><td><strong>5</strong></td><td>Min paired trade count</td></tr>
-                <tr><td>perTradeAmountThreshold</td><td><strong>0</strong></td><td>Min per-trade value (USD)</td></tr>
-              </tbody>
-            </table>
-          </div>
-        </div>
+      <div class="table-wrap-full">
+        <table style="font-size:12px">
+          <thead><tr><th>Parameter</th><th>Value</th><th>Description</th></tr></thead>
+          <tbody>
+            <tr>
+              <td>assetType</td>
+              <td>
+                <div style="display:flex;gap:4px;flex-wrap:wrap">
+                  <span class="tag" style="background:#e6f4ff;color:#0958d9;border:1px solid #91caff;cursor:default">STK</span>
+                  <span class="tag" style="background:#e6f4ff;color:#0958d9;border:1px solid #91caff;cursor:default">OPT</span>
+                  <span class="tag" style="background:#e6f4ff;color:#0958d9;border:1px solid #91caff;cursor:default">FUT</span>
+                </div>
+              </td>
+              <td>Asset types this rule applies to (multi-select)</td>
+            </tr>
+            <tr><td>orderTimes</td><td><strong>2</strong></td><td>Min buy/sell order count</td></tr>
+            <tr><td>orderTradeIntervalMinute</td><td><strong>1</strong></td><td>Max interval between orders (min)</td></tr>
+            <tr><td>priceDiffRatio</td><td><strong>0.05</strong></td><td>Min price spread ratio</td></tr>
+            <tr><td>priceDiffOrderThreshold</td><td><strong>2</strong></td><td>Min orders meeting price diff</td></tr>
+            <tr><td>tradePairTimes</td><td><strong>3</strong></td><td>Min paired trade count</td></tr>
+            <tr><td>perTradeAmountThreshold</td><td><strong>1,000</strong></td><td>Min per-trade value (USD)</td></tr>
+          </tbody>
+        </table>
       </div>
     </div>
 
@@ -2081,20 +2085,20 @@ tbody tr:hover td { background: #fffdf0; }
             <span style="width:7px;height:7px;border-radius:50%;background:#93c5fd;display:inline-block"></span>
             Version A &nbsp;<span style="font-weight:400;color:var(--text-hint)">(Current Online)</span>
           </div>
-          <div class="param-group-label">STK / Equities</div>
+          <div class="param-row" style="padding:6px 12px;background:#f5f5f5;border-bottom:1px solid var(--border)">
+            <span class="param-key">assetType</span>
+            <span style="display:flex;gap:4px;flex-wrap:wrap">
+              <span class="tag" style="background:#e6f4ff;color:#0958d9;border:1px solid #91caff;cursor:default;font-size:10px">STK</span>
+              <span class="tag" style="background:#e6f4ff;color:#0958d9;border:1px solid #91caff;cursor:default;font-size:10px">OPT</span>
+              <span class="tag" style="background:#e6f4ff;color:#0958d9;border:1px solid #91caff;cursor:default;font-size:10px">FUT</span>
+            </span>
+          </div>
           <div class="param-row"><span class="param-key">orderTimes</span><span class="param-val">2</span></div>
           <div class="param-row"><span class="param-key">orderTradeIntervalMinute</span><span class="param-val">1</span></div>
           <div class="param-row"><span class="param-key">priceDiffRatio</span><span class="param-val">0.05</span></div>
           <div class="param-row"><span class="param-key">priceDiffOrderThreshold</span><span class="param-val">2</span></div>
           <div class="param-row"><span class="param-key">tradePairTimes</span><span class="param-val">3</span></div>
           <div class="param-row"><span class="param-key">perTradeAmountThreshold</span><span class="param-val">1,000</span></div>
-          <div class="param-group-label">Derivatives (OPT / FUT)</div>
-          <div class="param-row"><span class="param-key">orderTimes</span><span class="param-val">3</span></div>
-          <div class="param-row"><span class="param-key">orderTradeIntervalMinute</span><span class="param-val">1</span></div>
-          <div class="param-row"><span class="param-key">priceDiffRatio</span><span class="param-val">0.03</span></div>
-          <div class="param-row"><span class="param-key">priceDiffOrderThreshold</span><span class="param-val">2</span></div>
-          <div class="param-row"><span class="param-key">tradePairTimes</span><span class="param-val">5</span></div>
-          <div class="param-row"><span class="param-key">perTradeAmountThreshold</span><span class="param-val">0</span></div>
         </div>
         <!-- Version B -->
         <div class="ab-col-b">
@@ -2102,20 +2106,20 @@ tbody tr:hover td { background: #fffdf0; }
             <span style="width:7px;height:7px;border-radius:50%;background:#d97706;display:inline-block"></span>
             Version B &nbsp;<span style="font-weight:400;color:var(--text-hint)">(Proposed — edit to adjust)</span>
           </div>
-          <div class="param-group-label" style="background:#fffbe6">STK / Equities</div>
-          <div class="param-row"><span class="param-key">orderTimes</span><input class="param-input" id="b_stk_orderTimes" value="2" oninput="markChanged(this,2)"></div>
-          <div class="param-row"><span class="param-key">orderTradeIntervalMinute</span><input class="param-input" id="b_stk_interval" value="1" oninput="markChanged(this,1)"></div>
-          <div class="param-row"><span class="param-key">priceDiffRatio</span><input class="param-input" id="b_stk_pdr" value="0.05" oninput="markChanged(this,0.05)"></div>
-          <div class="param-row"><span class="param-key">priceDiffOrderThreshold</span><input class="param-input" id="b_stk_pdot" value="2" oninput="markChanged(this,2)"></div>
-          <div class="param-row"><span class="param-key">tradePairTimes</span><input class="param-input" id="b_stk_tpt" value="3" oninput="markChanged(this,3)"></div>
-          <div class="param-row"><span class="param-key">perTradeAmountThreshold</span><input class="param-input" id="b_stk_ptat" value="1000" oninput="markChanged(this,1000)"></div>
-          <div class="param-group-label" style="background:#fffbe6">Derivatives (OPT / FUT)</div>
-          <div class="param-row"><span class="param-key">orderTimes</span><input class="param-input" id="b_opt_orderTimes" value="3" oninput="markChanged(this,3)"></div>
-          <div class="param-row"><span class="param-key">orderTradeIntervalMinute</span><input class="param-input" id="b_opt_interval" value="1" oninput="markChanged(this,1)"></div>
-          <div class="param-row"><span class="param-key">priceDiffRatio</span><input class="param-input" id="b_opt_pdr" value="0.03" oninput="markChanged(this,0.03)"></div>
-          <div class="param-row"><span class="param-key">priceDiffOrderThreshold</span><input class="param-input" id="b_opt_pdot" value="2" oninput="markChanged(this,2)"></div>
-          <div class="param-row"><span class="param-key">tradePairTimes</span><input class="param-input" id="b_opt_tpt" value="5" oninput="markChanged(this,5)"></div>
-          <div class="param-row"><span class="param-key">perTradeAmountThreshold</span><input class="param-input" id="b_opt_ptat" value="0" oninput="markChanged(this,0)"></div>
+          <div class="param-row" style="padding:6px 12px;background:#fffbe6;border-bottom:1px solid var(--border)">
+            <span class="param-key">assetType</span>
+            <span style="display:flex;gap:4px;flex-wrap:wrap">
+              <label style="display:inline-flex;align-items:center;gap:3px;font-size:11px;cursor:pointer"><input type="checkbox" checked> STK</label>
+              <label style="display:inline-flex;align-items:center;gap:3px;font-size:11px;cursor:pointer"><input type="checkbox" checked> OPT</label>
+              <label style="display:inline-flex;align-items:center;gap:3px;font-size:11px;cursor:pointer"><input type="checkbox" checked> FUT</label>
+            </span>
+          </div>
+          <div class="param-row"><span class="param-key">orderTimes</span><input class="param-input" id="b_orderTimes" value="2" oninput="markChanged(this,2)"></div>
+          <div class="param-row"><span class="param-key">orderTradeIntervalMinute</span><input class="param-input" id="b_interval" value="1" oninput="markChanged(this,1)"></div>
+          <div class="param-row"><span class="param-key">priceDiffRatio</span><input class="param-input" id="b_pdr" value="0.05" oninput="markChanged(this,0.05)"></div>
+          <div class="param-row"><span class="param-key">priceDiffOrderThreshold</span><input class="param-input" id="b_pdot" value="2" oninput="markChanged(this,2)"></div>
+          <div class="param-row"><span class="param-key">tradePairTimes</span><input class="param-input" id="b_tpt" value="3" oninput="markChanged(this,3)"></div>
+          <div class="param-row"><span class="param-key">perTradeAmountThreshold</span><input class="param-input" id="b_ptat" value="1000" oninput="markChanged(this,1000)"></div>
         </div>
       </div>
 
@@ -2123,7 +2127,7 @@ tbody tr:hover td { background: #fffdf0; }
       <div id="ab-results" style="display:none">
         <div style="font-size:12px;font-weight:600;margin-bottom:8px;color:var(--text-hint);text-transform:uppercase;letter-spacing:.3px">Backtest Results &nbsp;<span style="font-weight:400;text-transform:none;color:var(--text-hint)">2026-03-10 → 2026-04-09 · 30 days</span></div>
         <div class="card" style="margin-bottom:10px">
-          <div class="card-head">Metrics Comparison
+          <div class="card-head">Metrics Comparison <span class="ai-badge" style="font-size:10px;vertical-align:middle">AI</span>
             <span style="margin-left:auto;display:flex;gap:14px;font-size:11px;font-weight:400;color:var(--text-hint);align-items:center">
               <span style="display:flex;align-items:center;gap:4px"><span style="width:9px;height:9px;background:#93c5fd;border-radius:2px;display:inline-block"></span>Version A</span>
               <span style="display:flex;align-items:center;gap:4px"><span style="width:9px;height:9px;background:#d97706;border-radius:2px;display:inline-block;opacity:.75"></span>Version B</span>
@@ -2940,7 +2944,7 @@ function drawAssocGraph(suffix) {
 
   const dpr = window.devicePixelRatio || 1;
   const cssW = canvas.offsetWidth || 560;
-  const cssH = 340;
+  const cssH = 400;
   canvas.width  = Math.round(cssW * dpr);
   canvas.height = Math.round(cssH * dpr);
   const ctx = canvas.getContext('2d');
@@ -2951,58 +2955,82 @@ function drawAssocGraph(suffix) {
     alert:  { bg:'#fff7e6', border:'#fa8c16', text:'#d46b08', label:'ALERT'  },
     case:   { bg:'#f9f0ff', border:'#7c3aed', text:'#6d28d9', label:'CASE'   },
     client: { bg:'#e6f4ff', border:'#2563eb', text:'#1d4ed8', label:'CLIENT' },
+    ip:     { bg:'#e6fffb', border:'#13c2c2', text:'#006d75', label:'IP'     },
+    device: { bg:'#f0f5ff', border:'#597ef7', text:'#1d39c4', label:'DEVICE' },
+    reg:    { bg:'#f6ffed', border:'#52c41a', text:'#389e0d', label:'REG'    },
   };
 
   const GRAPHS = {
     alert: {
       nodes: [
-        { id:'19150109', type:'alert',  level:0, fx:0.50, fy:0.42, score:82, symbol:'SPXW',   rule:'Pre-arranged', page:'alert-details'  },
-        { id:'3215451',  type:'client', level:1, fx:0.20, fy:0.72, risk:'High', alerts:12, watchlist:true,         page:'client-details' },
-        { id:'TS_824',   type:'case',   level:1, fx:0.80, fy:0.72, status:'Processing', alerts:3,                  page:'case-details'   },
-        { id:'19150101', type:'alert',  level:2, fx:0.06, fy:0.27, score:79, symbol:'SPXW',                        page:'alert-details'  },
-        { id:'19147810', type:'alert',  level:2, fx:0.17, fy:0.83, score:45, symbol:'TSLA',                        page:'alert-details'  },
-        { id:'3215450',  type:'client', level:2, fx:0.93, fy:0.22, risk:'Med', alerts:5,                           page:'client-details' },
+        { id:'19150109',     type:'alert',  level:0, fx:0.50, fy:0.40, score:82, symbol:'SPXW',  rule:'Pre-arranged', page:'alert-details'  },
+        { id:'3215451',      type:'client', level:1, fx:0.18, fy:0.68, risk:'High', alerts:12, watchlist:true,        page:'client-details' },
+        { id:'TS_824',       type:'case',   level:1, fx:0.82, fy:0.68, status:'Processing', alerts:3,                 page:'case-details'   },
+        { id:'19150101',     type:'alert',  level:2, fx:0.05, fy:0.22, score:79, symbol:'SPXW',                       page:'alert-details'  },
+        { id:'19147810',     type:'alert',  level:2, fx:0.14, fy:0.90, score:45, symbol:'TSLA',                       page:'alert-details'  },
+        { id:'3215450',      type:'client', level:2, fx:0.86, fy:0.22, risk:'Med', alerts:5,                          page:'client-details' },
+        { id:'218.82.x.9',   type:'ip',     level:2, fx:0.68, fy:0.14, ip:'218.82.19.9'    },
+        { id:'DEV-A4C3F0',   type:'device', level:2, fx:0.93, fy:0.50, devNote:'Web Client' },
+        { id:'NZ/AKL',       type:'reg',    level:2, fx:0.05, fy:0.52, regNote:'Auckland NZ' },
       ],
       edges: [
-        { a:0, b:1, label:'Account'      },
-        { a:0, b:2, label:'Escalated to' },
-        { a:1, b:3, label:'Related Alert'},
-        { a:1, b:4, label:'Historical'   },
-        { a:2, b:5, label:'Co-Suspect'   },
+        { a:0, b:1, label:'Account'       },
+        { a:0, b:2, label:'Escalated to'  },
+        { a:1, b:3, label:'Related Alert' },
+        { a:1, b:4, label:'Historical'    },
+        { a:2, b:5, label:'Co-Suspect'    },
+        { a:1, b:6, label:'Shared IP'     },
+        { a:5, b:6, label:'Same IP'       },
+        { a:1, b:7, label:'Device'        },
+        { a:1, b:8, label:'Reg Location'  },
       ],
     },
     case: {
       nodes: [
-        { id:'TS_824',   type:'case',   level:0, fx:0.50, fy:0.42, status:'Processing', alerts:3,                  page:'case-details'   },
-        { id:'19150109', type:'alert',  level:1, fx:0.20, fy:0.22, score:82, symbol:'SPXW',  rule:'Pre-arranged',  page:'alert-details'  },
-        { id:'19150101', type:'alert',  level:1, fx:0.20, fy:0.78, score:79, symbol:'SPXW',  rule:'Wash Trade',    page:'alert-details'  },
-        { id:'3215451',  type:'client', level:1, fx:0.80, fy:0.47, risk:'High', alerts:12, watchlist:true,         page:'client-details' },
-        { id:'3215450',  type:'client', level:2, fx:0.06, fy:0.62, risk:'Med', alerts:5,                           page:'client-details' },
-        { id:'TS_798',   type:'case',   level:2, fx:0.94, fy:0.16, status:'Closed', alerts:5,                      page:'case-details'   },
+        { id:'TS_824',       type:'case',   level:0, fx:0.50, fy:0.40, status:'Processing', alerts:3,                 page:'case-details'   },
+        { id:'19150109',     type:'alert',  level:1, fx:0.18, fy:0.20, score:82, symbol:'SPXW', rule:'Pre-arranged',   page:'alert-details'  },
+        { id:'19150101',     type:'alert',  level:1, fx:0.18, fy:0.78, score:79, symbol:'SPXW', rule:'Wash Trade',     page:'alert-details'  },
+        { id:'3215451',      type:'client', level:1, fx:0.82, fy:0.44, risk:'High', alerts:12, watchlist:true,         page:'client-details' },
+        { id:'3215450',      type:'client', level:2, fx:0.05, fy:0.58, risk:'Med', alerts:5,                           page:'client-details' },
+        { id:'TS_798',       type:'case',   level:2, fx:0.94, fy:0.14, status:'Closed', alerts:5,                      page:'case-details'   },
+        { id:'218.82.x.9',   type:'ip',     level:2, fx:0.68, fy:0.12, ip:'218.82.19.9'    },
+        { id:'DEV-A4C3F0',   type:'device', level:2, fx:0.94, fy:0.68, devNote:'Web Client' },
+        { id:'NZ/AKL',       type:'reg',    level:2, fx:0.05, fy:0.88, regNote:'Auckland NZ' },
       ],
       edges: [
-        { a:0, b:1, label:'Trigger Alert'},
-        { a:0, b:2, label:'Related Alert'},
-        { a:0, b:3, label:'Primary Acct' },
-        { a:2, b:4, label:'Account'      },
-        { a:3, b:5, label:'Prior Case'   },
+        { a:0, b:1, label:'Trigger Alert' },
+        { a:0, b:2, label:'Related Alert' },
+        { a:0, b:3, label:'Primary Acct'  },
+        { a:2, b:4, label:'Account'       },
+        { a:3, b:5, label:'Prior Case'    },
+        { a:3, b:6, label:'Shared IP'     },
+        { a:4, b:6, label:'Same IP'       },
+        { a:3, b:7, label:'Device'        },
+        { a:3, b:8, label:'Reg Location'  },
       ],
     },
     client: {
       nodes: [
-        { id:'3215451',  type:'client', level:0, fx:0.50, fy:0.42, risk:'High', alerts:12, watchlist:true,         page:'client-details' },
-        { id:'19150109', type:'alert',  level:1, fx:0.20, fy:0.22, score:82, symbol:'SPXW',  rule:'Pre-arranged',  page:'alert-details'  },
-        { id:'19150101', type:'alert',  level:1, fx:0.20, fy:0.78, score:79, symbol:'SPXW',  rule:'Wash Trade',    page:'alert-details'  },
-        { id:'TS_824',   type:'case',   level:1, fx:0.80, fy:0.47, status:'Processing', alerts:3,                  page:'case-details'   },
-        { id:'3215450',  type:'client', level:2, fx:0.06, fy:0.47, risk:'Med', alerts:5,                           page:'client-details' },
-        { id:'19149981', type:'alert',  level:2, fx:0.94, fy:0.20, score:67, symbol:'NQ2506',                      page:'alert-details'  },
+        { id:'3215451',      type:'client', level:0, fx:0.50, fy:0.40, risk:'High', alerts:12, watchlist:true,         page:'client-details' },
+        { id:'19150109',     type:'alert',  level:1, fx:0.18, fy:0.20, score:82, symbol:'SPXW', rule:'Pre-arranged',   page:'alert-details'  },
+        { id:'19150101',     type:'alert',  level:1, fx:0.18, fy:0.75, score:79, symbol:'SPXW', rule:'Wash Trade',     page:'alert-details'  },
+        { id:'TS_824',       type:'case',   level:1, fx:0.82, fy:0.44, status:'Processing', alerts:3,                  page:'case-details'   },
+        { id:'3215450',      type:'client', level:2, fx:0.05, fy:0.44, risk:'Med', alerts:5,                           page:'client-details' },
+        { id:'19149981',     type:'alert',  level:2, fx:0.94, fy:0.18, score:67, symbol:'NQ2506',                      page:'alert-details'  },
+        { id:'218.82.x.9',   type:'ip',     level:2, fx:0.72, fy:0.14, ip:'218.82.19.9'    },
+        { id:'DEV-A4C3F0',   type:'device', level:2, fx:0.94, fy:0.60, devNote:'Web Client' },
+        { id:'NZ/AKL',       type:'reg',    level:2, fx:0.66, fy:0.88, regNote:'Auckland NZ' },
       ],
       edges: [
-        { a:0, b:1, label:'Alert'        },
-        { a:0, b:2, label:'Alert'        },
-        { a:0, b:3, label:'Active Case'  },
-        { a:1, b:4, label:'Counterparty' },
-        { a:3, b:5, label:'Related Alert'},
+        { a:0, b:1, label:'Alert'         },
+        { a:0, b:2, label:'Alert'         },
+        { a:0, b:3, label:'Active Case'   },
+        { a:1, b:4, label:'Counterparty'  },
+        { a:3, b:5, label:'Related Alert' },
+        { a:0, b:6, label:'Shared IP'     },
+        { a:4, b:6, label:'Same IP'       },
+        { a:0, b:7, label:'Device'        },
+        { a:0, b:8, label:'Reg Location'  },
       ],
     },
   };
@@ -3065,7 +3093,7 @@ function drawAssocGraph(suffix) {
     ctx.fillText(t.label, n.x, n.y - 5);
 
     // ID — blue + underline to signal clickability
-    const idFs = n.level === 0 ? 11 : (n.id.length > 7 ? 9 : 10);
+    const idFs = n.level === 0 ? 11 : (n.id.length > 9 ? 8 : n.id.length > 7 ? 9 : 10);
     ctx.font = `bold ${idFs}px system-ui,sans-serif`;
     ctx.fillStyle = '#1d4ed8';
     ctx.fillText(n.id, n.x, n.y + 8);
@@ -3091,9 +3119,18 @@ function drawAssocGraph(suffix) {
         ctx.fillText('Risk: ' + (n.risk || ''), n.x, sy);
         if (n.alerts !== undefined) { ctx.fillStyle = '#9ca3af'; ctx.font = '9px system-ui,sans-serif'; ctx.fillText(n.alerts + ' alerts', n.x, sy + 13); }
         if (n.watchlist) { ctx.fillStyle = '#d97706'; ctx.font = '9px system-ui,sans-serif'; ctx.fillText('● Watchlist', n.x, sy + 26); }
+      } else if (n.type === 'ip') {
+        ctx.fillStyle = '#006d75'; ctx.font = '9px system-ui,sans-serif'; ctx.textAlign = 'center';
+        ctx.fillText(n.ip || n.id, n.x, sy);
+      } else if (n.type === 'device') {
+        ctx.fillStyle = '#1d39c4'; ctx.font = '9px system-ui,sans-serif'; ctx.textAlign = 'center';
+        ctx.fillText(n.devNote || '', n.x, sy);
+      } else if (n.type === 'reg') {
+        ctx.fillStyle = '#389e0d'; ctx.font = '9px system-ui,sans-serif'; ctx.textAlign = 'center';
+        ctx.fillText(n.regNote || n.id, n.x, sy);
       }
     } else {
-      // L2: small corner badge
+      // L2: small corner badge or type indicator
       const bx = n.x + r - 7, by = n.y - r + 3;
       if (n.type === 'alert' && n.score !== undefined) {
         const c = n.score >= 75 ? '#cf1322' : n.score >= 50 ? '#d97706' : '#52c41a';
@@ -3107,6 +3144,19 @@ function drawAssocGraph(suffix) {
         const c = n.status === 'Closed' ? '#6b7280' : '#d97706';
         ctx.beginPath(); ctx.arc(bx, by, 9, 0, Math.PI * 2); ctx.fillStyle = c; ctx.fill();
         ctx.fillStyle = '#fff'; ctx.font = 'bold 7px system-ui,sans-serif'; ctx.textAlign = 'center'; ctx.fillText(n.status[0], bx, by + 3);
+      }
+      // Sub-label for ip/device/reg at level 2
+      const subY = n.y + r + 12;
+      ctx.textAlign = 'center';
+      if (n.type === 'ip') {
+        ctx.fillStyle = '#006d75'; ctx.font = '8px system-ui,sans-serif';
+        ctx.fillText(n.ip || n.id, n.x, subY);
+      } else if (n.type === 'device') {
+        ctx.fillStyle = '#1d39c4'; ctx.font = '8px system-ui,sans-serif';
+        ctx.fillText(n.devNote || '', n.x, subY);
+      } else if (n.type === 'reg') {
+        ctx.fillStyle = '#389e0d'; ctx.font = '8px system-ui,sans-serif';
+        ctx.fillText(n.regNote || n.id, n.x, subY);
       }
     }
   });
@@ -4710,9 +4760,90 @@ function _prSummary(s) {
   </div>`;
 }
 
+// ── AI Report cache flags ──
+const _aiCache = { alert: true, case: false, client: false };
+
+function _fmtNow() {
+  const d = new Date();
+  return d.getFullYear() + '-' +
+    String(d.getMonth()+1).padStart(2,'0') + '-' +
+    String(d.getDate()).padStart(2,'0') + ' ' +
+    String(d.getHours()).padStart(2,'0') + ':' +
+    String(d.getMinutes()).padStart(2,'0');
+}
+
+function _clearStale(el, newText) {
+  el.textContent = newText;
+  el.style.color = '';
+  el.style.fontWeight = '';
+  el.title = '';
+  delete el.dataset.stale;
+}
+
+function rerunAlertAI() {
+  const btn = document.getElementById('alert-rerun-btn');
+  const ts  = document.getElementById('alert-ai-ts');
+  btn.disabled = true; btn.textContent = '⏳ Running…';
+  setTimeout(() => {
+    _clearStale(ts, 'Generated ' + _fmtNow() + ' EDT · Model v2.4 · Fresh');
+    _aiCache.alert = true;
+    btn.disabled = false; btn.textContent = '↻ Re-run';
+  }, 1800);
+}
+
+function rerunCaseAI() {
+  const btn = document.getElementById('case-rerun-btn');
+  const ts  = document.getElementById('case-ai-ts');
+  btn.disabled = true; btn.textContent = '⏳ Running…';
+  setTimeout(() => {
+    renderCaseReport(CASE_REPORT);
+    _clearStale(ts, 'Generated ' + _fmtNow() + ' · Fresh');
+    _aiCache.case = true;
+    btn.disabled = false; btn.textContent = '↻ Re-run';
+  }, 1800);
+}
+
+function rerunClientAI() {
+  const btn = document.getElementById('client-rerun-btn');
+  const ts  = document.getElementById('client-ai-ts');
+  btn.disabled = true; btn.textContent = '⏳ Running…';
+  setTimeout(() => {
+    renderProfileReport(PROFILE_REPORT);
+    _clearStale(ts, 'Generated ' + _fmtNow() + ' · Fresh');
+    _aiCache.client = true;
+    btn.disabled = false; btn.textContent = '↻ Re-run';
+  }, 1800);
+}
+
+// ── AI timestamp staleness highlight ──
+// Parses "Generated YYYY-MM-DD HH:MM …" from element text;
+// if > 3 days old vs today, turns it amber with a warning icon.
+function checkAITimestamps() {
+  const TODAY = new Date('2026-04-15');
+  const IDS   = ['alert-ai-ts', 'case-ai-ts', 'client-ai-ts'];
+  IDS.forEach(id => {
+    const el = document.getElementById(id);
+    if (!el) return;
+    const m = el.textContent.match(/Generated\s+(\d{4}-\d{2}-\d{2})/);
+    if (!m) return;
+    const age = (TODAY - new Date(m[1])) / 86400000;
+    if (age > 3) {
+      el.style.color    = '#d46b08';
+      el.style.fontWeight = '500';
+      el.title = Math.floor(age) + ' days since last run — consider re-running';
+      // prepend warning icon if not already there
+      if (!el.dataset.stale) {
+        el.dataset.stale = '1';
+        el.innerHTML = '⚠ ' + el.innerHTML;
+      }
+    }
+  });
+}
+
 document.addEventListener('DOMContentLoaded', () => {
-  renderProfileReport(PROFILE_REPORT);
-  renderCaseReport(CASE_REPORT);
+  if (!_aiCache.client) { renderProfileReport(PROFILE_REPORT); _aiCache.client = true; }
+  if (!_aiCache.case)   { renderCaseReport(CASE_REPORT);   _aiCache.case = true; }
+  checkAITimestamps();
 });
 
 // ══ Case Report JSON data ══

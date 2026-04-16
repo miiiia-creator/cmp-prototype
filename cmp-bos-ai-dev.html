@@ -323,6 +323,19 @@ tbody tr:hover td { background: #fffdf0; }
 /* push detail page content above sheet */
 .page.detail-page { padding-bottom: 60px; }
 .page.detail-page.sheet-open { padding-bottom: 536px; }
+.inv-sheet.fullscreen { height: calc(100vh - 86px); }
+.page.detail-page.sheet-fullscreen { padding-bottom: calc(100vh - 60px); }
+.multi-sub-tab { padding:6px 12px;font-size:12px;cursor:pointer;color:var(--text-sec);border-bottom:2px solid transparent;white-space:nowrap;transition:color .15s; }
+.multi-sub-tab:hover { color:var(--text); }
+.multi-sub-tab.active { color:rgba(0,0,0,.85);border-bottom-color:var(--primary);font-weight:500; }
+.period-btn { height:24px;padding:0 9px;font-size:11px;border:1px solid var(--border-base);background:#fff;cursor:pointer;color:var(--text-sec);transition:all .15s;outline:none; }
+.period-btn:first-child { border-radius:4px 0 0 4px; }
+.period-btn:last-child { border-radius:0 4px 4px 0; }
+.period-btn + .period-btn { border-left:none; }
+.period-btn.active { background:var(--primary-bg);border-color:var(--primary);color:rgba(0,0,0,.85);font-weight:500; }
+.ms-section { border:1px solid #f0f0f0;border-radius:4px;overflow:hidden;margin-bottom:8px; }
+.ms-section-head { padding:6px 10px;background:#fafafa;display:flex;align-items:center;justify-content:space-between;cursor:pointer;font-size:11px;font-weight:600;user-select:none;transition:background .15s; }
+.ms-section-head:hover { background:#efefef; }
 /* ── A/B Test ── */
 .ab-split { display:grid; grid-template-columns:1fr 1fr; border:1px solid var(--border); border-radius:6px; overflow:hidden; margin-bottom:12px; }
 .ab-col-a { border-right:1px solid var(--border); }
@@ -3726,7 +3739,7 @@ function submitWLModal() {
       <span class="new-badge">NEW</span>
     </div>
     <div class="inv-sheet-actions">
-      <button class="btn btn-sm" id="inv-sheet-toggle-btn" style="font-size:11px;padding:2px 10px">Expand ↑</button>
+      <button class="btn btn-sm" id="inv-sheet-toggle-btn" onclick="event.stopPropagation();toggleInvFullscreen()" style="font-size:11px;padding:2px 10px">⤢ Fullscreen</button>
       <span onclick="event.stopPropagation();hideInvSheet()" style="cursor:pointer;color:#aaa;font-size:18px;line-height:1;padding:0 2px;margin-left:4px">×</span>
     </div>
   </div>
@@ -3791,114 +3804,249 @@ function submitWLModal() {
         <canvas id="assoc-canvas-alert" height="340" style="width:100%;display:block;border:1px solid var(--border);border-radius:4px"></canvas>
       </div>
       <!-- Associate Accounts Analysis -->
-      <div class="tab-pane" id="inv-multi-alert" style="flex:1;overflow-y:auto">
-        <div style="padding:6px 12px;background:#fafafa;border-bottom:1px solid #f0f0f0;display:flex;flex-wrap:wrap;align-items:center;gap:6px;flex-shrink:0">
-          <span style="font-size:11px;color:var(--text-hint)">Accounts</span>
-          <span style="background:#f0f7ff;color:#1677ff;border:1px solid #91caff;border-radius:3px;padding:0 6px;font-size:11px">3215451</span>
-          <span style="background:#f0f7ff;color:#1677ff;border:1px solid #91caff;border-radius:3px;padding:0 6px;font-size:11px">3215450</span>
-          <span style="font-size:11px;color:var(--text-hint)">· 2026-01-01 – 2026-04-07 · SPXW 20260406 6615.0 C</span>
-          <div style="margin-left:auto;display:flex;gap:5px">
-            <span style="font-size:10px;background:#f6ffed;color:#389e0d;border:1px solid #b7eb8f;padding:1px 6px;border-radius:3px">IP: None</span>
-            <span style="font-size:10px;background:#f6ffed;color:#389e0d;border:1px solid #b7eb8f;padding:1px 6px;border-radius:3px">Device: None</span>
-            <span style="font-size:10px;background:#fff2f0;color:#cf1322;border:1px solid #ffa39e;padding:1px 6px;border-radius:3px">Strategy: High</span>
-          </div>
-        </div>
-        <div style="padding:10px 12px">
-          <div style="font-size:11px;font-weight:600;margin-bottom:2px">Strategy Similarity Matrix</div>
-          <div style="font-size:10px;color:var(--text-hint);margin-bottom:5px">A(3215451) monthly pattern rows × B(3215450) monthly pattern cols · lower triangle only (col ≤ row) · <strong style="color:var(--text-sec)">5 months = 15 comparisons</strong></div>
-          <table style="width:100%;font-size:11px;border-collapse:collapse;margin-bottom:4px">
-            <thead><tr>
-              <th style="background:#fafafa;border:1px solid #f0f0f0;padding:3px 8px;text-align:left;font-weight:500;color:var(--text-hint);white-space:nowrap">A ↓ / B →</th>
-              <th style="background:#fafafa;border:1px solid #f0f0f0;padding:3px 8px;text-align:center;font-weight:500;color:var(--text-hint)">B·01</th>
-              <th style="background:#fafafa;border:1px solid #f0f0f0;padding:3px 8px;text-align:center;font-weight:500;color:var(--text-hint)">B·02</th>
-              <th style="background:#fafafa;border:1px solid #f0f0f0;padding:3px 8px;text-align:center;font-weight:500;color:var(--text-hint)">B·03</th>
-              <th style="background:#fafafa;border:1px solid #f0f0f0;padding:3px 8px;text-align:center;font-weight:500;color:var(--text-hint)">B·04</th>
-              <th style="background:#fafafa;border:1px solid #f0f0f0;padding:3px 8px;text-align:center;font-weight:500;color:var(--text-hint)">B·05</th>
-            </tr></thead>
-            <tbody>
-              <tr>
-                <td style="border:1px solid #f0f0f0;padding:3px 8px;font-weight:500;background:#fafafa;white-space:nowrap">A·2026-01</td>
-                <td style="border:1px solid #f0f0f0;padding:3px 8px;text-align:center;background:#fffbe6;color:#d46b08;font-weight:500" title="Same period">0.91</td>
-                <td style="border:1px solid #f0f0f0;padding:2px 8px;text-align:center;background:#f5f5f5;color:#d9d9d9;font-size:10px">—</td>
-                <td style="border:1px solid #f0f0f0;padding:2px 8px;text-align:center;background:#f5f5f5;color:#d9d9d9;font-size:10px">—</td>
-                <td style="border:1px solid #f0f0f0;padding:2px 8px;text-align:center;background:#f5f5f5;color:#d9d9d9;font-size:10px">—</td>
-                <td style="border:1px solid #f0f0f0;padding:2px 8px;text-align:center;background:#f5f5f5;color:#d9d9d9;font-size:10px">—</td>
-              </tr>
-              <tr>
-                <td style="border:1px solid #f0f0f0;padding:3px 8px;font-weight:500;background:#fafafa;white-space:nowrap">A·2026-02</td>
-                <td style="border:1px solid #f0f0f0;padding:3px 8px;text-align:center;color:var(--text-hint)">0.39</td>
-                <td style="border:1px solid #f0f0f0;padding:3px 8px;text-align:center;background:#fffbe6;color:#d46b08;font-weight:500" title="Same period">0.94</td>
-                <td style="border:1px solid #f0f0f0;padding:2px 8px;text-align:center;background:#f5f5f5;color:#d9d9d9;font-size:10px">—</td>
-                <td style="border:1px solid #f0f0f0;padding:2px 8px;text-align:center;background:#f5f5f5;color:#d9d9d9;font-size:10px">—</td>
-                <td style="border:1px solid #f0f0f0;padding:2px 8px;text-align:center;background:#f5f5f5;color:#d9d9d9;font-size:10px">—</td>
-              </tr>
-              <tr>
-                <td style="border:1px solid #f0f0f0;padding:3px 8px;font-weight:500;background:#fafafa;white-space:nowrap">A·2026-03</td>
-                <td style="border:1px solid #f0f0f0;padding:3px 8px;text-align:center;color:var(--text-hint)">0.36</td>
-                <td style="border:1px solid #f0f0f0;padding:3px 8px;text-align:center;color:var(--text-hint)">0.44</td>
-                <td style="border:1px solid #f0f0f0;padding:3px 8px;text-align:center;background:#fff2f0;color:#cf1322;font-weight:500" title="Same period">0.98</td>
-                <td style="border:1px solid #f0f0f0;padding:2px 8px;text-align:center;background:#f5f5f5;color:#d9d9d9;font-size:10px">—</td>
-                <td style="border:1px solid #f0f0f0;padding:2px 8px;text-align:center;background:#f5f5f5;color:#d9d9d9;font-size:10px">—</td>
-              </tr>
-              <tr>
-                <td style="border:1px solid #f0f0f0;padding:3px 8px;font-weight:500;background:#fafafa;white-space:nowrap">A·2026-04</td>
-                <td style="border:1px solid #f0f0f0;padding:3px 8px;text-align:center;color:var(--text-hint)">0.40</td>
-                <td style="border:1px solid #f0f0f0;padding:3px 8px;text-align:center;color:var(--text-hint)">0.41</td>
-                <td style="border:1px solid #f0f0f0;padding:3px 8px;text-align:center;color:var(--text-hint)">0.55</td>
-                <td style="border:1px solid #f0f0f0;padding:3px 8px;text-align:center;background:#fff2f0;color:#cf1322;font-weight:500" title="Same period">0.99</td>
-                <td style="border:1px solid #f0f0f0;padding:2px 8px;text-align:center;background:#f5f5f5;color:#d9d9d9;font-size:10px">—</td>
-              </tr>
-              <tr>
-                <td style="border:1px solid #f0f0f0;padding:3px 8px;font-weight:500;background:#fafafa;white-space:nowrap">A·2026-05</td>
-                <td style="border:1px solid #f0f0f0;padding:3px 8px;text-align:center;color:var(--text-hint)">0.38</td>
-                <td style="border:1px solid #f0f0f0;padding:3px 8px;text-align:center;color:var(--text-hint)">0.41</td>
-                <td style="border:1px solid #f0f0f0;padding:3px 8px;text-align:center;color:var(--text-hint)">0.46</td>
-                <td style="border:1px solid #f0f0f0;padding:3px 8px;text-align:center;color:var(--text-hint)">0.53</td>
-                <td style="border:1px solid #f0f0f0;padding:3px 8px;text-align:center;background:#fff2f0;color:#cf1322;font-weight:500" title="Same period">0.97</td>
-              </tr>
-            </tbody>
-          </table>
-          <div style="display:flex;gap:10px;font-size:10px;color:var(--text-hint);margin-bottom:8px;flex-wrap:wrap">
-            <span><span style="display:inline-block;width:10px;height:10px;background:#fff2f0;border:1px solid #ffa39e;border-radius:2px;vertical-align:middle;margin-right:2px"></span>≥0.95 High</span>
-            <span><span style="display:inline-block;width:10px;height:10px;background:#fffbe6;border:1px solid #ffe58f;border-radius:2px;vertical-align:middle;margin-right:2px"></span>0.85–0.94 Elevated</span>
-            <span><span style="display:inline-block;width:10px;height:10px;background:#f0f0f0;border:1px solid #d9d9d9;border-radius:2px;vertical-align:middle;margin-right:2px"></span>&lt;0.85 Normal</span>
-            <span style="margin-left:4px"><span style="display:inline-block;width:10px;height:10px;background:#f5f5f5;border:1px solid #e8e8e8;border-radius:2px;vertical-align:middle;margin-right:2px"></span>Not compared</span>
-          </div>
-          <div style="font-size:11px;font-weight:600;margin-bottom:5px">Strategy Overlap</div>
-          <table style="width:100%;font-size:11px;border-collapse:collapse;margin-bottom:10px">
-            <thead><tr>
-              <th style="background:#fafafa;border:1px solid #f0f0f0;padding:3px 8px;text-align:left;font-weight:500;color:var(--text-hint)">Dimension</th>
-              <th style="background:#fafafa;border:1px solid #f0f0f0;padding:3px 8px;text-align:center;font-weight:500;color:var(--text-hint)">3215451</th>
-              <th style="background:#fafafa;border:1px solid #f0f0f0;padding:3px 8px;text-align:center;font-weight:500;color:var(--text-hint)">3215450</th>
-            </tr></thead>
-            <tbody>
-              <tr><td style="border:1px solid #f0f0f0;padding:3px 8px;color:var(--text-sec)">Large Order Bias</td><td style="border:1px solid #f0f0f0;padding:3px 8px;text-align:center;color:#cf1322;font-weight:500">Yes (100%)</td><td style="border:1px solid #f0f0f0;padding:3px 8px;text-align:center;color:#cf1322;font-weight:500">Yes (83%)</td></tr>
-              <tr><td style="border:1px solid #f0f0f0;padding:3px 8px;color:var(--text-sec)">Order Type</td><td style="border:1px solid #f0f0f0;padding:3px 8px;text-align:center">LMT (100%)</td><td style="border:1px solid #f0f0f0;padding:3px 8px;text-align:center">LMT (100%)</td></tr>
-              <tr><td style="border:1px solid #f0f0f0;padding:3px 8px;color:var(--text-sec)">Price Deviation</td><td style="border:1px solid #f0f0f0;padding:3px 8px;text-align:center;color:#cf1322">High</td><td style="border:1px solid #f0f0f0;padding:3px 8px;text-align:center;color:#cf1322">High</td></tr>
-              <tr><td style="border:1px solid #f0f0f0;padding:3px 8px;color:var(--text-sec)">PnL</td><td style="border:1px solid #f0f0f0;padding:3px 8px;text-align:center;color:#cf1322">Negative</td><td style="border:1px solid #f0f0f0;padding:3px 8px;text-align:center;color:#cf1322">Negative</td></tr>
-              <tr><td style="border:1px solid #f0f0f0;padding:3px 8px;color:var(--text-sec)">Intraday / HFT</td><td style="border:1px solid #f0f0f0;padding:3px 8px;text-align:center;color:var(--text-hint)">None</td><td style="border:1px solid #f0f0f0;padding:3px 8px;text-align:center;color:var(--text-hint)">None</td></tr>
-            </tbody>
-          </table>
-          <div style="font-size:11px;background:#fff2f0;border:1px solid #ffa39e;border-radius:4px;padding:5px 10px;margin-bottom:10px;color:#cf1322"><strong>⚠</strong> 2026-03-19 combined market share <strong>12.57%</strong> exceeds 10% threshold — account 3215450</div>
-          <div style="font-size:11px;font-weight:600;margin-bottom:5px">Account Summaries</div>
-          <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px">
-            <div style="border:1px solid #f0f0f0;border-radius:4px;padding:8px;font-size:11px">
-              <div style="font-weight:600;margin-bottom:4px;color:var(--text)">3215451</div>
-              <div style="color:var(--text-sec);margin-bottom:2px">IP: <span style="color:#cf1322">Cross-city (Beijing, Anqing)</span></div>
-              <div style="color:var(--text-sec);margin-bottom:2px">PnL: <span style="color:#cf1322">−57,202.27</span></div>
-              <div style="color:var(--text-sec);margin-bottom:2px">Price: High deviation (max +227.55%)</div>
-              <div style="color:var(--text-hint)">No historical alerts</div>
+      <div class="tab-pane" id="inv-multi-alert" style="flex:1;display:flex;flex-direction:column;min-height:0;overflow:hidden">
+
+        <!-- Level 1: Account list -->
+        <div style="padding:8px 12px;background:#fafafa;border-bottom:1px solid #f0f0f0;flex-shrink:0">
+          <div style="font-size:10px;text-transform:uppercase;letter-spacing:.4px;color:var(--text-hint);margin-bottom:6px">Associated Accounts</div>
+          <div style="display:flex;gap:8px;flex-wrap:wrap">
+            <div style="display:flex;align-items:center;gap:6px;background:#fff;border:1px solid #ffa39e;border-radius:5px;padding:5px 10px">
+              <span class="ai-score ai-score-high" style="width:22px;height:22px;font-size:10px;flex-shrink:0">82</span>
+              <div>
+                <span style="font-size:12px;font-weight:500;color:#1677ff;cursor:pointer" onclick="showPage('client-details')">3215451</span>
+                <span style="font-size:10px;color:var(--text-hint);margin-left:4px">Share IP · Share Device</span>
+              </div>
+              <span style="font-size:10px;color:#cf1322;font-weight:600;background:#fff2f0;border:1px solid #ffa39e;border-radius:3px;padding:1px 5px;flex-shrink:0">获益方</span>
             </div>
-            <div style="border:1px solid #f0f0f0;border-radius:4px;padding:8px;font-size:11px">
-              <div style="font-weight:600;margin-bottom:4px;color:var(--text)">3215450</div>
-              <div style="color:var(--text-sec);margin-bottom:2px">IP: <span style="color:var(--text-hint)">No cross-city</span></div>
-              <div style="color:var(--text-sec);margin-bottom:2px">PnL: <span style="color:#cf1322">−159.92</span></div>
-              <div style="color:var(--text-sec);margin-bottom:2px">Price: Mixed (max +6.54%)</div>
-              <div style="color:var(--text-hint)">No historical alerts</div>
+            <div style="display:flex;align-items:center;gap:6px;background:#fff;border:1px solid #ffe58f;border-radius:5px;padding:5px 10px">
+              <span class="ai-score ai-score-mid" style="width:22px;height:22px;font-size:10px;flex-shrink:0">55</span>
+              <div>
+                <span style="font-size:12px;font-weight:500;color:#1677ff;cursor:pointer">3215450</span>
+                <span style="font-size:10px;color:var(--text-hint);margin-left:4px">Share IP · Share Device</span>
+              </div>
+              <span style="font-size:10px;color:#d46b08;font-weight:600;background:#fffbe6;border:1px solid #ffe58f;border-radius:3px;padding:1px 5px;flex-shrink:0">对手方</span>
             </div>
           </div>
         </div>
-      </div>
+
+        <!-- Level 2: Context parameters -->
+        <div style="padding:7px 12px;background:#fff;border-bottom:1px solid #f0f0f0;flex-shrink:0;display:flex;align-items:center;gap:8px;flex-wrap:wrap">
+          <span style="font-size:11px;color:var(--text-hint)">Symbol</span>
+          <input type="text" id="multi-symbol-alert" value="SPXW 20260406 6615.0 C" style="height:26px;border:1px solid var(--border-base);border-radius:4px;padding:0 8px;font-size:11px;width:185px;outline:none">
+          <span style="font-size:11px;color:var(--text-hint)">Period</span>
+          <div data-period-group style="display:flex">
+            <button class="period-btn active" onclick="setMultiPeriod(this)">本案</button>
+            <button class="period-btn" onclick="setMultiPeriod(this)">3M</button>
+            <button class="period-btn" onclick="setMultiPeriod(this)">6M</button>
+            <button class="period-btn" onclick="setMultiPeriod(this)">1Y</button>
+          </div>
+          <button class="btn btn-ai btn-sm" id="multi-rerun-btn-alert" onclick="rerunMultiAnalysis('alert')" style="margin-left:auto">↻ Re-run</button>
+        </div>
+
+        <!-- Level 3: Sub-tabs -->
+        <div style="border-bottom:1px solid #f0f0f0;padding:0 4px;background:#fff;display:flex;flex-shrink:0">
+          <div class="multi-sub-tab active" id="msub-all-alert" onclick="switchMultiSubTab('alert','all')">All</div>
+          <div class="multi-sub-tab" id="msub-3215451-alert" onclick="switchMultiSubTab('alert','3215451')">3215451</div>
+          <div class="multi-sub-tab" id="msub-3215450-alert" onclick="switchMultiSubTab('alert','3215450')">3215450</div>
+        </div>
+
+        <!-- Pane container -->
+        <div style="flex:1;overflow:hidden;min-height:0;position:relative">
+
+          <!-- All pane -->
+          <div id="msub-pane-all-alert" style="height:100%;overflow-y:auto;padding:10px 12px">
+
+            <div class="ms-section">
+              <div class="ms-section-head" onclick="toggleMsSection('ms-matrix-b-alert','ms-matrix-a-alert')">
+                <span>Strategy Similarity Matrix</span><span id="ms-matrix-a-alert">▼</span>
+              </div>
+              <div id="ms-matrix-b-alert" style="padding:8px 10px">
+                <div style="font-size:10px;color:var(--text-hint);margin-bottom:5px">A(3215451) monthly pattern rows × B(3215450) monthly pattern cols · lower triangle only · <strong style="color:var(--text-sec)">5 months = 15 comparisons</strong></div>
+                <table style="width:100%;font-size:11px;border-collapse:collapse;margin-bottom:4px">
+                  <thead><tr>
+                    <th style="background:#fafafa;border:1px solid #f0f0f0;padding:3px 8px;text-align:left;font-weight:500;color:var(--text-hint);white-space:nowrap">A ↓ / B →</th>
+                    <th style="background:#fafafa;border:1px solid #f0f0f0;padding:3px 8px;text-align:center;font-weight:500;color:var(--text-hint)">B·01</th>
+                    <th style="background:#fafafa;border:1px solid #f0f0f0;padding:3px 8px;text-align:center;font-weight:500;color:var(--text-hint)">B·02</th>
+                    <th style="background:#fafafa;border:1px solid #f0f0f0;padding:3px 8px;text-align:center;font-weight:500;color:var(--text-hint)">B·03</th>
+                    <th style="background:#fafafa;border:1px solid #f0f0f0;padding:3px 8px;text-align:center;font-weight:500;color:var(--text-hint)">B·04</th>
+                    <th style="background:#fafafa;border:1px solid #f0f0f0;padding:3px 8px;text-align:center;font-weight:500;color:var(--text-hint)">B·05</th>
+                  </tr></thead>
+                  <tbody>
+                    <tr>
+                      <td style="border:1px solid #f0f0f0;padding:3px 8px;font-weight:500;background:#fafafa;white-space:nowrap">A·2026-01</td>
+                      <td style="border:1px solid #f0f0f0;padding:3px 8px;text-align:center;background:#fffbe6;color:#d46b08;font-weight:500" title="Same period">0.91</td>
+                      <td style="border:1px solid #f0f0f0;padding:2px 8px;text-align:center;background:#f5f5f5;color:#d9d9d9;font-size:10px">—</td>
+                      <td style="border:1px solid #f0f0f0;padding:2px 8px;text-align:center;background:#f5f5f5;color:#d9d9d9;font-size:10px">—</td>
+                      <td style="border:1px solid #f0f0f0;padding:2px 8px;text-align:center;background:#f5f5f5;color:#d9d9d9;font-size:10px">—</td>
+                      <td style="border:1px solid #f0f0f0;padding:2px 8px;text-align:center;background:#f5f5f5;color:#d9d9d9;font-size:10px">—</td>
+                    </tr>
+                    <tr>
+                      <td style="border:1px solid #f0f0f0;padding:3px 8px;font-weight:500;background:#fafafa;white-space:nowrap">A·2026-02</td>
+                      <td style="border:1px solid #f0f0f0;padding:3px 8px;text-align:center;color:var(--text-hint)">0.39</td>
+                      <td style="border:1px solid #f0f0f0;padding:3px 8px;text-align:center;background:#fffbe6;color:#d46b08;font-weight:500" title="Same period">0.94</td>
+                      <td style="border:1px solid #f0f0f0;padding:2px 8px;text-align:center;background:#f5f5f5;color:#d9d9d9;font-size:10px">—</td>
+                      <td style="border:1px solid #f0f0f0;padding:2px 8px;text-align:center;background:#f5f5f5;color:#d9d9d9;font-size:10px">—</td>
+                      <td style="border:1px solid #f0f0f0;padding:2px 8px;text-align:center;background:#f5f5f5;color:#d9d9d9;font-size:10px">—</td>
+                    </tr>
+                    <tr>
+                      <td style="border:1px solid #f0f0f0;padding:3px 8px;font-weight:500;background:#fafafa;white-space:nowrap">A·2026-03</td>
+                      <td style="border:1px solid #f0f0f0;padding:3px 8px;text-align:center;color:var(--text-hint)">0.36</td>
+                      <td style="border:1px solid #f0f0f0;padding:3px 8px;text-align:center;color:var(--text-hint)">0.44</td>
+                      <td style="border:1px solid #f0f0f0;padding:3px 8px;text-align:center;background:#fff2f0;color:#cf1322;font-weight:500" title="Same period">0.98</td>
+                      <td style="border:1px solid #f0f0f0;padding:2px 8px;text-align:center;background:#f5f5f5;color:#d9d9d9;font-size:10px">—</td>
+                      <td style="border:1px solid #f0f0f0;padding:2px 8px;text-align:center;background:#f5f5f5;color:#d9d9d9;font-size:10px">—</td>
+                    </tr>
+                    <tr>
+                      <td style="border:1px solid #f0f0f0;padding:3px 8px;font-weight:500;background:#fafafa;white-space:nowrap">A·2026-04</td>
+                      <td style="border:1px solid #f0f0f0;padding:3px 8px;text-align:center;color:var(--text-hint)">0.40</td>
+                      <td style="border:1px solid #f0f0f0;padding:3px 8px;text-align:center;color:var(--text-hint)">0.41</td>
+                      <td style="border:1px solid #f0f0f0;padding:3px 8px;text-align:center;color:var(--text-hint)">0.55</td>
+                      <td style="border:1px solid #f0f0f0;padding:3px 8px;text-align:center;background:#fff2f0;color:#cf1322;font-weight:500" title="Same period">0.99</td>
+                      <td style="border:1px solid #f0f0f0;padding:2px 8px;text-align:center;background:#f5f5f5;color:#d9d9d9;font-size:10px">—</td>
+                    </tr>
+                    <tr>
+                      <td style="border:1px solid #f0f0f0;padding:3px 8px;font-weight:500;background:#fafafa;white-space:nowrap">A·2026-05</td>
+                      <td style="border:1px solid #f0f0f0;padding:3px 8px;text-align:center;color:var(--text-hint)">0.38</td>
+                      <td style="border:1px solid #f0f0f0;padding:3px 8px;text-align:center;color:var(--text-hint)">0.41</td>
+                      <td style="border:1px solid #f0f0f0;padding:3px 8px;text-align:center;color:var(--text-hint)">0.46</td>
+                      <td style="border:1px solid #f0f0f0;padding:3px 8px;text-align:center;color:var(--text-hint)">0.53</td>
+                      <td style="border:1px solid #f0f0f0;padding:3px 8px;text-align:center;background:#fff2f0;color:#cf1322;font-weight:500" title="Same period">0.97</td>
+                    </tr>
+                  </tbody>
+                </table>
+                <div style="display:flex;gap:10px;font-size:10px;color:var(--text-hint);flex-wrap:wrap">
+                  <span><span style="display:inline-block;width:10px;height:10px;background:#fff2f0;border:1px solid #ffa39e;border-radius:2px;vertical-align:middle;margin-right:2px"></span>≥0.95 High</span>
+                  <span><span style="display:inline-block;width:10px;height:10px;background:#fffbe6;border:1px solid #ffe58f;border-radius:2px;vertical-align:middle;margin-right:2px"></span>0.85–0.94 Elevated</span>
+                  <span><span style="display:inline-block;width:10px;height:10px;background:#f0f0f0;border:1px solid #d9d9d9;border-radius:2px;vertical-align:middle;margin-right:2px"></span>&lt;0.85 Normal</span>
+                </div>
+              </div>
+            </div>
+
+            <div class="ms-section">
+              <div class="ms-section-head" onclick="toggleMsSection('ms-overlap-b-alert','ms-overlap-a-alert')">
+                <span>Strategy Overlap</span><span id="ms-overlap-a-alert">▼</span>
+              </div>
+              <div id="ms-overlap-b-alert" style="padding:8px 10px">
+                <table style="width:100%;font-size:11px;border-collapse:collapse;margin-bottom:8px">
+                  <thead><tr>
+                    <th style="background:#fafafa;border:1px solid #f0f0f0;padding:3px 8px;text-align:left;font-weight:500;color:var(--text-hint)">Dimension</th>
+                    <th style="background:#fafafa;border:1px solid #f0f0f0;padding:3px 8px;text-align:center;font-weight:500;color:var(--text-hint)">3215451</th>
+                    <th style="background:#fafafa;border:1px solid #f0f0f0;padding:3px 8px;text-align:center;font-weight:500;color:var(--text-hint)">3215450</th>
+                  </tr></thead>
+                  <tbody>
+                    <tr><td style="border:1px solid #f0f0f0;padding:3px 8px;color:var(--text-sec)">Large Order Bias</td><td style="border:1px solid #f0f0f0;padding:3px 8px;text-align:center;color:#cf1322;font-weight:500">Yes (100%)</td><td style="border:1px solid #f0f0f0;padding:3px 8px;text-align:center;color:#cf1322;font-weight:500">Yes (83%)</td></tr>
+                    <tr><td style="border:1px solid #f0f0f0;padding:3px 8px;color:var(--text-sec)">Order Type</td><td style="border:1px solid #f0f0f0;padding:3px 8px;text-align:center">LMT (100%)</td><td style="border:1px solid #f0f0f0;padding:3px 8px;text-align:center">LMT (100%)</td></tr>
+                    <tr><td style="border:1px solid #f0f0f0;padding:3px 8px;color:var(--text-sec)">Price Deviation</td><td style="border:1px solid #f0f0f0;padding:3px 8px;text-align:center;color:#cf1322">High</td><td style="border:1px solid #f0f0f0;padding:3px 8px;text-align:center;color:#cf1322">High</td></tr>
+                    <tr><td style="border:1px solid #f0f0f0;padding:3px 8px;color:var(--text-sec)">PnL</td><td style="border:1px solid #f0f0f0;padding:3px 8px;text-align:center;color:#cf1322">+$1,691</td><td style="border:1px solid #f0f0f0;padding:3px 8px;text-align:center;color:#cf1322">−$1,702</td></tr>
+                    <tr><td style="border:1px solid #f0f0f0;padding:3px 8px;color:var(--text-sec)">Intraday / HFT</td><td style="border:1px solid #f0f0f0;padding:3px 8px;text-align:center;color:var(--text-hint)">None</td><td style="border:1px solid #f0f0f0;padding:3px 8px;text-align:center;color:var(--text-hint)">None</td></tr>
+                  </tbody>
+                </table>
+                <div style="font-size:11px;background:#fff2f0;border:1px solid #ffa39e;border-radius:4px;padding:5px 10px;color:#cf1322"><strong>⚠</strong> 2026-03-19 combined market share <strong>12.57%</strong> exceeds 10% threshold</div>
+              </div>
+            </div>
+
+            <div class="ms-section">
+              <div class="ms-section-head" onclick="toggleMsSection('ms-summary-b-alert','ms-summary-a-alert')">
+                <span>Account Summaries</span><span id="ms-summary-a-alert">▼</span>
+              </div>
+              <div id="ms-summary-b-alert" style="padding:8px 10px">
+                <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px">
+                  <div style="border:1px solid #f0f0f0;border-radius:4px;padding:8px;font-size:11px">
+                    <div style="font-weight:600;margin-bottom:4px">3215451</div>
+                    <div style="color:var(--text-sec);margin-bottom:2px">IP: <span style="color:#cf1322">Cross-city (Beijing, Anqing)</span></div>
+                    <div style="color:var(--text-sec);margin-bottom:2px">PnL: <span style="color:#cf1322">+$1,691.53</span></div>
+                    <div style="color:var(--text-sec);margin-bottom:2px">Price deviation: +4.2% vs baseline</div>
+                    <div style="color:var(--text-sec)">Alerts: 4 (3 same rule)</div>
+                  </div>
+                  <div style="border:1px solid #f0f0f0;border-radius:4px;padding:8px;font-size:11px">
+                    <div style="font-weight:600;margin-bottom:4px">3215450</div>
+                    <div style="color:var(--text-sec);margin-bottom:2px">IP: <span style="color:var(--text-hint)">No cross-city</span></div>
+                    <div style="color:var(--text-sec);margin-bottom:2px">PnL: <span style="color:#cf1322">−$1,702.20</span></div>
+                    <div style="color:var(--text-sec);margin-bottom:2px">Price deviation: Mixed</div>
+                    <div style="color:var(--text-sec)">Alerts: 0 historical</div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+          </div><!-- /All pane -->
+
+          <!-- Account 3215451 pane -->
+          <div id="msub-pane-3215451-alert" style="display:none;height:100%;overflow-y:auto;padding:10px 12px">
+            <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:6px;margin-bottom:10px">
+              <div style="background:#fafafa;border:1px solid #f0f0f0;border-radius:4px;padding:7px 8px;text-align:center">
+                <div style="font-size:10px;color:var(--text-hint)">历史 Alert 次数</div>
+                <div style="font-size:16px;font-weight:600;color:#d46b08;margin-top:2px">4</div>
+                <div style="font-size:10px;color:var(--text-hint)">同类规则 × 3</div>
+              </div>
+              <div style="background:#fff2f0;border:1px solid #ffa39e;border-radius:4px;padding:7px 8px;text-align:center">
+                <div style="font-size:10px;color:#cf1322">本次盈亏</div>
+                <div style="font-size:16px;font-weight:600;color:#cf1322;margin-top:2px">+$1,691</div>
+                <div style="font-size:10px;color:var(--text-hint)">累计 $284K</div>
+              </div>
+              <div style="background:#fff2f0;border:1px solid #ffa39e;border-radius:4px;padding:7px 8px;text-align:center">
+                <div style="font-size:10px;color:#cf1322">成交量 / 均值</div>
+                <div style="font-size:16px;font-weight:600;color:#cf1322;margin-top:2px">4.2×</div>
+                <div style="font-size:10px;color:var(--text-hint)">均值 7 手/笔</div>
+              </div>
+              <div style="background:#fff2f0;border:1px solid #ffa39e;border-radius:4px;padding:7px 8px;text-align:center">
+                <div style="font-size:10px;color:#cf1322">角色</div>
+                <div style="font-size:13px;font-weight:600;color:#cf1322;margin-top:4px">获益方</div>
+              </div>
+            </div>
+            <div style="font-size:11px;color:var(--text-sec);line-height:1.75;background:#fdf8ff;border:1px solid var(--ai-border);border-radius:4px;padding:8px 10px;margin-bottom:8px">
+              <span class="ai-badge" style="font-size:9px;padding:0 4px;margin-right:4px">AI</span>
+              该账户在本案时间窗口内集中实现盈利，买入价格持续偏高于市场均价 <strong style="color:#cf1322">+4.2%</strong>，成交量是其 SPXW 历史均值的 4.2×。今年内第 3 次同类规则触发，历史案例相似度 87%。结合对手方账户 3215450 的同步亏损，高度符合预先安排交易特征。
+            </div>
+            <div style="display:flex;flex-wrap:wrap;gap:4px;margin-bottom:8px">
+              <span class="tag tag-high" style="font-size:10px">Synchronized Reverse Trading</span>
+              <span class="tag tag-ai" style="font-size:10px">Shared IP · Same Session</span>
+              <span class="tag tag-medium" style="font-size:10px">Concentrated Options Window</span>
+            </div>
+            <div style="text-align:right;font-size:11px">
+              <span style="color:var(--ai-color);cursor:pointer" onclick="showPage('client-details')">查看完整客户档案 →</span>
+            </div>
+          </div>
+
+          <!-- Account 3215450 pane -->
+          <div id="msub-pane-3215450-alert" style="display:none;height:100%;overflow-y:auto;padding:10px 12px">
+            <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:6px;margin-bottom:10px">
+              <div style="background:#fafafa;border:1px solid #f0f0f0;border-radius:4px;padding:7px 8px;text-align:center">
+                <div style="font-size:10px;color:var(--text-hint)">历史 Alert 次数</div>
+                <div style="font-size:16px;font-weight:600;color:#389e0d;margin-top:2px">0</div>
+                <div style="font-size:10px;color:var(--text-hint)">首次触发</div>
+              </div>
+              <div style="background:#fff2f0;border:1px solid #ffa39e;border-radius:4px;padding:7px 8px;text-align:center">
+                <div style="font-size:10px;color:#cf1322">本次盈亏</div>
+                <div style="font-size:16px;font-weight:600;color:#cf1322;margin-top:2px">−$1,702</div>
+                <div style="font-size:10px;color:var(--text-hint)">连续亏损 8 笔</div>
+              </div>
+              <div style="background:#fafafa;border:1px solid #f0f0f0;border-radius:4px;padding:7px 8px;text-align:center">
+                <div style="font-size:10px;color:var(--text-hint)">成交量 / 均值</div>
+                <div style="font-size:16px;font-weight:600;color:#d46b08;margin-top:2px">3.1×</div>
+                <div style="font-size:10px;color:var(--text-hint)">同期</div>
+              </div>
+              <div style="background:#fffbe6;border:1px solid #ffe58f;border-radius:4px;padding:7px 8px;text-align:center">
+                <div style="font-size:10px;color:#d46b08">角色</div>
+                <div style="font-size:13px;font-weight:600;color:#d46b08;margin-top:4px">对手方</div>
+              </div>
+            </div>
+            <div style="font-size:11px;color:var(--text-sec);line-height:1.75;background:#fdf8ff;border:1px solid var(--ai-border);border-radius:4px;padding:8px 10px;margin-bottom:8px">
+              <span class="ai-badge" style="font-size:9px;padding:0 4px;margin-right:4px">AI</span>
+              该账户与 3215451 共用 IP（218.82.19.9），在本案窗口内主动承担全部亏损 −$1,702.20，与其近 6 个月持续亏损模式（−8 笔）高度吻合。操作序列相似度 91%，疑似主动配合对手方获利。
+            </div>
+            <div style="display:flex;flex-wrap:wrap;gap:4px;margin-bottom:8px">
+              <span class="tag tag-high" style="font-size:10px">Persistent Loss Pattern</span>
+              <span class="tag tag-ai" style="font-size:10px">Shared IP · 218.82.19.9</span>
+            </div>
+            <div style="text-align:right;font-size:11px">
+              <span style="color:var(--ai-color);cursor:pointer">查看完整客户档案 →</span>
+            </div>
+          </div>
+
+        </div><!-- /pane container -->
+      </div><!-- /inv-multi-alert -->
+    </div>
     </div>
 
     <!-- CASE content -->
@@ -4266,7 +4414,7 @@ function openInvSheet() {
   const sheet = document.getElementById('inv-sheet');
   if (!sheet.classList.contains('open')) {
     sheet.classList.add('open');
-    document.getElementById('inv-sheet-toggle-btn').textContent = 'Collapse ↓';
+    document.getElementById('inv-sheet-toggle-btn').textContent = '⤢ Fullscreen';
     document.querySelectorAll('.detail-page.active').forEach(p => p.classList.add('sheet-open'));
     // Draw after CSS transition completes (transition: height .28s)
     setTimeout(() => {
@@ -4286,9 +4434,9 @@ function openInvSheet() {
 
 function collapseInvSheet() {
   const sheet = document.getElementById('inv-sheet');
-  sheet.classList.remove('open');
-  document.getElementById('inv-sheet-toggle-btn').textContent = 'Expand ↑';
-  document.querySelectorAll('.detail-page').forEach(p => p.classList.remove('sheet-open'));
+  sheet.classList.remove('open', 'fullscreen');
+  document.getElementById('inv-sheet-toggle-btn').textContent = '⤢ Fullscreen';
+  document.querySelectorAll('.detail-page').forEach(p => { p.classList.remove('sheet-open'); p.classList.remove('sheet-fullscreen'); });
 }
 
 function hideInvSheet() {
@@ -4302,7 +4450,7 @@ function openInvToTab(suffix, tabType) {
   const sheet = document.getElementById('inv-sheet');
   if (!sheet.classList.contains('open')) {
     sheet.classList.add('open');
-    document.getElementById('inv-sheet-toggle-btn').textContent = 'Collapse ↓';
+    document.getElementById('inv-sheet-toggle-btn').textContent = '⤢ Fullscreen';
     document.querySelectorAll('.detail-page.active').forEach(p => p.classList.add('sheet-open'));
     setTimeout(() => switchSheetTab(suffix, tabType), 300);
   } else {
@@ -4315,6 +4463,51 @@ function toggleInvSheet() {
   const sheet = document.getElementById('inv-sheet');
   if (sheet.classList.contains('open')) collapseInvSheet();
   else openInvSheet();
+}
+
+function toggleInvFullscreen() {
+  const sheet = document.getElementById('inv-sheet');
+  const btn = document.getElementById('inv-sheet-toggle-btn');
+  if (sheet.classList.contains('fullscreen')) {
+    sheet.classList.remove('fullscreen');
+    sheet.classList.add('open');
+    document.querySelectorAll('.detail-page').forEach(p => { p.classList.remove('sheet-fullscreen'); p.classList.add('sheet-open'); });
+    btn.textContent = '⤢ Fullscreen';
+  } else {
+    sheet.classList.remove('open');
+    sheet.classList.add('fullscreen');
+    document.querySelectorAll('.detail-page').forEach(p => { p.classList.remove('sheet-open'); p.classList.add('sheet-fullscreen'); });
+    btn.textContent = '⤡ Restore';
+  }
+}
+
+function switchMultiSubTab(suffix, key) {
+  document.querySelectorAll('[id^="msub-pane-"][id$="-' + suffix + '"]').forEach(p => p.style.display = 'none');
+  document.querySelectorAll('[id^="msub-"][id$="-' + suffix + '"]').forEach(t => { if (!t.id.startsWith('msub-pane-')) t.classList.remove('active'); });
+  const pane = document.getElementById('msub-pane-' + key + '-' + suffix);
+  if (pane) pane.style.display = 'block';
+  const tab = document.getElementById('msub-' + key + '-' + suffix);
+  if (tab) tab.classList.add('active');
+}
+
+function setMultiPeriod(btn) {
+  btn.closest('[data-period-group]').querySelectorAll('.period-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+}
+
+function rerunMultiAnalysis(suffix) {
+  const btn = document.getElementById('multi-rerun-btn-' + suffix);
+  if (!btn) return;
+  btn.disabled = true; btn.textContent = '⏳ Running…';
+  setTimeout(() => { btn.disabled = false; btn.textContent = '↻ Re-run'; }, 2000);
+}
+
+function toggleMsSection(bodyId, arrowId) {
+  const b = document.getElementById(bodyId);
+  const a = document.getElementById(arrowId);
+  const open = b.style.display !== 'none';
+  b.style.display = open ? 'none' : 'block';
+  a.textContent = open ? '▶' : '▼';
 }
 
 function switchSheetTab(suffix, type) {

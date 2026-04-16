@@ -1126,7 +1126,48 @@ tbody tr:hover td { background: #fffdf0; }
         </div>
       </div>
 
-      <!-- ⑥ Actions + Ask AI -->
+      <!-- ⑥ Client Background Snapshot (collapsible) -->
+      <div style="border:1px solid var(--ai-border);border-radius:4px;overflow:hidden;margin-bottom:14px">
+        <div style="padding:7px 12px;background:var(--ai-bg);font-size:11px;font-weight:600;color:var(--ai-dark);cursor:pointer;display:flex;align-items:center;justify-content:space-between;user-select:none" onclick="var b=document.getElementById('ai-cs-body');var a=document.getElementById('ai-cs-arrow');var open=b.style.display!=='none';b.style.display=open?'none':'block';a.textContent=open?'▶':'▼'">
+          <span>Client Background Snapshot &nbsp;<span style="font-weight:400;color:var(--text-hint)">Account 3215451 · SPXW · 2025-10 ~ 2026-04</span></span>
+          <span id="ai-cs-arrow">▶</span>
+        </div>
+        <div id="ai-cs-body" style="display:none">
+          <div style="padding:10px 14px;border-top:1px solid #ede0ff">
+            <div style="font-size:11px;color:var(--text-hint);margin-bottom:7px">该账户 SPXW 历史交易概览（参照基线，用于判断本次告警是否属于行为偏离）</div>
+            <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:6px;margin-bottom:9px">
+              <div style="background:#fafafa;border:1px solid #f0f0f0;border-radius:4px;padding:6px 8px;text-align:center">
+                <div style="font-size:10px;color:var(--text-hint)">历史 Alert 次数</div>
+                <div style="font-size:15px;font-weight:600;color:#d46b08;margin-top:2px">4</div>
+                <div style="font-size:10px;color:var(--text-hint)">同类规则 × 3</div>
+              </div>
+              <div style="background:#fafafa;border:1px solid #f0f0f0;border-radius:4px;padding:6px 8px;text-align:center">
+                <div style="font-size:10px;color:var(--text-hint)">SPXW 累计盈利</div>
+                <div style="font-size:15px;font-weight:600;color:#cf1322;margin-top:2px">$284,320</div>
+                <div style="font-size:10px;color:var(--text-hint)">近 6 个月</div>
+              </div>
+              <div style="background:#fff2f0;border:1px solid #ffa39e;border-radius:4px;padding:6px 8px;text-align:center">
+                <div style="font-size:10px;color:#cf1322">本次成交量 vs 均值</div>
+                <div style="font-size:15px;font-weight:600;color:#cf1322;margin-top:2px">4.2×</div>
+                <div style="font-size:10px;color:var(--text-hint)">均值 7 手/笔</div>
+              </div>
+              <div style="background:#fff2f0;border:1px solid #ffa39e;border-radius:4px;padding:6px 8px;text-align:center">
+                <div style="font-size:10px;color:#cf1322">价格偏离 vs 基线</div>
+                <div style="font-size:15px;font-weight:600;color:#cf1322;margin-top:2px">+4.2%</div>
+                <div style="font-size:10px;color:var(--text-hint)">基线均值 0.62%</div>
+              </div>
+            </div>
+            <div style="font-size:11px;color:var(--text-sec);line-height:1.75;background:#fdf8ff;border:1px solid #ede0ff;border-radius:4px;padding:8px 10px">
+              该账户 90 天内在 SPXW 期权上触发 4 次告警，今日本笔为今年第 3 次同类规则触发。本次成交量是该账户 SPXW 历史均值的 <strong style="color:#cf1322">4.2×</strong>，价格偏离 +4.2% 相比账户基线 0.62% 显著异常。盈利高度集中：前 2 次密集交易窗口占总盈利 89.9%，与本次交易模式完全一致。
+            </div>
+            <div style="margin-top:7px;text-align:right">
+              <span style="font-size:11px;color:var(--ai-color);cursor:pointer" onclick="showPage('client-details')">查看完整客户档案 →</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ⑦ Actions + Ask AI -->
       <div class="ai-actions-row">
         <button class="btn btn-ai btn-sm" onclick="openInvToTab('alert','graph')">Association Graph</button>
         <button class="btn btn-ai btn-sm" onclick="openInvToTab('alert','spread')">Spread Analysis</button>
@@ -1604,19 +1645,44 @@ tbody tr:hover td { background: #fffdf0; }
     </div>
   </div>
 
-  <!-- AI User Profile Report -->
+  <!-- AI Analyses Index (replaces full profile report — context-specific analyses live in Alert/Case) -->
   <div class="ai-card" style="margin-bottom:12px">
     <div class="ai-card-head">
-      <div class="ai-card-title"><span class="ai-badge">AI</span> User Profile Report</div>
-      <div style="display:flex;align-items:center;gap:10px">
-        <span id="client-ai-ts" style="font-size:11px;color:var(--text-dis)">Generated 2026-04-07 16:11 &nbsp;·&nbsp; Cached</span>
-        <button class="btn btn-ai btn-sm" id="client-rerun-btn" onclick="rerunClientAI()">↻ Re-run</button>
-      </div>
+      <div class="ai-card-title"><span class="ai-badge">AI</span> Recent AI Analyses</div>
+      <span style="font-size:11px;color:var(--text-dis)">Context-specific · linked to Alert / Case</span>
     </div>
     <div class="ai-card-body" style="padding:0">
-      <div id="profile-report-content"></div>
-    </div><!-- /ai-card-body -->
-  </div><!-- /AI User Profile Report -->
+      <div style="padding:6px 0">
+        <div style="display:flex;align-items:center;padding:8px 16px;border-bottom:1px solid var(--ai-border);cursor:pointer;transition:background .15s" onclick="showPage('alert-details')" onmouseover="this.style.background='#fdf8ff'" onmouseout="this.style.background=''">
+          <div style="flex:1;min-width:0">
+            <div style="font-size:12px;font-weight:500;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">Alert #19150109 · SPXW 20260406 6615.0 C</div>
+            <div style="font-size:11px;color:var(--text-hint);margin-top:1px">Pre-Arranged Trading · 2026-04-07 · Risk Score 82</div>
+          </div>
+          <span style="background:#fff2f0;color:#cf1322;border:1px solid #ffa39e;border-radius:10px;font-size:10px;font-weight:600;padding:2px 8px;margin-left:10px;flex-shrink:0">HIGH</span>
+          <span style="color:var(--text-dis);margin-left:8px;font-size:12px">→</span>
+        </div>
+        <div style="display:flex;align-items:center;padding:8px 16px;border-bottom:1px solid var(--ai-border);cursor:pointer;transition:background .15s" onclick="showPage('case-details')" onmouseover="this.style.background='#fdf8ff'" onmouseout="this.style.background=''">
+          <div style="flex:1;min-width:0">
+            <div style="font-size:12px;font-weight:500">Case TS_798 · SPXW (Multiple Alerts)</div>
+            <div style="font-size:11px;color:var(--text-hint);margin-top:1px">Wash Trade Investigation · 2025-11-02 · Risk HIGH</div>
+          </div>
+          <span style="background:#fff2f0;color:#cf1322;border:1px solid #ffa39e;border-radius:10px;font-size:10px;font-weight:600;padding:2px 8px;margin-left:10px;flex-shrink:0">HIGH</span>
+          <span style="color:var(--text-dis);margin-left:8px;font-size:12px">→</span>
+        </div>
+        <div style="display:flex;align-items:center;padding:8px 16px;cursor:pointer;transition:background .15s" onmouseover="this.style.background='#fdf8ff'" onmouseout="this.style.background=''">
+          <div style="flex:1;min-width:0">
+            <div style="font-size:12px;font-weight:500">Alert #19149230 · SPXW 20251217 5900.0 C</div>
+            <div style="font-size:11px;color:var(--text-hint);margin-top:1px">Pre-Arranged Trading · 2025-12-18 · Risk Score 61</div>
+          </div>
+          <span style="background:#fffbe6;color:#d46b08;border:1px solid #ffe58f;border-radius:10px;font-size:10px;font-weight:600;padding:2px 8px;margin-left:10px;flex-shrink:0">MED</span>
+          <span style="color:var(--text-dis);margin-left:8px;font-size:12px">→</span>
+        </div>
+      </div>
+      <div style="padding:7px 16px;border-top:1px solid var(--ai-border);font-size:11px;color:var(--text-hint);text-align:center">
+        AI analyses are generated in Alert / Case context &nbsp;·&nbsp; <span style="color:var(--ai-color);cursor:pointer" onclick="showPage('alert-details')">View latest analysis →</span>
+      </div>
+    </div>
+  </div><!-- /AI Analyses Index -->
 
   <!-- Lifecycle -->
   <div class="card" style="margin-bottom:12px">
@@ -4759,7 +4825,7 @@ function _prSummary(s) {
 }
 
 // ── AI Report cache flags ──
-const _aiCache = { alert: true, case: false, client: false };
+const _aiCache = { alert: true, case: false };
 
 function _fmtNow() {
   const d = new Date();
@@ -4801,24 +4867,13 @@ function rerunCaseAI() {
   }, 1800);
 }
 
-function rerunClientAI() {
-  const btn = document.getElementById('client-rerun-btn');
-  const ts  = document.getElementById('client-ai-ts');
-  btn.disabled = true; btn.textContent = '⏳ Running…';
-  setTimeout(() => {
-    renderProfileReport(PROFILE_REPORT);
-    _clearStale(ts, 'Generated ' + _fmtNow() + ' · Fresh');
-    _aiCache.client = true;
-    btn.disabled = false; btn.textContent = '↻ Re-run';
-  }, 1800);
-}
 
 // ── AI timestamp staleness highlight ──
 // Parses "Generated YYYY-MM-DD HH:MM …" from element text;
 // if > 3 days old vs today, turns it amber with a warning icon.
 function checkAITimestamps() {
   const TODAY = new Date('2026-04-15');
-  const IDS   = ['alert-ai-ts', 'case-ai-ts', 'client-ai-ts'];
+  const IDS   = ['alert-ai-ts', 'case-ai-ts'];
   IDS.forEach(id => {
     const el = document.getElementById(id);
     if (!el) return;
@@ -4839,8 +4894,7 @@ function checkAITimestamps() {
 }
 
 document.addEventListener('DOMContentLoaded', () => {
-  if (!_aiCache.client) { renderProfileReport(PROFILE_REPORT); _aiCache.client = true; }
-  if (!_aiCache.case)   { renderCaseReport(CASE_REPORT);   _aiCache.case = true; }
+  if (!_aiCache.case) { renderCaseReport(CASE_REPORT); _aiCache.case = true; }
   checkAITimestamps();
 });
 

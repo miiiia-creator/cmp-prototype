@@ -320,6 +320,7 @@ tbody tr:hover td { background: #fffdf0; }
 /* spread panes need flex display (overrides generic .tab-pane.active display:block) */
 #inv-sheet .tab-pane { padding: 0; }
 #inv-sheet .tab-pane[id^="inv-spread"].active { display: flex; }
+#inv-sheet #inv-multi-alert.active { display: flex; }
 /* push detail page content above sheet */
 .page.detail-page { padding-bottom: 60px; }
 .page.detail-page.sheet-open { padding-bottom: 536px; }
@@ -3804,7 +3805,7 @@ function submitWLModal() {
         <canvas id="assoc-canvas-alert" height="340" style="width:100%;display:block;border:1px solid var(--border);border-radius:4px"></canvas>
       </div>
       <!-- Associate Accounts Analysis -->
-      <div class="tab-pane" id="inv-multi-alert" style="flex:1;display:flex;flex-direction:column;min-height:0;overflow:hidden">
+      <div class="tab-pane" id="inv-multi-alert" style="flex:1;flex-direction:column;min-height:0;overflow:hidden">
 
         <!-- Level 1: Account list -->
         <div style="padding:8px 12px;background:#fafafa;border-bottom:1px solid #f0f0f0;flex-shrink:0">

@@ -1031,64 +1031,19 @@ tbody tr:hover td { background: #fffdf0; }
     </div>
     <div class="ai-card-body">
 
-      <!-- ① Verdict Banner -->
-      <div style="background:#fff2f0;border:1px solid #ffa39e;border-radius:5px;padding:9px 14px;margin-bottom:14px;display:flex;align-items:flex-start;gap:10px">
-        <span style="font-size:20px;line-height:1;flex-shrink:0">⚠️</span>
-        <div>
-          <div style="font-weight:700;font-size:13px;color:#820014;margin-bottom:2px">检测到可疑交易行为 · 建议升级处理</div>
-          <div style="font-size:11px;color:#cf1322">发现账户 3215451 与关联账户 3215450 在 08:38–08:49 窗口内存在高度同步的对向交易，共用 IP，符合 Pre-Arranged Trading 典型特征（历史案例相似度 87%）</div>
-        </div>
-      </div>
-
-      <!-- ② Score + Recommendation + Behavior Tags -->
-      <div class="ai-score-row">
-        <div>
+      <!-- ① Score + Verdict (same row) -->
+      <div style="display:flex;align-items:flex-start;gap:14px;margin-bottom:14px">
+        <div style="flex-shrink:0;text-align:center">
           <div class="ai-score-big high">82</div>
-          <div style="font-size:11px;color:var(--text-hint);margin-top:3px">Risk Score / 100</div>
-          <div style="font-size:11px;color:var(--text-hint)">Confidence 74%</div>
+          <div style="font-size:10px;color:var(--text-hint);margin-top:3px">Confidence 74%</div>
         </div>
-        <div>
-          <div style="font-size:11px;color:var(--text-hint);margin-bottom:4px">Disposition Recommendation</div>
-          <span class="ai-recommend ai-recommend-escalate">⬆ Recommend Escalate</span>
-        </div>
-        <div style="margin-left:auto">
-          <div style="font-size:11px;color:var(--text-hint);margin-bottom:4px">Behavior Tags</div>
-          <div style="display:flex;flex-wrap:wrap;gap:4px">
-            <span class="tag tag-high">Synchronized Reverse Trading</span>
-            <span class="tag tag-medium">Concentrated Options Window</span>
-            <span class="tag tag-ai">Shared IP · Same Session</span>
-          </div>
+        <div style="flex:1;background:#fff2f0;border:1px solid #ffa39e;border-radius:5px;padding:9px 14px">
+          <div style="font-weight:700;font-size:13px;color:#820014;margin-bottom:2px">检测到可疑交易行为 · Pre-Arranged Trading</div>
+          <div style="font-size:11px;color:#cf1322;line-height:1.75">发现账户 3215451 与关联账户 3215450 在 08:38–08:49 窗口内存在高度同步的对向交易，共用 IP（218.82.19.9），操作序列相似度 91%，符合 Pre-Arranged Trading 典型特征（历史案例相似度 87%）。两账户间盈亏完全转移（+$1,691 / −$1,702），疑似人为收益转移。</div>
         </div>
       </div>
 
-      <!-- ③ Anomaly Category Scores -->
-      <div style="margin-bottom:14px">
-        <div style="font-size:11px;font-weight:600;color:var(--text);margin-bottom:6px">Anomaly Category Scores <span style="font-size:10px;font-weight:400;color:var(--text-hint)">(1–10 · ≥7 high · 4–6 medium · ≤3 low)</span></div>
-        <div style="display:grid;grid-template-columns:repeat(5,1fr);gap:6px">
-          <div style="text-align:center;background:#fff2f0;border:1px solid #ffa39e;border-radius:4px;padding:7px 4px">
-            <div style="font-size:22px;font-weight:700;color:#cf1322;line-height:1">9</div>
-            <div style="font-size:10px;color:#cf1322;margin-top:3px;line-height:1.3">Pre-Arranged<br>Trading</div>
-          </div>
-          <div style="text-align:center;background:#fff2f0;border:1px solid #ffa39e;border-radius:4px;padding:7px 4px">
-            <div style="font-size:22px;font-weight:700;color:#cf1322;line-height:1">8</div>
-            <div style="font-size:10px;color:#cf1322;margin-top:3px;line-height:1.3">Price<br>Driver</div>
-          </div>
-          <div style="text-align:center;background:#fffbe6;border:1px solid #ffe58f;border-radius:4px;padding:7px 4px">
-            <div style="font-size:22px;font-weight:700;color:#d46b08;line-height:1">5</div>
-            <div style="font-size:10px;color:#d46b08;margin-top:3px;line-height:1.3">Order<br>Manipulation</div>
-          </div>
-          <div style="text-align:center;background:#f6ffed;border:1px solid #b7eb8f;border-radius:4px;padding:7px 4px">
-            <div style="font-size:22px;font-weight:700;color:#389e0d;line-height:1">3</div>
-            <div style="font-size:10px;color:#389e0d;margin-top:3px;line-height:1.3">Wash<br>Trade</div>
-          </div>
-          <div style="text-align:center;background:#f6ffed;border:1px solid #b7eb8f;border-radius:4px;padding:7px 4px">
-            <div style="font-size:22px;font-weight:700;color:#389e0d;line-height:1">2</div>
-            <div style="font-size:10px;color:#389e0d;margin-top:3px;line-height:1.3">Layering /<br>Spoofing</div>
-          </div>
-        </div>
-      </div>
-
-      <!-- ④ Data Analysis (collapsible) -->
+      <!-- ② Data Analysis -->
       <div style="border:1px solid var(--ai-border);border-radius:4px;overflow:hidden;margin-bottom:14px">
         <div style="padding:7px 12px;background:var(--ai-bg);font-size:11px;font-weight:600;color:var(--ai-dark);cursor:pointer;display:flex;align-items:center;justify-content:space-between;user-select:none" onclick="var b=document.getElementById('ai-da-body');var a=document.getElementById('ai-da-arrow');var open=b.style.display!=='none';b.style.display=open?'none':'block';a.textContent=open?'▶':'▼'">
           <span>Data Analysis</span><span id="ai-da-arrow">▼</span>
@@ -1133,37 +1088,34 @@ tbody tr:hover td { background: #fffdf0; }
         </div>
       </div>
 
-      <!-- ⑤ Per-category Anomaly Analysis -->
-      <div style="margin-bottom:14px">
-        <div style="font-size:11px;font-weight:600;color:var(--text);margin-bottom:6px">Anomaly Analysis</div>
-        <div style="border:1px solid #ffa39e;border-radius:4px;margin-bottom:6px;overflow:hidden">
-          <div style="background:#fff2f0;padding:6px 12px;display:flex;align-items:center;justify-content:space-between">
-            <span style="font-size:11px;font-weight:600;color:#cf1322">Pre-Arranged Trading</span>
-            <span style="background:#cf1322;color:#fff;font-size:10px;font-weight:600;padding:1px 8px;border-radius:8px">Score 9 · HIGH</span>
-          </div>
-          <div style="padding:8px 12px;font-size:11px;color:var(--text-sec);line-height:1.8">
-            账户 3215451 与 3215450 在 08:38–08:49 窗口内呈高度同步对向交易，结合共用 IP 及操作序列相似性（91%），符合预先安排交易的典型特征，历史案例相似度 87%。两账户间盈亏完全转移，疑似为人为收益转移行为。
-            <div style="margin-top:5px;color:#820014;font-weight:600">结论：高风险 · 建议立案调查，冻结账户并调取完整操作日志</div>
-          </div>
+      <!-- ③ Anomaly Analysis (same card style as Data Analysis) -->
+      <div style="border:1px solid var(--ai-border);border-radius:4px;overflow:hidden;margin-bottom:14px">
+        <div style="padding:7px 12px;background:var(--ai-bg);font-size:11px;font-weight:600;color:var(--ai-dark);cursor:pointer;display:flex;align-items:center;justify-content:space-between;user-select:none" onclick="var b=document.getElementById('ai-aa-body');var a=document.getElementById('ai-aa-arrow');var open=b.style.display!=='none';b.style.display=open?'none':'block';a.textContent=open?'▶':'▼'">
+          <span>Anomaly Analysis</span><span id="ai-aa-arrow">▼</span>
         </div>
-        <div style="border:1px solid #ffe58f;border-radius:4px;overflow:hidden">
-          <div style="background:#fffbe6;padding:6px 12px;display:flex;align-items:center;justify-content:space-between">
-            <span style="font-size:11px;font-weight:600;color:#d46b08">Price Driver</span>
-            <span style="background:#d46b08;color:#fff;font-size:10px;font-weight:600;padding:1px 8px;border-radius:8px">Score 8 · MEDIUM-HIGH</span>
+        <div id="ai-aa-body">
+          <div style="padding:8px 12px;border-top:1px solid #ede0ff">
+            <div style="font-size:11px;font-weight:600;color:#cf1322;margin-bottom:4px">Pre-Arranged Trading</div>
+            <div style="font-size:11px;color:var(--text-sec);line-height:1.8">
+              账户 3215451 与 3215450 在 08:38–08:49 窗口内呈高度同步对向交易，结合共用 IP 及操作序列相似性（91%），符合预先安排交易的典型特征，历史案例相似度 87%。两账户间盈亏完全转移，疑似为人为收益转移行为。
+              <div style="margin-top:5px;color:#820014;font-weight:600">结论：高风险 · 建议立案调查，冻结账户并调取完整操作日志</div>
+            </div>
           </div>
-          <div style="padding:8px 12px;font-size:11px;color:var(--text-sec);line-height:1.8">
-            成交价持续偏高于市场中间价约 4.2%，但鉴于 SPXW 末日期权流动性低，单独判断不足以构成价格操纵。需结合 Pre-Arranged 证据综合认定。
-            <div style="margin-top:5px;color:#d46b08;font-weight:600">结论：中高风险 · 与主案合并处理，无需单独立案</div>
+          <div style="padding:8px 12px;border-top:1px solid #ede0ff">
+            <div style="font-size:11px;font-weight:600;color:#d46b08;margin-bottom:4px">Price Driver</div>
+            <div style="font-size:11px;color:var(--text-sec);line-height:1.8">
+              成交价持续偏高于市场中间价约 4.2%，但鉴于 SPXW 末日期权流动性低，单独判断不足以构成价格操纵。需结合 Pre-Arranged 证据综合认定。
+              <div style="margin-top:5px;color:#d46b08;font-weight:600">结论：中高风险 · 与主案合并处理，无需单独立案</div>
+            </div>
           </div>
         </div>
       </div>
 
-      <!-- ⑦ Actions + Ask AI -->
+      <!-- ④ Actions + Ask AI -->
       <div class="ai-actions-row">
-        <button class="btn btn-ai btn-sm" onclick="openInvToTab('alert','graph')">Association Graph</button>
         <button class="btn btn-ai btn-sm" onclick="openInvToTab('alert','spread')">Spread Analysis</button>
+        <button class="btn btn-ai btn-sm" onclick="openInvToTab('alert','graph')">Association Graph</button>
         <button class="btn btn-ai btn-sm" onclick="openInvToTab('alert','multi')">Associate Accounts</button>
-        <button class="btn btn-ai btn-sm" onclick="sendChip('re_evaluate')">Re-evaluate</button>
         <div style="flex:1"></div>
         <button class="ask-ai-toggle" onclick="toggleAsk()"><span id="ask-toggle-label">Ask AI ↓</span></button>
       </div>

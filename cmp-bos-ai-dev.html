@@ -1422,45 +1422,45 @@ tbody tr:hover td { background: #fffdf0; }
     </div>
   </div>
 
-  <!-- Related Clients -->
-  <div class="card">
-    <div class="section-title">Related Clients <span class="section-subtitle">2 Accounts</span></div>
-    <table>
-      <thead><tr><th>Account ID</th><th>Status</th><th>AI Risk</th><th>Linkage</th><th>Op</th></tr></thead>
-      <tbody>
-        <tr>
-          <td class="col-link" onclick="showPage('client-details')">4183296</td>
-          <td><span class="tag tag-cleared">Cleared</span></td>
-          <td style="background:#fffdf0"><span class="ai-score ai-score-mid">55</span></td>
-          <td><span style="font-size:11px;color:#cf1322">Same IP</span></td>
-          <td><button class="btn btn-sm" onclick="showPage('client-details')">Detail</button></td>
-        </tr>
-        <tr>
-          <td class="col-link" onclick="showPage('client-details')">4183297</td>
-          <td><span class="tag tag-watchlist">Watchlist</span></td>
-          <td style="background:#fffdf0"><span class="ai-score ai-score-mid">61</span></td>
-          <td><span style="font-size:11px;color:#cf1322">Same IP · Device</span></td>
-          <td><button class="btn btn-sm" onclick="showPage('client-details')">Detail</button></td>
-        </tr>
-      </tbody>
-    </table>
-  </div>
-
-  <!-- Linked Alerts (paginated) -->
-  <div class="card">
-    <div class="section-title">Linked Alerts <span class="section-subtitle">18 Total · 15 Closed · 3 Processing</span>
-      <button class="btn btn-sm" style="margin-left:auto;font-size:11px">Link Existing</button>
+  <!-- Linked Alerts + Related Clients tabs -->
+  <div class="card" style="margin-top:12px">
+    <div class="tab-bar">
+      <div class="tab active" onclick="switchTab(this,'cs-alerts')">Linked Alerts <span style="background:#fff2f0;color:#cf1322;border:1px solid #ffa39e;border-radius:10px;padding:0 5px;font-size:10px;margin-left:3px">18</span></div>
+      <div class="tab" onclick="switchTab(this,'cs-clients')">Related Clients <span style="background:#e6f4ff;color:#0958d9;border:1px solid #91caff;border-radius:10px;padding:0 5px;font-size:10px;margin-left:3px">2</span></div>
     </div>
-    <table id="case-alerts-table">
-      <thead><tr><th>ID</th><th>Hit Time</th><th>Symbol</th><th>Rule Name</th><th>Status</th><th>Owner</th><th>Conclusion</th><th>Op</th></tr></thead>
-      <tbody id="case-alerts-body"></tbody>
-    </table>
-    <div style="padding:8px 12px;border-top:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;font-size:11px;color:var(--text-hint)">
-      <span id="case-alerts-info">Showing 1-10 of 18</span>
-      <div style="display:flex;gap:4px">
-        <button class="btn btn-sm" style="font-size:11px;padding:2px 8px" id="case-alerts-prev" onclick="pageCaseAlerts(-1)" disabled>← Prev</button>
-        <button class="btn btn-sm" style="font-size:11px;padding:2px 8px" id="case-alerts-next" onclick="pageCaseAlerts(1)">Next →</button>
+    <div class="tab-pane active" id="cs-alerts">
+      <table id="case-alerts-table">
+        <thead><tr><th>ID</th><th>Hit Time</th><th>Symbol</th><th>Rule Name</th><th>Status</th><th>Owner</th><th>Conclusion</th><th>Op</th></tr></thead>
+        <tbody id="case-alerts-body"></tbody>
+      </table>
+      <div style="padding:8px 12px;border-top:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;font-size:11px;color:var(--text-hint)">
+        <span id="case-alerts-info">Showing 1-10 of 18</span>
+        <div style="display:flex;gap:4px">
+          <button class="btn btn-sm" style="font-size:11px;padding:2px 8px" id="case-alerts-prev" onclick="pageCaseAlerts(-1)" disabled>← Prev</button>
+          <button class="btn btn-sm" style="font-size:11px;padding:2px 8px" id="case-alerts-next" onclick="pageCaseAlerts(1)">Next →</button>
+        </div>
       </div>
+    </div>
+    <div class="tab-pane" id="cs-clients">
+      <table>
+        <thead><tr><th>Account ID</th><th>Status</th><th>AI Risk</th><th>Linkage</th><th>Op</th></tr></thead>
+        <tbody>
+          <tr>
+            <td class="col-link" onclick="showPage('client-details')">4183296</td>
+            <td><span class="tag tag-cleared">Cleared</span></td>
+            <td style="background:#fffdf0"><span class="ai-score ai-score-mid">55</span></td>
+            <td><span style="font-size:11px;color:#cf1322">Same IP</span></td>
+            <td><button class="btn btn-sm" onclick="showPage('client-details')">Detail</button></td>
+          </tr>
+          <tr>
+            <td class="col-link" onclick="showPage('client-details')">4183297</td>
+            <td><span class="tag tag-watchlist">Watchlist</span></td>
+            <td style="background:#fffdf0"><span class="ai-score ai-score-mid">61</span></td>
+            <td><span style="font-size:11px;color:#cf1322">Same IP · Device</span></td>
+            <td><button class="btn btn-sm" onclick="showPage('client-details')">Detail</button></td>
+          </tr>
+        </tbody>
+      </table>
     </div>
   </div>
 

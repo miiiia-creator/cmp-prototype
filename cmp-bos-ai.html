@@ -1361,7 +1361,10 @@ tbody tr:hover td { background: #fffdf0; }
 ══════════════════════════════════════════ -->
 <div class="page detail-page" id="page-case-details">
   <div class="breadcrumb"><a onclick="showPage('case-management')">Case Management</a> › TS_814</div>
-  <div class="page-actions"><button class="btn btn-sm" onclick="showPage('case-management')">← Back</button></div>
+  <div class="page-actions">
+    <button class="btn btn-sm" onclick="showPage('case-management')">← Back</button>
+    <button class="btn btn-primary btn-sm" style="margin-left:auto">Manage Case</button>
+  </div>
 
   <div class="card">
     <div class="meta-grid">
@@ -1413,53 +1416,52 @@ tbody tr:hover td { background: #fffdf0; }
     <div style="padding:8px 16px;border-top:1px solid var(--ai-border);display:flex;align-items:center;gap:8px;background:#fdf8ff">
       <span style="font-size:11px;color:var(--text-dis)" id="case-report-status">Saved</span>
       <div style="margin-left:auto;display:flex;gap:6px">
-        <button class="btn btn-sm" onclick="rerunCaseAI()">↻ Re-generate</button>
         <button class="btn btn-primary btn-sm" onclick="saveCaseReport()">Save</button>
         <button class="btn btn-sm">Export</button>
       </div>
     </div>
   </div>
 
-  <!-- Linked Alerts + Related Clients side-by-side -->
-  <div class="case-alert-client-row">
+  <!-- Related Clients -->
+  <div class="card">
+    <div class="section-title">Related Clients <span class="section-subtitle">2 Accounts</span></div>
+    <table>
+      <thead><tr><th>Account ID</th><th>Status</th><th>AI Risk</th><th>Linkage</th><th>Op</th></tr></thead>
+      <tbody>
+        <tr>
+          <td class="col-link" onclick="showPage('client-details')">4183296</td>
+          <td><span class="tag tag-cleared">Cleared</span></td>
+          <td style="background:#fffdf0"><span class="ai-score ai-score-mid">55</span></td>
+          <td><span style="font-size:11px;color:#cf1322">Same IP</span></td>
+          <td><button class="btn btn-sm" onclick="showPage('client-details')">Detail</button></td>
+        </tr>
+        <tr>
+          <td class="col-link" onclick="showPage('client-details')">4183297</td>
+          <td><span class="tag tag-watchlist">Watchlist</span></td>
+          <td style="background:#fffdf0"><span class="ai-score ai-score-mid">61</span></td>
+          <td><span style="font-size:11px;color:#cf1322">Same IP · Device</span></td>
+          <td><button class="btn btn-sm" onclick="showPage('client-details')">Detail</button></td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
 
-    <div class="card" style="margin:0">
-      <div class="section-title">Linked Alerts <span class="section-subtitle">8 Total · All Closed</span>
-        <button class="btn btn-sm" style="margin-left:auto;font-size:11px">Link Existing</button>
+  <!-- Linked Alerts (paginated) -->
+  <div class="card">
+    <div class="section-title">Linked Alerts <span class="section-subtitle">18 Total · 15 Closed · 3 Processing</span>
+      <button class="btn btn-sm" style="margin-left:auto;font-size:11px">Link Existing</button>
+    </div>
+    <table id="case-alerts-table">
+      <thead><tr><th>ID</th><th>Hit Time</th><th>Symbol</th><th>Rule Name</th><th>Status</th><th>Owner</th><th>Conclusion</th><th>Op</th></tr></thead>
+      <tbody id="case-alerts-body"></tbody>
+    </table>
+    <div style="padding:8px 12px;border-top:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;font-size:11px;color:var(--text-hint)">
+      <span id="case-alerts-info">Showing 1-10 of 18</span>
+      <div style="display:flex;gap:4px">
+        <button class="btn btn-sm" style="font-size:11px;padding:2px 8px" id="case-alerts-prev" onclick="pageCaseAlerts(-1)" disabled>← Prev</button>
+        <button class="btn btn-sm" style="font-size:11px;padding:2px 8px" id="case-alerts-next" onclick="pageCaseAlerts(1)">Next →</button>
       </div>
-      <table>
-        <thead><tr><th>ID</th><th>Hit Time</th><th>Symbol</th><th>Rule Name</th><th>Status</th><th>Owner</th><th>Conclusion</th><th>Op</th></tr></thead>
-        <tbody>
-          <tr><td class="col-link" onclick="showPage('alert-details')">19141761</td><td>2025-07-15</td><td>SPXW 20250714 6235.0 P</td><td>pre-arranged trading (Profit)</td><td><span class="tag tag-closed">Closed</span></td><td>zengyuxiang</td><td><span class="tag tag-cleared">Cleared</span></td><td><button class="btn btn-sm" onclick="showPage('alert-details')">Detail</button></td></tr>
-          <tr><td class="col-link" onclick="showPage('alert-details')">19141760</td><td>2025-07-15</td><td>SPXW 20250714 6255.0 P</td><td>pre-arranged trading (Profit)</td><td><span class="tag tag-closed">Closed</span></td><td>houyuexuan</td><td><span class="tag tag-cleared">Cleared</span></td><td><button class="btn btn-sm" onclick="showPage('alert-details')">Detail</button></td></tr>
-          <tr><td class="col-link" onclick="showPage('alert-details')">19141753</td><td>2025-07-14</td><td>SPXW 20250711 6260.0 C</td><td>pre-arranged trading (Profit)</td><td><span class="tag tag-closed">Closed</span></td><td>zengyuxiang</td><td><span class="tag tag-cleared">Cleared</span></td><td><button class="btn btn-sm" onclick="showPage('alert-details')">Detail</button></td></tr>
-          <tr><td colspan="8" style="text-align:center;padding:8px;color:var(--text-dis);font-size:12px">+ 5 more alerts</td></tr>
-        </tbody>
-      </table>
     </div>
-
-    <div class="card" style="margin:0">
-      <div class="section-title">Related Clients <span class="section-subtitle">2 Accounts</span></div>
-      <table>
-        <thead><tr><th>Account ID</th><th>Status</th><th>AI Risk</th><th>Op</th></tr></thead>
-        <tbody>
-          <tr>
-            <td class="col-link" onclick="showPage('client-details')">4183296</td>
-            <td><span class="tag tag-cleared">Cleared</span></td>
-            <td style="background:#fffdf0"><span class="ai-score ai-score-mid">55</span></td>
-            <td><button class="btn btn-sm" onclick="showPage('client-details')">Detail</button></td>
-          </tr>
-          <tr>
-            <td class="col-link" onclick="showPage('client-details')">4183297</td>
-            <td><span class="tag tag-watchlist">Watchlist</span></td>
-            <td style="background:#fffdf0"><span class="ai-score ai-score-mid">61</span></td>
-            <td><button class="btn btn-sm" onclick="showPage('client-details')">Detail</button></td>
-          </tr>
-        </tbody>
-      </table>
-      <div style="padding:8px 12px;font-size:11px;color:var(--text-hint);border-top:1px solid var(--border)">Same IP / Device linkage detected</div>
-    </div>
-
   </div>
 
   <div class="card">
@@ -5636,6 +5638,44 @@ function saveCaseReport() {
   }, 600);
 }
 
+// ── Case Linked Alerts Pagination ──
+const CASE_ALERTS_DATA = [
+  {id:'19141761',date:'2025-07-15',sym:'SPXW 20250714 6235.0 P',rule:'pre-arranged trading (Profit)',status:'Closed',owner:'zengyuxiang',conc:'Cleared'},
+  {id:'19141760',date:'2025-07-15',sym:'SPXW 20250714 6255.0 P',rule:'pre-arranged trading (Profit)',status:'Closed',owner:'houyuexuan',conc:'Cleared'},
+  {id:'19141753',date:'2025-07-14',sym:'SPXW 20250711 6260.0 C',rule:'pre-arranged trading (Profit)',status:'Closed',owner:'zengyuxiang',conc:'Cleared'},
+  {id:'19141749',date:'2025-07-11',sym:'SPXW 20250711 6230.0 P',rule:'pre-arranged trading (Profit)',status:'Closed',owner:'houyuexuan',conc:'Cleared'},
+  {id:'19141742',date:'2025-07-10',sym:'SPXW 20250709 6200.0 C',rule:'pre-arranged trading (Profit)',status:'Closed',owner:'zengyuxiang',conc:'Cleared'},
+  {id:'19141738',date:'2025-07-09',sym:'SPXW 20250709 6180.0 P',rule:'pre-arranged trading (Profit)',status:'Closed',owner:'houyuexuan',conc:'Cleared'},
+  {id:'19141730',date:'2025-07-08',sym:'NQ2511',rule:'possible wash trade (A to A)',status:'Closed',owner:'mayimeng',conc:'Further Action'},
+  {id:'19141725',date:'2025-07-07',sym:'NQ2511',rule:'possible wash trade (A to A)',status:'Closed',owner:'mayimeng',conc:'Further Action'},
+  {id:'19141718',date:'2025-06-28',sym:'SPXW 20250627 6100.0 C',rule:'pre-arranged trading (Profit)',status:'Closed',owner:'zengyuxiang',conc:'Cleared'},
+  {id:'19141710',date:'2025-06-25',sym:'SPXW 20250625 6050.0 P',rule:'pre-arranged trading (Profit)',status:'Closed',owner:'houyuexuan',conc:'Cleared'},
+  {id:'19141705',date:'2025-06-20',sym:'NQ2511',rule:'possible wash trade (A to B)',status:'Processing',owner:'mayimeng',conc:'—'},
+  {id:'19141698',date:'2025-06-18',sym:'SPXW 20250618 6000.0 C',rule:'pre-arranged trading (Profit)',status:'Closed',owner:'zengyuxiang',conc:'Cleared'},
+  {id:'19141690',date:'2025-06-15',sym:'SPXW 20250613 5980.0 P',rule:'pre-arranged trading (Profit)',status:'Closed',owner:'houyuexuan',conc:'Cleared'},
+  {id:'19141682',date:'2025-06-10',sym:'NQ2511',rule:'possible wash trade (A to A)',status:'Processing',owner:'mayimeng',conc:'—'},
+  {id:'19141675',date:'2025-06-05',sym:'SPXW 20250604 5950.0 C',rule:'pre-arranged trading (Profit)',status:'Closed',owner:'zengyuxiang',conc:'Cleared'},
+  {id:'19141668',date:'2025-05-28',sym:'SPXW 20250528 5900.0 P',rule:'pre-arranged trading (Profit)',status:'Closed',owner:'houyuexuan',conc:'Cleared'},
+  {id:'19141660',date:'2025-05-22',sym:'NQ2511',rule:'possible wash trade (A to B)',status:'Processing',owner:'mayimeng',conc:'—'},
+  {id:'19141652',date:'2025-05-15',sym:'SPXW 20250514 5850.0 C',rule:'pre-arranged trading (Profit)',status:'Closed',owner:'zengyuxiang',conc:'Cleared'},
+];
+let caseAlertPage = 0;
+const CASE_ALERT_PAGE_SIZE = 10;
+function renderCaseAlerts() {
+  const body = document.getElementById('case-alerts-body');
+  if (!body) return;
+  const start = caseAlertPage * CASE_ALERT_PAGE_SIZE;
+  const page = CASE_ALERTS_DATA.slice(start, start + CASE_ALERT_PAGE_SIZE);
+  const stCls = s => s === 'Closed' ? 'tag-closed' : 'tag-processing';
+  const conCls = c => c === 'Cleared' ? 'tag-cleared' : c === 'Further Action' ? 'tag-escalated' : '';
+  body.innerHTML = page.map(a => `<tr><td class="col-link" onclick="showPage('alert-details')">${a.id}</td><td>${a.date}</td><td>${a.sym}</td><td>${a.rule}</td><td><span class="tag ${stCls(a.status)}">${a.status}</span></td><td>${a.owner}</td><td>${a.conc !== '—' ? '<span class="tag '+conCls(a.conc)+'">'+a.conc+'</span>' : '—'}</td><td><button class="btn btn-sm" onclick="showPage('alert-details')">Detail</button></td></tr>`).join('');
+  const total = CASE_ALERTS_DATA.length;
+  document.getElementById('case-alerts-info').textContent = 'Showing '+(start+1)+'-'+Math.min(start+CASE_ALERT_PAGE_SIZE,total)+' of '+total;
+  document.getElementById('case-alerts-prev').disabled = caseAlertPage === 0;
+  document.getElementById('case-alerts-next').disabled = start + CASE_ALERT_PAGE_SIZE >= total;
+}
+function pageCaseAlerts(dir) { caseAlertPage += dir; renderCaseAlerts(); }
+document.addEventListener('DOMContentLoaded', () => { renderCaseAlerts(); });
 
 // ── AI timestamp staleness highlight ──
 // Parses "Generated YYYY-MM-DD HH:MM …" from element text;

@@ -1006,7 +1006,7 @@ tbody tr:hover td { background: #fffdf0; }
   <!-- ✦ AI Analysis Card ✦ -->
   <div class="ai-card">
     <div class="ai-card-head">
-      <div class="ai-card-title"><span class="ai-badge">AI</span> TS-AI Analysis <span class="new-badge">NEW</span></div>
+      <div class="ai-card-title"><span class="ai-badge">AI</span> Anomaly Assessment <span class="new-badge">NEW</span></div>
       <div style="display:flex;align-items:center;gap:8px">
         <span id="alert-ai-ts" style="font-size:11px;color:var(--text-dis)">Generated 2026-04-07 09:02 · Model v2.4 · Cached</span>
         <button class="btn btn-ai btn-sm" id="alert-rerun-btn" onclick="rerunAlertAI()">↻ Re-run</button>
@@ -1137,47 +1137,6 @@ tbody tr:hover td { background: #fffdf0; }
           <div style="padding:8px 12px;font-size:11px;color:var(--text-sec);line-height:1.8">
             成交价持续偏高于市场中间价约 4.2%，但鉴于 SPXW 末日期权流动性低，单独判断不足以构成价格操纵。需结合 Pre-Arranged 证据综合认定。
             <div style="margin-top:5px;color:#d46b08;font-weight:600">结论：中高风险 · 与主案合并处理，无需单独立案</div>
-          </div>
-        </div>
-      </div>
-
-      <!-- ⑥ Client Background Snapshot (collapsible) -->
-      <div style="border:1px solid var(--ai-border);border-radius:4px;overflow:hidden;margin-bottom:14px">
-        <div style="padding:7px 12px;background:var(--ai-bg);font-size:11px;font-weight:600;color:var(--ai-dark);cursor:pointer;display:flex;align-items:center;justify-content:space-between;user-select:none" onclick="var b=document.getElementById('ai-cs-body');var a=document.getElementById('ai-cs-arrow');var open=b.style.display!=='none';b.style.display=open?'none':'block';a.textContent=open?'▶':'▼'">
-          <span>Client Background Snapshot &nbsp;<span style="font-weight:400;color:var(--text-hint)">Account 3215451 · SPXW · 2025-10 ~ 2026-04</span></span>
-          <span id="ai-cs-arrow">▶</span>
-        </div>
-        <div id="ai-cs-body" style="display:none">
-          <div style="padding:10px 14px;border-top:1px solid #ede0ff">
-            <div style="font-size:11px;color:var(--text-hint);margin-bottom:7px">该账户 SPXW 历史交易概览（参照基线，用于判断本次告警是否属于行为偏离）</div>
-            <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:6px;margin-bottom:9px">
-              <div style="background:#fafafa;border:1px solid #f0f0f0;border-radius:4px;padding:6px 8px;text-align:center">
-                <div style="font-size:10px;color:var(--text-hint)">历史 Alert 次数</div>
-                <div style="font-size:15px;font-weight:600;color:#d46b08;margin-top:2px">4</div>
-                <div style="font-size:10px;color:var(--text-hint)">同类规则 × 3</div>
-              </div>
-              <div style="background:#fafafa;border:1px solid #f0f0f0;border-radius:4px;padding:6px 8px;text-align:center">
-                <div style="font-size:10px;color:var(--text-hint)">SPXW 累计盈利</div>
-                <div style="font-size:15px;font-weight:600;color:#cf1322;margin-top:2px">$284,320</div>
-                <div style="font-size:10px;color:var(--text-hint)">近 6 个月</div>
-              </div>
-              <div style="background:#fff2f0;border:1px solid #ffa39e;border-radius:4px;padding:6px 8px;text-align:center">
-                <div style="font-size:10px;color:#cf1322">本次成交量 vs 均值</div>
-                <div style="font-size:15px;font-weight:600;color:#cf1322;margin-top:2px">4.2×</div>
-                <div style="font-size:10px;color:var(--text-hint)">均值 7 手/笔</div>
-              </div>
-              <div style="background:#fff2f0;border:1px solid #ffa39e;border-radius:4px;padding:6px 8px;text-align:center">
-                <div style="font-size:10px;color:#cf1322">价格偏离 vs 基线</div>
-                <div style="font-size:15px;font-weight:600;color:#cf1322;margin-top:2px">+4.2%</div>
-                <div style="font-size:10px;color:var(--text-hint)">基线均值 0.62%</div>
-              </div>
-            </div>
-            <div style="font-size:11px;color:var(--text-sec);line-height:1.75;background:#fdf8ff;border:1px solid #ede0ff;border-radius:4px;padding:8px 10px">
-              该账户 90 天内在 SPXW 期权上触发 4 次告警，今日本笔为今年第 3 次同类规则触发。本次成交量是该账户 SPXW 历史均值的 <strong style="color:#cf1322">4.2×</strong>，价格偏离 +4.2% 相比账户基线 0.62% 显著异常。盈利高度集中：前 2 次密集交易窗口占总盈利 89.9%，与本次交易模式完全一致。
-            </div>
-            <div style="margin-top:7px;text-align:right">
-              <span style="font-size:11px;color:var(--ai-color);cursor:pointer" onclick="showPage('client-details')">查看完整客户档案 →</span>
-            </div>
           </div>
         </div>
       </div>
@@ -1413,15 +1372,21 @@ tbody tr:hover td { background: #fffdf0; }
       </div>
     </div>
 
-    <!-- Input params bar -->
+    <!-- Input params bar (editable) -->
     <div style="padding:8px 16px;background:#fdf8ff;border-bottom:1px solid var(--ai-border)">
-      <div style="display:grid;grid-template-columns:repeat(4,1fr) repeat(3,auto);gap:6px 12px;font-size:11px;align-items:center">
-        <div><span style="color:var(--text-hint)">Accounts&nbsp;</span><strong>4183296, 4183297</strong></div>
-        <div><span style="color:var(--text-hint)">Symbol&nbsp;</span><strong>SPXW</strong></div>
-        <div><span style="color:var(--text-hint)">Period&nbsp;</span><strong>2025-05-10 ~ 2025-07-14</strong></div>
-        <div><span style="color:var(--text-hint)">Market&nbsp;</span><strong>US</strong></div>
-        <div><span style="color:var(--text-hint)">Category&nbsp;</span><strong>Wash Trade</strong></div>
-        <div><span style="color:var(--text-hint)">Target&nbsp;</span><strong style="color:#cf1322">存在异常</strong> <span style="background:#fff1f0;border:1px solid #ffa39e;border-radius:3px;padding:1px 6px;font-size:10px;font-weight:700;color:#cf1322;margin-left:4px">异常</span></div>
+      <div style="display:flex;flex-wrap:wrap;gap:8px;font-size:11px;align-items:center">
+        <span style="color:var(--text-hint)">Accounts</span>
+        <input id="case-rpt-accounts" class="filter-input" style="width:130px;font-size:11px" value="4183296, 4183297">
+        <span style="color:var(--text-hint)">Symbol</span>
+        <input id="case-rpt-symbol" class="filter-input" style="width:80px;font-size:11px" value="SPXW">
+        <span style="color:var(--text-hint)">From</span>
+        <input type="date" id="case-rpt-from" class="filter-input" style="width:120px;font-size:11px" value="2025-05-10">
+        <span style="color:var(--text-hint)">To</span>
+        <input type="date" id="case-rpt-to" class="filter-input" style="width:120px;font-size:11px" value="2025-07-14">
+        <span style="color:var(--text-hint)">Market</span>
+        <select id="case-rpt-market" class="filter-select" style="width:60px;font-size:11px"><option>US</option><option>HK</option><option>SG</option><option>AU</option></select>
+        <span style="color:var(--text-hint)">Category</span>
+        <select id="case-rpt-category" class="filter-select" style="width:110px;font-size:11px"><option>Wash Trade</option><option>Pre-arranged</option><option>Ramping</option><option>Spoofing</option><option>Market Dominance</option></select>
       </div>
     </div>
 
@@ -3766,13 +3731,12 @@ function submitWLModal() {
           </select>
           <span style="font-size:11px;color:var(--text-hint)">Date</span>
           <input type="date" id="spread-date-alert" class="filter-input" style="width:126px;font-size:11px" value="2026-04-06">
-          <span style="font-size:11px;color:var(--text-hint)">Account</span>
-          <input id="spread-acct1-alert" class="filter-input" style="width:84px;font-size:11px" value="3215451">
-          <label style="display:flex;align-items:center;gap:4px;font-size:11px;color:var(--text-hint);cursor:pointer">
-            <input type="checkbox" id="related-toggle-alert" onchange="drawSpread('alert')" style="margin:0">
-            <input id="spread-acct2-alert" class="filter-input" style="width:72px;font-size:11px" value="3215450" placeholder="Compare…">
-            <span style="color:var(--text-hint);font-size:10px">Same IP</span>
-          </label>
+          <span style="font-size:11px;color:var(--text-hint)">Accounts</span>
+          <div id="spread-accts-alert" style="display:flex;gap:4px;align-items:center;flex-wrap:wrap">
+            <input class="filter-input" style="width:78px;font-size:11px" value="3215451">
+            <input class="filter-input" style="width:78px;font-size:11px" value="3215450">
+          </div>
+          <button class="btn btn-sm" onclick="addSpreadAcct('alert')" style="font-size:11px;padding:0 6px;line-height:22px" title="Add account">+</button>
           <button class="btn btn-primary btn-sm" id="spread-apply-alert" onclick="applySpread('alert')" style="font-size:11px">Apply</button>
           <div style="margin-left:auto;display:flex;align-items:center;gap:3px">
             <button class="btn btn-sm" onclick="zoomSpread('alert',-1)" style="font-size:13px;padding:0 8px;line-height:22px" title="Zoom out">−</button>
@@ -3796,12 +3760,16 @@ function submitWLModal() {
         </div>
       </div>
       <div class="tab-pane" id="inv-graph-alert" style="padding:12px 16px;overflow-y:auto;flex:1">
-        <div style="font-size:11px;color:var(--text-hint);background:#fafafa;border:1px solid var(--border);border-radius:4px;padding:5px 8px;margin-bottom:10px">Center: <strong style="color:rgba(0,0,0,.75)">Alert 19150109</strong> &nbsp;·&nbsp; 2 L1 nodes &nbsp;·&nbsp; 3 L2 nodes</div>
+        <div style="display:flex;align-items:center;gap:8px;margin-bottom:10px;flex-wrap:wrap">
+          <span style="font-size:11px;color:var(--text-hint)">Center Node</span>
+          <input id="graph-center-alert" class="filter-input" style="width:140px;font-size:11px" value="Alert 19150109">
+          <button class="btn btn-primary btn-sm" id="graph-gen-btn-alert" onclick="regenAssocGraph('alert')" style="font-size:11px">Generate</button>
+          <span id="graph-info-alert" style="font-size:10px;color:var(--text-hint);margin-left:auto">2 L1 nodes · 3 L2 nodes</span>
+        </div>
         <div style="display:flex;flex-wrap:wrap;gap:8px;margin-bottom:8px;font-size:11px;color:var(--text-hint)">
           <span style="display:flex;align-items:center;gap:3px"><span style="width:9px;height:9px;border-radius:50%;background:#fff7e6;border:1.5px solid #fa8c16;display:inline-block"></span>Alert</span>
           <span style="display:flex;align-items:center;gap:3px"><span style="width:9px;height:9px;border-radius:50%;background:#f9f0ff;border:1.5px solid #7c3aed;display:inline-block"></span>Case</span>
           <span style="display:flex;align-items:center;gap:3px"><span style="width:9px;height:9px;border-radius:50%;background:#e6f4ff;border:1.5px solid #2563eb;display:inline-block"></span>Client</span>
-          <span style="margin-left:auto;color:var(--ai-color);cursor:pointer;font-size:11px" onclick="sendChip('deep_expand')"><span class="ai-badge" style="font-size:10px">AI</span> Deep Expand</span>
         </div>
         <canvas id="assoc-canvas-alert" height="340" style="width:100%;display:block;border:1px solid var(--border);border-radius:4px"></canvas>
       </div>
@@ -4221,13 +4189,12 @@ function submitWLModal() {
           </select>
           <span style="font-size:11px;color:var(--text-hint)">Date</span>
           <input type="date" id="spread-date-case" class="filter-input" style="width:126px;font-size:11px" value="2026-04-06">
-          <span style="font-size:11px;color:var(--text-hint)">Account</span>
-          <input id="spread-acct1-case" class="filter-input" style="width:84px;font-size:11px" value="4183296">
-          <label style="display:flex;align-items:center;gap:4px;font-size:11px;color:var(--text-hint);cursor:pointer">
-            <input type="checkbox" id="related-toggle-case" onchange="drawSpread('case')" style="margin:0">
-            <input id="spread-acct2-case" class="filter-input" style="width:72px;font-size:11px" value="4183297" placeholder="Compare…">
-            <span style="color:var(--text-hint);font-size:10px">Same IP</span>
-          </label>
+          <span style="font-size:11px;color:var(--text-hint)">Accounts</span>
+          <div id="spread-accts-case" style="display:flex;gap:4px;align-items:center;flex-wrap:wrap">
+            <input class="filter-input" style="width:78px;font-size:11px" value="4183296">
+            <input class="filter-input" style="width:78px;font-size:11px" value="4183297">
+          </div>
+          <button class="btn btn-sm" onclick="addSpreadAcct('case')" style="font-size:11px;padding:0 6px;line-height:22px" title="Add account">+</button>
           <button class="btn btn-primary btn-sm" id="spread-apply-case" onclick="applySpread('case')" style="font-size:11px">Apply</button>
           <div style="margin-left:auto;display:flex;align-items:center;gap:3px">
             <button class="btn btn-sm" onclick="zoomSpread('case',-1)" style="font-size:13px;padding:0 8px;line-height:22px" title="Zoom out">−</button>
@@ -4249,12 +4216,16 @@ function submitWLModal() {
         </div>
       </div>
       <div class="tab-pane" id="inv-graph-case" style="padding:12px 16px;overflow-y:auto;flex:1">
-        <div style="font-size:11px;color:var(--text-hint);background:#fafafa;border:1px solid var(--border);border-radius:4px;padding:5px 8px;margin-bottom:10px">Center: <strong style="color:rgba(0,0,0,.75)">Case TS_824</strong> &nbsp;·&nbsp; 3 L1 nodes &nbsp;·&nbsp; 2 L2 nodes</div>
+        <div style="display:flex;align-items:center;gap:8px;margin-bottom:10px;flex-wrap:wrap">
+          <span style="font-size:11px;color:var(--text-hint)">Center Node</span>
+          <input id="graph-center-case" class="filter-input" style="width:140px;font-size:11px" value="Case TS_824">
+          <button class="btn btn-primary btn-sm" id="graph-gen-btn-case" onclick="regenAssocGraph('case')" style="font-size:11px">Generate</button>
+          <span id="graph-info-case" style="font-size:10px;color:var(--text-hint);margin-left:auto">3 L1 nodes · 2 L2 nodes</span>
+        </div>
         <div style="display:flex;flex-wrap:wrap;gap:8px;margin-bottom:8px;font-size:11px;color:var(--text-hint)">
           <span style="display:flex;align-items:center;gap:3px"><span style="width:9px;height:9px;border-radius:50%;background:#fff7e6;border:1.5px solid #fa8c16;display:inline-block"></span>Alert</span>
           <span style="display:flex;align-items:center;gap:3px"><span style="width:9px;height:9px;border-radius:50%;background:#f9f0ff;border:1.5px solid #7c3aed;display:inline-block"></span>Case</span>
           <span style="display:flex;align-items:center;gap:3px"><span style="width:9px;height:9px;border-radius:50%;background:#e6f4ff;border:1.5px solid #2563eb;display:inline-block"></span>Client</span>
-          <span style="margin-left:auto;color:var(--ai-color);cursor:pointer;font-size:11px"><span class="ai-badge" style="font-size:10px">AI</span> Deep Expand</span>
         </div>
         <canvas id="assoc-canvas-case" height="340" style="width:100%;display:block;border:1px solid var(--border);border-radius:4px"></canvas>
       </div>
@@ -4386,13 +4357,12 @@ function submitWLModal() {
           </select>
           <span style="font-size:11px;color:var(--text-hint)">Date</span>
           <input type="date" id="spread-date-client" class="filter-input" style="width:126px;font-size:11px" value="2026-04-06">
-          <span style="font-size:11px;color:var(--text-hint)">Account</span>
-          <input id="spread-acct1-client" class="filter-input" style="width:84px;font-size:11px" value="3215451">
-          <label style="display:flex;align-items:center;gap:4px;font-size:11px;color:var(--text-hint);cursor:pointer">
-            <input type="checkbox" id="related-toggle-client" onchange="drawSpread('client')" style="margin:0">
-            <input id="spread-acct2-client" class="filter-input" style="width:72px;font-size:11px" value="3215450" placeholder="Compare…">
-            <span style="color:var(--text-hint);font-size:10px">Same IP</span>
-          </label>
+          <span style="font-size:11px;color:var(--text-hint)">Accounts</span>
+          <div id="spread-accts-client" style="display:flex;gap:4px;align-items:center;flex-wrap:wrap">
+            <input class="filter-input" style="width:78px;font-size:11px" value="3215451">
+            <input class="filter-input" style="width:78px;font-size:11px" value="3215450">
+          </div>
+          <button class="btn btn-sm" onclick="addSpreadAcct('client')" style="font-size:11px;padding:0 6px;line-height:22px" title="Add account">+</button>
           <button class="btn btn-primary btn-sm" id="spread-apply-client" onclick="applySpread('client')" style="font-size:11px">Apply</button>
           <div style="margin-left:auto;display:flex;align-items:center;gap:3px">
             <button class="btn btn-sm" onclick="zoomSpread('client',-1)" style="font-size:13px;padding:0 8px;line-height:22px" title="Zoom out">−</button>
@@ -4416,12 +4386,16 @@ function submitWLModal() {
         </div>
       </div>
       <div class="tab-pane" id="inv-graph-client" style="padding:12px 16px;overflow-y:auto;flex:1">
-        <div style="font-size:11px;color:var(--text-hint);background:#fafafa;border:1px solid var(--border);border-radius:4px;padding:5px 8px;margin-bottom:10px">Center: <strong style="color:rgba(0,0,0,.75)">Client 3215451</strong> &nbsp;·&nbsp; 3 L1 nodes &nbsp;·&nbsp; 2 L2 nodes</div>
+        <div style="display:flex;align-items:center;gap:8px;margin-bottom:10px;flex-wrap:wrap">
+          <span style="font-size:11px;color:var(--text-hint)">Center Node</span>
+          <input id="graph-center-client" class="filter-input" style="width:140px;font-size:11px" value="Client 3215451">
+          <button class="btn btn-primary btn-sm" id="graph-gen-btn-client" onclick="regenAssocGraph('client')" style="font-size:11px">Generate</button>
+          <span id="graph-info-client" style="font-size:10px;color:var(--text-hint);margin-left:auto">3 L1 nodes · 2 L2 nodes</span>
+        </div>
         <div style="display:flex;flex-wrap:wrap;gap:8px;margin-bottom:8px;font-size:11px;color:var(--text-hint)">
           <span style="display:flex;align-items:center;gap:3px"><span style="width:9px;height:9px;border-radius:50%;background:#fff7e6;border:1.5px solid #fa8c16;display:inline-block"></span>Alert</span>
           <span style="display:flex;align-items:center;gap:3px"><span style="width:9px;height:9px;border-radius:50%;background:#f9f0ff;border:1.5px solid #7c3aed;display:inline-block"></span>Case</span>
           <span style="display:flex;align-items:center;gap:3px"><span style="width:9px;height:9px;border-radius:50%;background:#e6f4ff;border:1.5px solid #2563eb;display:inline-block"></span>Client</span>
-          <span style="margin-left:auto;color:var(--ai-color);cursor:pointer;font-size:11px" onclick="sendChipClient('assoc_graph')"><span class="ai-badge" style="font-size:10px">AI</span> Deep Expand</span>
         </div>
         <canvas id="assoc-canvas-client" height="340" style="width:100%;display:block;border:1px solid var(--border);border-radius:4px"></canvas>
       </div>
@@ -4654,6 +4628,28 @@ function rerunMultiAnalysis(suffix) {
   if (!btn) return;
   btn.disabled = true; btn.textContent = '⏳ Running…';
   setTimeout(() => { btn.disabled = false; btn.textContent = '↻ Re-run'; }, 2000);
+}
+
+function addSpreadAcct(suffix) {
+  const container = document.getElementById('spread-accts-' + suffix);
+  if (!container) return;
+  if (container.querySelectorAll('input').length >= 5) return;
+  const inp = document.createElement('input');
+  inp.className = 'filter-input';
+  inp.style.cssText = 'width:78px;font-size:11px';
+  inp.placeholder = 'Account';
+  container.appendChild(inp);
+  inp.focus();
+}
+
+function regenAssocGraph(suffix) {
+  const btn = document.getElementById('graph-gen-btn-' + suffix);
+  if (!btn) return;
+  btn.disabled = true; btn.textContent = '⏳ Generating…';
+  setTimeout(() => {
+    btn.disabled = false; btn.textContent = 'Generate';
+    drawAssocGraph(suffix);
+  }, 1500);
 }
 
 function toggleMsSection(bodyId, arrowId) {

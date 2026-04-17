@@ -3808,40 +3808,14 @@ function submitWLModal() {
       <!-- Associate Accounts Analysis -->
       <div class="tab-pane" id="inv-multi-alert" style="flex:1;flex-direction:column;min-height:0;overflow:hidden">
 
-        <!-- Level 1: Account list -->
-        <div style="padding:8px 12px;background:#fafafa;border-bottom:1px solid #f0f0f0;flex-shrink:0">
-          <div style="font-size:10px;text-transform:uppercase;letter-spacing:.4px;color:var(--text-hint);margin-bottom:6px">Associated Accounts</div>
-          <div style="display:flex;gap:8px;flex-wrap:wrap">
-            <div style="display:flex;align-items:center;gap:6px;background:#fff;border:1px solid #ffa39e;border-radius:5px;padding:5px 10px">
-              <span class="ai-score ai-score-high" style="width:22px;height:22px;font-size:10px;flex-shrink:0">82</span>
-              <div>
-                <span style="font-size:12px;font-weight:500;color:#1677ff;cursor:pointer" onclick="showPage('client-details')">3215451</span>
-                <span style="font-size:10px;color:var(--text-hint);margin-left:4px">Share IP · Share Device</span>
-              </div>
-              <span style="font-size:10px;color:#cf1322;font-weight:600;background:#fff2f0;border:1px solid #ffa39e;border-radius:3px;padding:1px 5px;flex-shrink:0">获益方</span>
-            </div>
-            <div style="display:flex;align-items:center;gap:6px;background:#fff;border:1px solid #ffe58f;border-radius:5px;padding:5px 10px">
-              <span class="ai-score ai-score-mid" style="width:22px;height:22px;font-size:10px;flex-shrink:0">55</span>
-              <div>
-                <span style="font-size:12px;font-weight:500;color:#1677ff;cursor:pointer">3215450</span>
-                <span style="font-size:10px;color:var(--text-hint);margin-left:4px">Share IP · Share Device</span>
-              </div>
-              <span style="font-size:10px;color:#d46b08;font-weight:600;background:#fffbe6;border:1px solid #ffe58f;border-radius:3px;padding:1px 5px;flex-shrink:0">对手方</span>
-            </div>
-          </div>
-        </div>
-
-        <!-- Level 2: Context parameters -->
-        <div style="padding:7px 12px;background:#fff;border-bottom:1px solid #f0f0f0;flex-shrink:0;display:flex;align-items:center;gap:8px;flex-wrap:wrap">
+        <!-- Context parameters -->
+        <div style="padding:7px 12px;background:#fafafa;border-bottom:1px solid #f0f0f0;flex-shrink:0;display:flex;align-items:center;gap:8px;flex-wrap:wrap">
           <span style="font-size:11px;color:var(--text-hint)">Symbol</span>
           <input type="text" id="multi-symbol-alert" value="SPXW 20260406 6615.0 C" style="height:26px;border:1px solid var(--border-base);border-radius:4px;padding:0 8px;font-size:11px;width:185px;outline:none">
-          <span style="font-size:11px;color:var(--text-hint)">Period</span>
-          <div data-period-group style="display:flex">
-            <button class="period-btn active" onclick="setMultiPeriod(this)">本案</button>
-            <button class="period-btn" onclick="setMultiPeriod(this)">3M</button>
-            <button class="period-btn" onclick="setMultiPeriod(this)">6M</button>
-            <button class="period-btn" onclick="setMultiPeriod(this)">1Y</button>
-          </div>
+          <span style="font-size:11px;color:var(--text-hint)">From</span>
+          <input type="date" id="multi-date-from-alert" value="2026-04-01" style="height:26px;border:1px solid var(--border-base);border-radius:4px;padding:0 6px;font-size:11px;width:120px;outline:none">
+          <span style="font-size:11px;color:var(--text-hint)">To</span>
+          <input type="date" id="multi-date-to-alert" value="2026-04-07" style="height:26px;border:1px solid var(--border-base);border-radius:4px;padding:0 6px;font-size:11px;width:120px;outline:none">
           <button class="btn btn-ai btn-sm" id="multi-rerun-btn-alert" onclick="rerunMultiAnalysis('alert')" style="margin-left:auto">↻ Re-run</button>
         </div>
 

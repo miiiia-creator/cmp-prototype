@@ -3787,6 +3787,8 @@ function submitWLModal() {
 
         <!-- Context parameters -->
         <div style="padding:7px 12px;background:#fafafa;border-bottom:1px solid #f0f0f0;flex-shrink:0;display:flex;align-items:center;gap:8px;flex-wrap:wrap">
+          <span style="font-size:11px;color:var(--text-hint)">Accounts</span>
+          <input type="text" id="multi-accounts-alert" value="3215451, 3215450" style="height:26px;border:1px solid var(--border-base);border-radius:4px;padding:0 8px;font-size:11px;width:130px;outline:none">
           <span style="font-size:11px;color:var(--text-hint)">Symbol</span>
           <input type="text" id="multi-symbol-alert" value="SPXW 20260406 6615.0 C" style="height:26px;border:1px solid var(--border-base);border-radius:4px;padding:0 8px;font-size:11px;width:185px;outline:none">
           <span style="font-size:11px;color:var(--text-hint)">From</span>
@@ -3794,6 +3796,7 @@ function submitWLModal() {
           <span style="font-size:11px;color:var(--text-hint)">To</span>
           <input type="date" id="multi-date-to-alert" value="2026-04-07" style="height:26px;border:1px solid var(--border-base);border-radius:4px;padding:0 6px;font-size:11px;width:120px;outline:none">
           <button class="btn btn-ai btn-sm" id="multi-rerun-btn-alert" onclick="rerunMultiAnalysis('alert')" style="margin-left:auto">↻ Re-run</button>
+          <span id="multi-ts-alert" style="font-size:10px;color:var(--text-dis)">Last run: 2026-04-07 09:02</span>
         </div>
 
         <!-- Level 3: Sub-tabs -->
@@ -4244,6 +4247,8 @@ function submitWLModal() {
 
         <!-- Context parameters -->
         <div style="padding:7px 12px;background:#fafafa;border-bottom:1px solid #f0f0f0;flex-shrink:0;display:flex;align-items:center;gap:8px;flex-wrap:wrap">
+          <span style="font-size:11px;color:var(--text-hint)">Accounts</span>
+          <input type="text" id="multi-accounts-case" value="4183296, 4183297" style="height:26px;border:1px solid var(--border-base);border-radius:4px;padding:0 8px;font-size:11px;width:130px;outline:none">
           <span style="font-size:11px;color:var(--text-hint)">Symbol</span>
           <input type="text" id="multi-symbol-case" value="NQ2511" style="height:26px;border:1px solid var(--border-base);border-radius:4px;padding:0 8px;font-size:11px;width:120px;outline:none">
           <span style="font-size:11px;color:var(--text-hint)">From</span>
@@ -4251,6 +4256,7 @@ function submitWLModal() {
           <span style="font-size:11px;color:var(--text-hint)">To</span>
           <input type="date" id="multi-date-to-case" value="2025-07-14" style="height:26px;border:1px solid var(--border-base);border-radius:4px;padding:0 6px;font-size:11px;width:120px;outline:none">
           <button class="btn btn-ai btn-sm" id="multi-rerun-btn-case" onclick="rerunMultiAnalysis('case')" style="margin-left:auto">&#8635; Re-run</button>
+          <span id="multi-ts-case" style="font-size:10px;color:var(--text-dis)">Last run: 2025-09-19 14:23</span>
         </div>
 
         <!-- Level 3: Sub-tabs -->
@@ -4636,6 +4642,8 @@ function submitWLModal() {
 
         <!-- Context parameters -->
         <div style="padding:7px 12px;background:#fafafa;border-bottom:1px solid #f0f0f0;flex-shrink:0;display:flex;align-items:center;gap:8px;flex-wrap:wrap">
+          <span style="font-size:11px;color:var(--text-hint)">Accounts</span>
+          <input type="text" id="multi-accounts-client" value="3215451, 3215450, 2353510, 7526677" style="height:26px;border:1px solid var(--border-base);border-radius:4px;padding:0 8px;font-size:11px;width:210px;outline:none">
           <span style="font-size:11px;color:var(--text-hint)">Symbol</span>
           <input type="text" id="multi-symbol-client" value="All" style="height:26px;border:1px solid var(--border-base);border-radius:4px;padding:0 8px;font-size:11px;width:80px;outline:none">
           <span style="font-size:11px;color:var(--text-hint)">From</span>
@@ -4643,6 +4651,7 @@ function submitWLModal() {
           <span style="font-size:11px;color:var(--text-hint)">To</span>
           <input type="date" id="multi-date-to-client" value="2026-04-07" style="height:26px;border:1px solid var(--border-base);border-radius:4px;padding:0 6px;font-size:11px;width:120px;outline:none">
           <button class="btn btn-ai btn-sm" id="multi-rerun-btn-client" onclick="rerunMultiAnalysis('client')" style="margin-left:auto">&#8635; Re-run</button>
+          <span id="multi-ts-client" style="font-size:10px;color:var(--text-dis)">Last run: 2026-04-07 09:15</span>
         </div>
 
         <!-- Level 3: Sub-tabs -->
@@ -4997,7 +5006,11 @@ function rerunMultiAnalysis(suffix) {
   const btn = document.getElementById('multi-rerun-btn-' + suffix);
   if (!btn) return;
   btn.disabled = true; btn.textContent = '⏳ Running…';
-  setTimeout(() => { btn.disabled = false; btn.textContent = '↻ Re-run'; }, 2000);
+  setTimeout(() => {
+    btn.disabled = false; btn.textContent = '↻ Re-run';
+    const ts = document.getElementById('multi-ts-' + suffix);
+    if (ts) ts.textContent = 'Last run: ' + new Date().toISOString().slice(0,16).replace('T',' ');
+  }, 2000);
 }
 
 function addSpreadAcct(suffix) {

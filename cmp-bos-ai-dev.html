@@ -1012,6 +1012,21 @@ tbody tr:hover td { background: #fffdf0; }
         <button class="btn btn-ai btn-sm" id="alert-rerun-btn" onclick="rerunAlertAI()">↻ Re-run</button>
       </div>
     </div>
+    <!-- Input params bar (editable) -->
+    <div style="padding:8px 16px;background:#fdf8ff;border-bottom:1px solid var(--ai-border)">
+      <div style="display:flex;flex-wrap:wrap;gap:8px;font-size:11px;align-items:center">
+        <span style="color:var(--text-hint)">Accounts</span>
+        <input id="alert-rpt-accounts" class="filter-input" style="width:130px;font-size:11px" value="3215451, 3215450">
+        <span style="color:var(--text-hint)">Symbol</span>
+        <input id="alert-rpt-symbol" class="filter-input" style="width:160px;font-size:11px" value="SPXW 20260406 6615.0 C">
+        <span style="color:var(--text-hint)">From</span>
+        <input type="date" id="alert-rpt-from" class="filter-input" style="width:120px;font-size:11px" value="2026-04-01">
+        <span style="color:var(--text-hint)">To</span>
+        <input type="date" id="alert-rpt-to" class="filter-input" style="width:120px;font-size:11px" value="2026-04-07">
+        <span style="color:var(--text-hint)">Market</span>
+        <select id="alert-rpt-market" class="filter-select" style="width:60px;font-size:11px"><option>US</option><option>HK</option><option>SG</option><option>AU</option></select>
+      </div>
+    </div>
     <div class="ai-card-body">
 
       <!-- ① Verdict Banner -->
@@ -1751,7 +1766,6 @@ tbody tr:hover td { background: #fffdf0; }
       <div class="tab active" onclick="switchTab(this,'ct-alerts')">Alert History <span style="background:#fff2f0;color:#cf1322;border:1px solid #ffa39e;border-radius:10px;padding:0 5px;font-size:10px;margin-left:3px">4</span></div>
       <div class="tab" onclick="switchTab(this,'ct-cases')">Linked Cases <span style="background:#e6f4ff;color:#0958d9;border:1px solid #91caff;border-radius:10px;padding:0 5px;font-size:10px;margin-left:3px">1</span></div>
       <div class="tab" onclick="switchTab(this,'ct-watchlist')">Watchlist Records</div>
-      <div class="tab" onclick="switchTab(this,'ct-inquiry')">Inquiry Records</div>
     </div>
     <div class="tab-pane active" id="ct-alerts">
       <table>
@@ -1838,9 +1852,6 @@ tbody tr:hover td { background: #fffdf0; }
           </tbody>
         </table>
       </div>
-    </div>
-    <div class="tab-pane" id="ct-inquiry">
-      <div class="empty">No inquiry records</div>
     </div>
   </div>
 

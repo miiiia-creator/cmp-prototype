@@ -1571,7 +1571,7 @@ tbody tr:hover td { background: #fffdf0; }
     <button class="btn btn-sm" onclick="showPage('client-management')">← Back</button>
     <button class="btn btn-sm">Send Inquiry</button>
     <button class="btn btn-sm" style="color:#cf1322;border-color:#ffa39e">Request Restriction</button>
-    <button class="btn btn-primary btn-sm" style="margin-left:auto">Edit Watchlist Config</button>
+    <button class="btn btn-primary btn-sm" style="margin-left:auto" onclick="document.getElementById('edit-wl-modal').style.display='flex'">Edit Watchlist Config</button>
   </div>
 
   <!-- Compliance Status Stepper -->
@@ -1586,7 +1586,6 @@ tbody tr:hover td { background: #fffdf0; }
       <div class="meta-item"><div class="meta-label">Watchlist Expiry</div><div class="meta-val">2026-06-02</div></div>
       <div class="meta-item"><div class="meta-label">Total Alerts</div><div class="meta-val">4</div></div>
       <div class="meta-item"><div class="meta-label">Total Cases</div><div class="meta-val">1</div></div>
-      <div class="meta-item"><div class="meta-label">AI Risk Score</div><div class="meta-val"><span class="ai-score ai-score-high">82</span></div></div>
     </div>
   </div>
 
@@ -1594,8 +1593,8 @@ tbody tr:hover td { background: #fffdf0; }
   <!-- Lifecycle -->
   <div class="card" style="margin-bottom:12px">
     <div class="card-head">
-      🕐 Client Risk Lifecycle
-      <span style="font-size:11px;font-weight:400;color:var(--text-hint);margin-left:4px">7 Events · <span style="color:var(--ai-color)">3 AI Analyses</span></span>
+      Client Risk Lifecycle
+      <span style="font-size:11px;font-weight:400;color:var(--text-hint);margin-left:4px">7 Events</span>
     </div>
     <div style="padding:16px;">
       <div class="timeline">
@@ -1610,36 +1609,15 @@ tbody tr:hover td { background: #fffdf0; }
         <div class="tl-item">
           <div class="tl-dot yellow"></div>
           <div class="tl-date">2025-08-03</div>
-          <div class="tl-title">First Alert Triggered · #19143201</div>
-          <div class="tl-desc">Rule: possible ramping (without tick data) · FUBO · Cleared</div>
-          <div style="margin-top:5px;display:inline-flex;align-items:center;gap:5px;background:var(--ai-bg);border:1px solid var(--ai-border);border-radius:4px;padding:2px 8px 2px 5px;font-size:11px">
-            <span class="ai-badge" style="font-size:9px;padding:0 4px">AI</span>
-            <span style="color:var(--text-hint)">Score</span>
-            <span class="ai-score ai-score-low" style="width:20px;height:20px;font-size:10px">29</span>
-            <span style="color:#389e0d;font-weight:500">LOW · Cleared as FP</span>
-          </div>
+          <div class="tl-title"><span class="col-link" onclick="showPage('alert-details')">Alert #19143201</span></div>
+          <div class="tl-desc">Rule: possible ramping (without tick data) · FUBO · <span class="tag tag-closed" style="font-size:10px">Cleared</span> · Source: CMP Rule</div>
         </div>
 
         <div class="tl-item">
           <div class="tl-dot red"></div>
           <div class="tl-date">2025-11-02</div>
-          <div class="tl-title">Case TS_798 Opened</div>
-          <div class="tl-desc">Involving possible wash trade · NQ2511 · assigned to mayimeng</div>
-          <!-- AI case summary (collapsed) -->
-          <div style="margin-top:6px;border:1px solid var(--ai-border);border-radius:4px;overflow:hidden">
-            <div style="padding:5px 10px;background:var(--ai-bg);font-size:11px;cursor:pointer;display:flex;align-items:center;gap:6px;user-select:none" onclick="var b=document.getElementById('tl-ai-case');var a=document.getElementById('tl-ai-case-arr');var o=b.style.display!=='none';b.style.display=o?'none':'block';a.textContent=o?'▶':'▼'">
-              <span class="ai-badge" style="font-size:9px;padding:0 4px">AI</span>
-              <span style="font-weight:500;color:var(--ai-dark)">Case Risk: HIGH · Confidence 81%</span>
-              <span style="color:#cf1322;font-size:10px">Wash Trade · 2 accounts</span>
-              <span id="tl-ai-case-arr" style="margin-left:auto;color:var(--text-dis)">▶</span>
-            </div>
-            <div id="tl-ai-case" style="display:none;padding:8px 10px;border-top:1px solid #ede0ff;font-size:11px;color:var(--text-sec);line-height:1.75">
-              账户 3215451 与 4183296 在 2025-05-10 ~ 2025-07-14 期间通过 NQ2511 期货进行高度同步的对向交易，共计 23 笔配对，盈亏完全转移（+$47,820 / −$47,634）。共用注册地址，交易时间窗口重叠率 94%。
-              <div style="margin-top:5px;display:flex;gap:8px">
-                <span style="cursor:pointer;color:var(--ai-color)" onclick="showPage('case-details')">查看完整调查报告 →</span>
-              </div>
-            </div>
-          </div>
+          <div class="tl-title"><span class="col-link" onclick="showPage('case-details')">Case TS_798</span> Opened</div>
+          <div class="tl-desc">Status: Open · NQ2511 · Other Accounts: 4183296 · Source: Alert Escalation</div>
         </div>
 
         <div class="tl-item">
@@ -1658,49 +1636,23 @@ tbody tr:hover td { background: #fffdf0; }
 
         <div class="tl-item">
           <div class="tl-dot yellow"></div>
-          <div class="tl-date">2025-12-18</div>
-          <div class="tl-title">Alert 19149230 Triggered</div>
-          <div class="tl-desc">pre-arranged trading (Profit) · SPXW 20251217 5800C · Cleared</div>
-          <!-- AI alert summary (collapsed) -->
-          <div style="margin-top:6px;border:1px solid var(--ai-border);border-radius:4px;overflow:hidden">
-            <div style="padding:5px 10px;background:var(--ai-bg);font-size:11px;cursor:pointer;display:flex;align-items:center;gap:6px;user-select:none" onclick="var b=document.getElementById('tl-ai-al2');var a=document.getElementById('tl-ai-al2-arr');var o=b.style.display!=='none';b.style.display=o?'none':'block';a.textContent=o?'▶':'▼'">
-              <span class="ai-badge" style="font-size:9px;padding:0 4px">AI</span>
-              <span style="font-weight:500;color:var(--ai-dark)">Score</span>
-              <span class="ai-score ai-score-mid" style="width:20px;height:20px;font-size:10px">61</span>
-              <span style="color:#d46b08;font-weight:500">MEDIUM · Cleared</span>
-              <span id="tl-ai-al2-arr" style="margin-left:auto;color:var(--text-dis)">▶</span>
-            </div>
-            <div id="tl-ai-al2" style="display:none;padding:8px 10px;border-top:1px solid #ede0ff;font-size:11px;color:var(--text-sec);line-height:1.75">
-              与关联账户 3215450 存在对向交易模式，但此次交易量低于异常阈值（成交量 2.1× 均值），操作序列相似度 68%，置信度不足。建议持续监控，暂不立案。
-              <div style="margin-top:5px">
-                <span style="cursor:pointer;color:var(--ai-color)" onclick="showPage('alert-details')">查看完整分析 →</span>
-              </div>
-            </div>
+          <div class="tl-date">2025-12-18 ~ 2026-04-07</div>
+          <div class="tl-title" style="display:flex;align-items:center;gap:6px">
+            2x pre-arranged trading (Profit)
+            <span style="background:var(--primary);color:rgba(0,0,0,.85);font-size:10px;padding:1px 5px;border-radius:3px">Latest: Today</span>
           </div>
-        </div>
-
-        <div class="tl-item">
-          <div class="tl-dot red"></div>
-          <div class="tl-date">2026-04-07 <span style="background:var(--primary);color:rgba(0,0,0,.85);font-size:10px;padding:1px 5px;border-radius:3px;margin-left:4px">Today</span></div>
-          <div class="tl-title">Alert 19150109 Triggered (Current)</div>
-          <div class="tl-desc">pre-arranged trading (Profit) · SPXW 20260406 6615C · Processing</div>
-          <!-- AI alert summary (expanded by default — most recent) -->
-          <div style="margin-top:6px;border:1px solid #ffa39e;border-radius:4px;overflow:hidden">
-            <div style="padding:5px 10px;background:#fff2f0;font-size:11px;cursor:pointer;display:flex;align-items:center;gap:6px;user-select:none" onclick="var b=document.getElementById('tl-ai-al1');var a=document.getElementById('tl-ai-al1-arr');var o=b.style.display!=='none';b.style.display=o?'none':'block';a.textContent=o?'▶':'▼'">
-              <span class="ai-badge" style="font-size:9px;padding:0 4px">AI</span>
-              <span style="font-weight:500;color:#820014">Score</span>
-              <span class="ai-score ai-score-high" style="width:20px;height:20px;font-size:10px">82</span>
-              <span style="color:#cf1322;font-weight:600">HIGH · Recommend Escalate</span>
-              <span id="tl-ai-al1-arr" style="margin-left:auto;color:#cf1322">▼</span>
+          <div class="tl-desc">Source: CMP Rule · 1 Processing, 1 Cleared</div>
+          <div style="margin-top:6px;border:1px solid var(--border);border-radius:4px;overflow:hidden">
+            <div style="padding:5px 10px;background:var(--bg-gray);font-size:11px;cursor:pointer;display:flex;align-items:center;gap:6px;user-select:none" onclick="var b=document.getElementById('tl-grouped-alerts');var a=document.getElementById('tl-grouped-arr');var o=b.style.display!=='none';b.style.display=o?'none':'block';a.textContent=o?'▶':'▼'">
+              <span style="font-weight:500;color:var(--text-base)">Expand 2 alerts</span>
+              <span id="tl-grouped-arr" style="margin-left:auto;color:var(--text-dis)">▶</span>
             </div>
-            <div id="tl-ai-al1" style="padding:8px 10px;border-top:1px solid #ffa39e;font-size:11px;color:var(--text-sec);line-height:1.75">
-              与关联账户 3215450 在 08:38–08:49 窗口高度同步对向交易，共用 IP（218.82.19.9），操作序列相似度 91%。成交量 4.2× 该账户 SPXW 均值，价格偏离基线 +4.2%。为今年内第 3 次同类规则触发，历史案例相似度 87%。
-              <div style="margin-top:6px;display:flex;gap:6px;flex-wrap:wrap">
-                <span class="tag tag-high" style="font-size:10px">Synchronized Reverse Trading</span>
-                <span class="tag tag-ai" style="font-size:10px">Shared IP · Same Session</span>
+            <div id="tl-grouped-alerts" style="display:none;border-top:1px solid var(--border);font-size:11px;color:var(--text-sec)">
+              <div style="padding:6px 10px;border-bottom:1px solid var(--border)">
+                <span class="col-link" onclick="showPage('alert-details')">Alert #19150109</span> · SPXW 20260406 6615C · <span class="tag tag-processing" style="font-size:10px">Processing</span> · 2026-04-07
               </div>
-              <div style="margin-top:6px">
-                <span style="cursor:pointer;color:var(--ai-color)" onclick="showPage('alert-details')">查看完整分析 →</span>
+              <div style="padding:6px 10px">
+                <span class="col-link" onclick="showPage('alert-details')">Alert #19149230</span> · SPXW 20251217 5800C · <span class="tag tag-closed" style="font-size:10px">Cleared</span> · 2025-12-18
               </div>
             </div>
           </div>
@@ -1719,28 +1671,46 @@ tbody tr:hover td { background: #fffdf0; }
     </div>
     <div class="tab-pane active" id="ct-alerts">
       <table>
-        <thead><tr><th>Alert ID</th><th>Hit Time</th><th>Symbol</th><th>Rule</th><th>Status</th><th>Conclusion</th><th class="ai-col" style="color:var(--ai-dark)">AI Score</th><th>Case</th></tr></thead>
+        <thead><tr><th>Alert ID</th><th>Rule Name</th><th>Symbol</th><th>Status</th><th>Source</th></tr></thead>
         <tbody>
-          <tr><td class="col-link" onclick="showPage('alert-details')">19150109</td><td>2026-04-07</td><td>SPXW 20260406 6615.0 C</td><td>pre-arranged trading (Profit)</td><td><span class="tag tag-processing">Processing</span></td><td>—</td><td style="background:#fffdf0"><span class="ai-score ai-score-high">82</span></td><td>—</td></tr>
-          <tr><td class="col-link" onclick="showPage('alert-details')">19149230</td><td>2025-12-18</td><td>SPXW 20251217 5800.0 C</td><td>pre-arranged trading (Profit)</td><td><span class="tag tag-closed">Closed</span></td><td><span class="tag tag-cleared">Cleared</span></td><td style="background:#fffdf0"><span class="ai-score ai-score-mid">51</span></td><td>—</td></tr>
-          <tr><td class="col-link" onclick="showPage('alert-details')">19147810</td><td>2025-11-02</td><td>NQ2511</td><td>possible wash trade (A to A)</td><td><span class="tag tag-closed">Closed</span></td><td><span class="tag tag-escalated">Further Action</span></td><td style="background:#fffdf0"><span class="ai-score ai-score-high">78</span></td><td><span class="col-link" onclick="showPage('case-details')">TS_798</span></td></tr>
-          <tr><td class="col-link" onclick="showPage('alert-details')">19143201</td><td>2025-08-03</td><td>FUBO</td><td>possible ramping (without tick data)</td><td><span class="tag tag-closed">Closed</span></td><td><span class="tag tag-cleared">Cleared</span></td><td style="background:#fffdf0"><span class="ai-score ai-score-low">29</span></td><td>—</td></tr>
+          <tr style="background:#fafafa;font-weight:500;cursor:pointer" onclick="var b=document.getElementById('grouped-pat-rows');var o=b.style.display!=='none';b.style.display=o?'none':'table-row-group';this.querySelector('.g-arr').textContent=o?'▶':'▼'">
+            <td><span class="g-arr" style="margin-right:4px;font-size:10px;color:var(--text-dis)">▶</span> 19150109, 19149230</td>
+            <td>pre-arranged trading (Profit) <span style="font-size:10px;color:var(--text-hint);font-weight:400">x2</span></td>
+            <td>SPXW</td>
+            <td><span class="tag tag-processing">Processing</span> / <span class="tag tag-closed">Cleared</span></td>
+            <td>CMP Rule</td>
+          </tr>
+          <tbody id="grouped-pat-rows" style="display:none">
+            <tr style="background:#fafcff">
+              <td style="padding-left:24px" class="col-link" onclick="showPage('alert-details')">19150109</td>
+              <td>pre-arranged trading (Profit)</td>
+              <td>SPXW 20260406 6615.0 C</td>
+              <td><span class="tag tag-processing">Processing</span></td>
+              <td>CMP Rule</td>
+            </tr>
+            <tr style="background:#fafcff">
+              <td style="padding-left:24px" class="col-link" onclick="showPage('alert-details')">19149230</td>
+              <td>pre-arranged trading (Profit)</td>
+              <td>SPXW 20251217 5800.0 C</td>
+              <td><span class="tag tag-closed">Cleared</span></td>
+              <td>CMP Rule</td>
+            </tr>
+          </tbody>
+          <tr><td class="col-link" onclick="showPage('alert-details')">19147810</td><td>possible wash trade (A to A)</td><td>NQ2511</td><td><span class="tag tag-closed">Closed</span></td><td>CMP Rule</td></tr>
+          <tr><td class="col-link" onclick="showPage('alert-details')">19143201</td><td>possible ramping (without tick data)</td><td>FUBO</td><td><span class="tag tag-closed">Cleared</span></td><td>CMP Rule</td></tr>
         </tbody>
       </table>
     </div>
     <div class="tab-pane" id="ct-cases">
       <table>
-        <thead><tr><th>Case ID</th><th>Case Name</th><th>Status</th><th>Tag</th><th>Open Date</th><th>Close Date</th><th>Owner</th><th>Operation</th></tr></thead>
+        <thead><tr><th>Case ID</th><th>Status</th><th>Symbol</th><th>Other Accounts</th><th>Source</th></tr></thead>
         <tbody>
           <tr>
             <td class="col-link" onclick="showPage('case-details')">TS_798</td>
-            <td>NQ Futures - 3215451</td>
             <td><span class="tag tag-closed">Closed</span></td>
-            <td><span class="tag tag-escalated">Further Action</span></td>
-            <td>2025-11-02</td>
-            <td>2025-11-28</td>
-            <td>mayimeng</td>
-            <td><button class="btn btn-sm" onclick="showPage('case-details')">Detail</button></td>
+            <td>NQ2511</td>
+            <td>4183296</td>
+            <td>Alert Escalation</td>
           </tr>
         </tbody>
       </table>
@@ -1753,7 +1723,6 @@ tbody tr:hover td { background: #fffdf0; }
           <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px;">
             <div style="font-weight:600;font-size:13px">Watchlist Configuration</div>
             <div style="display:flex;gap:6px;align-items:center">
-              <span class="tag tag-medium">Medium Risk</span>
               <span class="tag tag-watchlist">Monitoring</span>
             </div>
           </div>
@@ -1765,12 +1734,17 @@ tbody tr:hover td { background: #fffdf0; }
             <div><div style="font-size:11px;color:var(--text-hint);margin-bottom:2px">Period</div><div style="font-size:12px">6 months</div></div>
             <div><div style="font-size:11px;color:var(--text-hint);margin-bottom:2px">Frequency</div><div style="font-size:12px">Monthly review</div></div>
           </div>
-          <div class="wl-rules">
-            <div class="wl-rules-label">Monitoring Rules</div>
-            <span class="wl-rule-tag">pre-arranged trading (Profit)</span>
-            <span class="wl-rule-tag">possible wash trade (A to A)</span>
-            <span class="wl-rule-tag">possible ramping</span>
-            <span class="wl-rule-tag">large position accumulation</span>
+          <div style="margin-top:10px">
+            <div style="font-size:11px;color:var(--text-hint);margin-bottom:6px">Monitoring Rules</div>
+            <table style="font-size:12px">
+              <thead><tr><th>Rule Name</th><th>Version</th><th>Rule Type</th></tr></thead>
+              <tbody>
+                <tr><td>pre-arranged trading (Profit)</td><td>v2.4</td><td>TS Rule</td></tr>
+                <tr><td>possible wash trade (A to A)</td><td>v1.8</td><td>TS Rule</td></tr>
+                <tr><td>possible ramping</td><td>v3.1</td><td>TS Rule</td></tr>
+                <tr><td>large position accumulation</td><td>v1.2</td><td>TM Rule</td></tr>
+              </tbody>
+            </table>
           </div>
           <div style="margin-top:10px;padding-top:10px;border-top:1px solid #ffe58f;">
             <div style="font-size:11px;color:var(--text-hint);margin-bottom:4px">Reason / Checkpoint</div>
@@ -1781,26 +1755,48 @@ tbody tr:hover td { background: #fffdf0; }
         <!-- Triggered Alerts while on Watchlist -->
         <div style="font-size:12px;color:var(--text-hint);margin-bottom:6px">Alerts Triggered During Watchlist Period</div>
         <table>
-          <thead><tr><th>Alert ID</th><th>Hit Time</th><th>Symbol</th><th>Rule</th><th>Status</th><th class="ai-col" style="color:var(--ai-dark)">AI Score</th></tr></thead>
+          <thead><tr><th>Alert ID</th><th>Rule Name</th><th>Symbol</th><th>Status</th><th>Source</th></tr></thead>
           <tbody>
             <tr>
               <td class="col-link" onclick="showPage('alert-details')">19150109</td>
-              <td>2026-04-07</td>
-              <td>SPXW 20260406 6615.0 C</td>
               <td>pre-arranged trading (Profit)</td>
+              <td>SPXW 20260406 6615.0 C</td>
               <td><span class="tag tag-processing">Processing</span></td>
-              <td style="background:#fffdf0"><span class="ai-score ai-score-high">82</span></td>
+              <td>CMP Rule</td>
             </tr>
             <tr>
-              <td class="col-link">19149230</td>
-              <td>2025-12-18</td>
-              <td>SPXW 20251217 5800.0 C</td>
+              <td class="col-link" onclick="showPage('alert-details')">19149230</td>
               <td>pre-arranged trading (Profit)</td>
-              <td><span class="tag tag-closed">Closed · Cleared</span></td>
-              <td style="background:#fffdf0"><span class="ai-score ai-score-mid">51</span></td>
+              <td>SPXW 20251217 5800.0 C</td>
+              <td><span class="tag tag-closed">Cleared</span></td>
+              <td>CMP Rule</td>
             </tr>
           </tbody>
         </table>
+      </div>
+    </div>
+  </div>
+
+  <!-- Edit Watchlist Config Modal -->
+  <div class="modal-overlay" id="edit-wl-modal" style="display:none" onclick="if(event.target===this)this.style.display='none'">
+    <div class="modal" style="width:560px">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px">
+        <div style="font-weight:600;font-size:14px">Edit Watchlist Configuration</div>
+        <span style="cursor:pointer;color:#aaa;font-size:18px" onclick="document.getElementById('edit-wl-modal').style.display='none'">&#215;</span>
+      </div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:12px">
+        <div><div style="font-size:11px;color:var(--text-hint);margin-bottom:4px">Account ID</div><input class="filter-input" style="width:100%" value="3215451" disabled></div>
+        <div><div style="font-size:11px;color:var(--text-hint);margin-bottom:4px">Risk Level</div><select class="filter-select" style="width:100%"><option>High</option><option selected>Medium</option><option>Low</option></select></div>
+        <div><div style="font-size:11px;color:var(--text-hint);margin-bottom:4px">Expiry Date</div><input type="date" class="filter-input" style="width:100%" value="2026-06-02"></div>
+        <div><div style="font-size:11px;color:var(--text-hint);margin-bottom:4px">Review Frequency</div><select class="filter-select" style="width:100%"><option>Weekly</option><option selected>Monthly</option><option>Quarterly</option></select></div>
+        <div><div style="font-size:11px;color:var(--text-hint);margin-bottom:4px">Tag</div><select class="filter-select" style="width:100%"><option selected>Internal</option><option>External</option><option>Regulator</option></select></div>
+        <div><div style="font-size:11px;color:var(--text-hint);margin-bottom:4px">Period</div><select class="filter-select" style="width:100%"><option>3 months</option><option selected>6 months</option><option>12 months</option></select></div>
+      </div>
+      <div style="margin-bottom:12px"><div style="font-size:11px;color:var(--text-hint);margin-bottom:4px">Monitoring Rules</div><input class="filter-input" style="width:100%" value="pre-arranged trading, possible wash trade, possible ramping, large position accumulation"></div>
+      <div style="margin-bottom:12px"><div style="font-size:11px;color:var(--text-hint);margin-bottom:4px">Reason / Checkpoint</div><textarea class="filter-input" style="width:100%;height:60px;resize:vertical">Case TS_798 closed with a Further Action conclusion, reported to TBNZ regulator.</textarea></div>
+      <div style="display:flex;justify-content:flex-end;gap:8px;border-top:1px solid var(--border);padding-top:12px">
+        <button class="btn btn-sm" onclick="document.getElementById('edit-wl-modal').style.display='none'">Cancel</button>
+        <button class="btn btn-primary btn-sm" onclick="document.getElementById('edit-wl-modal').style.display='none'">Save</button>
       </div>
     </div>
   </div>

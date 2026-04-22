@@ -1399,19 +1399,17 @@ tbody tr:hover td { background: #fffdf0; }
     </div>
     <div class="tab-pane" id="cs-clients">
       <table>
-        <thead><tr><th>Account ID</th><th>Status</th><th>AI Risk</th><th>Linkage</th><th>Op</th></tr></thead>
+        <thead><tr><th>Account ID</th><th>Status</th><th>Linkage</th><th>Op</th></tr></thead>
         <tbody>
           <tr>
             <td class="col-link" onclick="showPage('client-details')">4183296</td>
             <td><span class="tag tag-cleared">Cleared</span></td>
-            <td style="background:#fffdf0"><span class="ai-score ai-score-mid">55</span></td>
             <td><span style="font-size:11px;color:#cf1322">Same IP</span></td>
             <td><button class="btn btn-sm" onclick="showPage('client-details')">Detail</button></td>
           </tr>
           <tr>
             <td class="col-link" onclick="showPage('client-details')">4183297</td>
             <td><span class="tag tag-watchlist">Watchlist</span></td>
-            <td style="background:#fffdf0"><span class="ai-score ai-score-mid">61</span></td>
             <td><span style="font-size:11px;color:#cf1322">Same IP · Device</span></td>
             <td><button class="btn btn-sm" onclick="showPage('client-details')">Detail</button></td>
           </tr>
@@ -1450,9 +1448,6 @@ tbody tr:hover td { background: #fffdf0; }
     <div class="stat-card" onclick="setClientFilter('Investigating')" style="cursor:pointer">
       <div class="stat-num" style="color:rgba(0,0,0,.85)">8</div><div class="stat-label">Investigating</div>
     </div>
-    <div class="stat-card" onclick="setClientFilter('Inquiring')" style="cursor:pointer">
-      <div class="stat-num" style="color:#d46b08">3</div><div class="stat-label">Inquiring</div>
-    </div>
     <div class="stat-card" onclick="setClientFilter('Restricted')" style="cursor:pointer">
       <div class="stat-num" style="color:#cf1322">1</div><div class="stat-label">Restricted</div>
     </div>
@@ -1472,9 +1467,7 @@ tbody tr:hover td { background: #fffdf0; }
     <span class="filter-label">License</span>
     <select class="filter-select"><option>All</option><option>TBNZ</option><option>TBHK</option><option>TBSG</option></select>
     <span class="filter-label">Compliance Status</span>
-    <select class="filter-select" id="client-status-filter" onchange="filterClientTable(this.value)"><option value="">All</option><option>Detected</option><option>Investigating</option><option value="Inquiring">Inquiring</option><option>Restricted</option><option value="Terminated">Terminated</option><option>Watchlist</option><option>Cleared</option></select>
-    <span class="filter-label" style="color:var(--ai-color);font-weight:500">AI Risk ≥</span>
-    <select class="filter-select" style="width:64px;border-color:var(--ai-border)"><option>—</option><option>50</option><option>70</option><option>85</option></select>
+    <select class="filter-select" id="client-status-filter" onchange="filterClientTable(this.value)"><option value="">All</option><option>Detected</option><option>Investigating</option><option>Restricted</option><option value="Terminated">Terminated</option><option>Watchlist</option><option>Cleared</option></select>
     <button class="btn btn-primary btn-sm">Search</button>
     <button class="btn btn-sm">Reset</button>
     <button class="btn btn-sm" style="margin-left:auto">Export</button>
@@ -1483,7 +1476,6 @@ tbody tr:hover td { background: #fffdf0; }
   <div class="table-bar">
     <span>0 selected, <strong>277</strong> clients in total</span>
     <button class="btn btn-sm" style="margin-left:auto">Manage in bulk</button>
-    <button class="btn btn-sm">Export</button>
   </div>
   <div class="table-wrap">
     <table>
@@ -1492,7 +1484,6 @@ tbody tr:hover td { background: #fffdf0; }
           <th style="width:32px"><input type="checkbox"></th>
           <th>Account ID</th><th>License</th><th>Registration</th>
           <th>Compliance Status</th><th>Watchlist Since</th><th>Total Alerts</th><th>Open Cases</th><th>Last Alert</th>
-          <th class="ai-col" style="color:var(--ai-dark)">AI Risk <span class="tag tag-ai">AI</span></th>
           <th>Operation</th>
         </tr>
       </thead>
@@ -1504,7 +1495,6 @@ tbody tr:hover td { background: #fffdf0; }
           <td><span class="tag tag-watchlist">Watchlist</span></td>
           <td style="font-size:11px">2025-12-02</td>
           <td>4</td><td>1</td><td>2026-04-07</td>
-          <td style="background:#fffdf0"><span class="ai-score ai-score-high">82</span></td>
           <td><button class="btn btn-sm" onclick="showPage('client-details')">Detail</button></td>
         </tr>
         <tr data-status="Detected">
@@ -1514,7 +1504,6 @@ tbody tr:hover td { background: #fffdf0; }
           <td><span class="tag" style="background:#fff1f0;color:#820014;border:1px solid #ffa39e">Detected</span></td>
           <td style="color:var(--text-dis)">—</td>
           <td>3</td><td>0</td><td>2026-04-06</td>
-          <td style="background:#fffdf0"><span class="ai-score ai-score-mid">67</span></td>
           <td style="white-space:nowrap">
             <button class="btn btn-sm" onclick="showPage('client-details')">Detail</button>
             <button class="btn btn-sm" style="color:#531dab;border-color:#b37feb;margin-left:4px" onclick="openWLModal('2353510')">+ Watchlist</button>
@@ -1527,7 +1516,6 @@ tbody tr:hover td { background: #fffdf0; }
           <td><span class="tag tag-cleared">Cleared</span></td>
           <td style="color:var(--text-dis)">—</td>
           <td>8</td><td>0</td><td>2025-07-15</td>
-          <td style="background:#fffdf0"><span class="ai-score ai-score-mid">55</span></td>
           <td style="white-space:nowrap">
             <button class="btn btn-sm" onclick="showPage('client-details')">Detail</button>
             <button class="btn btn-sm" style="color:#531dab;border-color:#b37feb;margin-left:4px" onclick="openWLModal('4183296')">+ Watchlist</button>
@@ -1540,7 +1528,6 @@ tbody tr:hover td { background: #fffdf0; }
           <td><span class="tag tag-restricted">Restricted</span></td>
           <td style="color:var(--text-dis)">—</td>
           <td>12</td><td>0</td><td>2025-08-29</td>
-          <td style="background:#fffdf0"><span class="ai-score ai-score-high">91</span></td>
           <td><button class="btn btn-sm" onclick="showPage('client-details')">Detail</button></td>
         </tr>
         <tr data-status="Investigating">
@@ -1550,7 +1537,6 @@ tbody tr:hover td { background: #fffdf0; }
           <td><span class="tag" style="background:#fff7e6;color:#d46b08;border:1px solid #ffd591">Investigating</span></td>
           <td style="color:var(--text-dis)">—</td>
           <td>2</td><td>1</td><td>2026-04-03</td>
-          <td style="background:#fffdf0"><span class="ai-score ai-score-mid">48</span></td>
           <td style="white-space:nowrap">
             <button class="btn btn-sm" onclick="showPage('client-details')">Detail</button>
             <button class="btn btn-sm" style="color:#531dab;border-color:#b37feb;margin-left:4px" onclick="openWLModal('7526677')">+ Watchlist</button>

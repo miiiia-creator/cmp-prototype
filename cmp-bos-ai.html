@@ -35,20 +35,24 @@ body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helv
 /* ── Top Nav ── */
 .topnav { background: #001529; height: 48px; display: flex; align-items: center; padding: 0 16px; gap: 24px; position: fixed; top: 0; left: 0; right: 0; z-index: 100; }
 .topnav-logo { color: var(--primary); font-weight: 700; font-size: 16px; letter-spacing: 1px; }
-.topnav-menu { display: flex; gap: 4px; }
+.topnav-menu { display: flex; gap: 4px; align-items: center; height: 48px; }
 .topnav-item { color: rgba(255,255,255,.65); font-size: 13px; cursor: pointer; padding: 4px 10px; border-radius: 4px; transition: all .2s; }
 .topnav-item:hover { color: #fff; background: rgba(255,255,255,.08); }
 .topnav-item.active { color: var(--primary); }
 .topnav-right { margin-left: auto; color: rgba(255,255,255,.55); font-size: 12px; display: flex; align-items: center; gap: 12px; }
 
 /* ── Layout ── */
-.layout { display: flex; padding-top: 86px; min-height: 100vh; }
-.sidebar { width: 200px; background: #fff; border-right: 1px solid #f0f0f0; position: fixed; top: 86px; bottom: 0; left: 0; overflow-y: auto; padding: 8px 0; }
-.sidebar-group { padding: 14px 16px 4px; font-size: 11px; color: var(--text-hint); text-transform: uppercase; letter-spacing: .5px; }
-.sidebar-item { padding: 8px 16px 8px 20px; cursor: pointer; color: var(--text-sec); transition: background .15s; border-right: 3px solid transparent; line-height: 1.4; }
-.sidebar-item:hover { background: rgba(255,225,0,.06); color: var(--text); }
-.sidebar-item.active { background: var(--primary-bg); color: var(--text); border-right-color: var(--primary); font-weight: 500; }
-.content { margin-left: 200px; padding: 16px; flex: 1; }
+.layout { display: flex; flex-direction: column; padding-top: 86px; min-height: 100vh; }
+.sidebar { display: none; }
+.content { margin-left: 0; padding: 16px; flex: 1; }
+/* ── Top nav dropdown ── */
+.topnav-dropdown { position: relative; height: 48px; display: flex; align-items: center; }
+.topnav-dropdown > .topnav-item::after { content: ' ▾'; font-size: 10px; }
+.topnav-dropdown-menu { display: none; position: absolute; top: 100%; left: 0; background: #001529; min-width: 190px; border-radius: 0 0 4px 4px; box-shadow: 0 6px 16px rgba(0,0,0,.2); z-index: 101; padding: 4px 0; }
+.topnav-dropdown:hover .topnav-dropdown-menu { display: block; }
+.topnav-dropdown-item { display: block; padding: 8px 16px; font-size: 12px; color: rgba(255,255,255,.65); cursor: pointer; transition: all .15s; white-space: nowrap; }
+.topnav-dropdown-item:hover { color: #fff; background: rgba(255,255,255,.08); }
+.topnav-dropdown-item.active { color: var(--primary); }
 
 /* ── Pages ── */
 .page { display: none; }
@@ -304,7 +308,7 @@ tbody tr:hover td { background: #fffdf0; }
 .rule-state-enable { background:#f6ffed; color:#389e0d; border:1px solid #b7eb8f; }
 .rule-state-disable { background:#f5f5f5; color:var(--text-hint); border:1px solid #d9d9d9; }
 /* ── Investigation Bottom Sheet ── */
-.inv-sheet { position:fixed; bottom:0; left:200px; right:0; z-index:500; background:#fff; border-top:2px solid #e8e8e8; border-radius:10px 10px 0 0; box-shadow:0 -4px 24px rgba(0,0,0,.10); display:none; flex-direction:column; transition:height .28s cubic-bezier(.4,0,.2,1); height:44px; }
+.inv-sheet { position:fixed; bottom:0; left:0; right:0; z-index:500; background:#fff; border-top:2px solid #e8e8e8; border-radius:10px 10px 0 0; box-shadow:0 -4px 24px rgba(0,0,0,.10); display:none; flex-direction:column; transition:height .28s cubic-bezier(.4,0,.2,1); height:44px; }
 .inv-sheet.visible { display:flex; }
 .inv-sheet.open { height:520px; }
 .inv-sheet-handle { display:flex; align-items:center; padding:0 16px; height:44px; cursor:pointer; user-select:none; flex-shrink:0; position:relative; border-bottom:1px solid transparent; }
@@ -437,7 +441,16 @@ tbody tr:hover td { background: #fffdf0; }
   <div class="topnav-menu">
     <div class="topnav-item">Policy</div>
     <div class="topnav-item">Data Analysis</div>
-    <div class="topnav-item active">Compliance Monitoring</div>
+    <div class="topnav-dropdown">
+      <div class="topnav-item active">Compliance Monitoring</div>
+      <div class="topnav-dropdown-menu">
+        <div class="topnav-dropdown-item active" id="subnav-0" onclick="showPage('dashboard')">Dashboard</div>
+        <div class="topnav-dropdown-item" id="subnav-1" onclick="showPage('alert-viewer')">Alert Viewer</div>
+        <div class="topnav-dropdown-item" id="subnav-2" onclick="showPage('case-management')">Case Management</div>
+        <div class="topnav-dropdown-item" id="subnav-3" onclick="showPage('client-management')">Client Management</div>
+        <div class="topnav-dropdown-item" id="subnav-4" onclick="showPage('rule-management')">Rule Management</div>
+      </div>
+    </div>
     <div class="topnav-item">Accounts</div>
     <div class="topnav-item">Employee Track</div>
     <div class="topnav-item">Rule Testing</div>
@@ -460,15 +473,6 @@ tbody tr:hover td { background: #fffdf0; }
 </div>
 
 <div class="layout">
-  <!-- ── Sidebar ── -->
-  <div class="sidebar">
-    <div class="sidebar-group">Compliance Monitoring</div>
-    <div class="sidebar-item active" onclick="showPage('dashboard')">Dashboard <span class="new-badge">NEW</span></div>
-    <div class="sidebar-item" onclick="showPage('alert-viewer')">Alert Viewer</div>
-    <div class="sidebar-item" onclick="showPage('case-management')">Case Management</div>
-    <div class="sidebar-item" onclick="showPage('client-management')">Client Management <span class="new-badge">NEW</span></div>
-    <div class="sidebar-item" onclick="showPage('rule-management')">Rule Management</div>
-  </div>
 
   <div class="content">
 
@@ -1594,45 +1598,10 @@ tbody tr:hover td { background: #fffdf0; }
   <div class="card" style="margin-bottom:12px">
     <div class="card-head">
       Client Risk Lifecycle
-      <span style="font-size:11px;font-weight:400;color:var(--text-hint);margin-left:4px">7 Events</span>
+      <span style="font-size:11px;font-weight:400;color:var(--text-hint);margin-left:4px">10 Events · 2 Watchlist Entries</span>
     </div>
     <div style="padding:16px;">
       <div class="timeline">
-
-        <div class="tl-item">
-          <div class="tl-dot gray"></div>
-          <div class="tl-date">2023-08-12</div>
-          <div class="tl-title">Account Registered</div>
-          <div class="tl-desc">TBNZ License, Individual Investor</div>
-        </div>
-
-        <div class="tl-item">
-          <div class="tl-dot yellow"></div>
-          <div class="tl-date">2025-08-03</div>
-          <div class="tl-title"><span class="col-link" onclick="showPage('alert-details')">Alert #19143201</span></div>
-          <div class="tl-desc">Rule: possible ramping (without tick data) · FUBO · <span class="tag tag-closed" style="font-size:10px">Cleared</span> · Source: CMP Rule</div>
-        </div>
-
-        <div class="tl-item">
-          <div class="tl-dot red"></div>
-          <div class="tl-date">2025-11-02</div>
-          <div class="tl-title"><span class="col-link" onclick="showPage('case-details')">Case TS_798</span> Opened</div>
-          <div class="tl-desc">Status: Open · NQ2511 · Other Accounts: 4183296 · Source: Alert Escalation</div>
-        </div>
-
-        <div class="tl-item">
-          <div class="tl-dot green"></div>
-          <div class="tl-date">2025-11-28</div>
-          <div class="tl-title">Case TS_798 Closed</div>
-          <div class="tl-desc">Conclusion: Further Action · reported to regulator</div>
-        </div>
-
-        <div class="tl-item">
-          <div class="tl-dot yellow"></div>
-          <div class="tl-date">2025-12-02</div>
-          <div class="tl-title">Added to Watchlist</div>
-          <div class="tl-desc">Risk Level: Medium · Expiry: 2026-06-02 · Added by houyuexuan</div>
-        </div>
 
         <div class="tl-item">
           <div class="tl-dot yellow"></div>
@@ -1656,6 +1625,62 @@ tbody tr:hover td { background: #fffdf0; }
               </div>
             </div>
           </div>
+        </div>
+
+        <div class="tl-item">
+          <div class="tl-dot yellow"></div>
+          <div class="tl-date">2025-12-02</div>
+          <div class="tl-title">Added to Watchlist <span class="tag tag-watchlist" style="font-size:10px">2nd time</span></div>
+          <div class="tl-desc">Risk Level: Medium · Expiry: 2026-06-02 · Added by houyuexuan · Reason: Case TS_798 Further Action</div>
+        </div>
+
+        <div class="tl-item">
+          <div class="tl-dot green"></div>
+          <div class="tl-date">2025-11-28</div>
+          <div class="tl-title">Case TS_798 Closed</div>
+          <div class="tl-desc">Conclusion: Further Action · reported to regulator</div>
+        </div>
+
+        <div class="tl-item">
+          <div class="tl-dot red"></div>
+          <div class="tl-date">2025-11-02</div>
+          <div class="tl-title"><span class="col-link" onclick="showPage('case-details')">Case TS_798</span> Opened</div>
+          <div class="tl-desc">Status: Open · NQ2511 · Other Accounts: 4183296 · Source: Alert Escalation</div>
+        </div>
+
+        <div class="tl-item">
+          <div class="tl-dot yellow"></div>
+          <div class="tl-date">2025-08-03</div>
+          <div class="tl-title"><span class="col-link" onclick="showPage('alert-details')">Alert #19143201</span></div>
+          <div class="tl-desc">Rule: possible ramping (without tick data) · FUBO · <span class="tag tag-closed" style="font-size:10px">Cleared</span> · Source: CMP Rule</div>
+        </div>
+
+        <div class="tl-item">
+          <div class="tl-dot green"></div>
+          <div class="tl-date">2025-06-15</div>
+          <div class="tl-title">Removed from Watchlist</div>
+          <div class="tl-desc">Expired · 6-month monitoring period ended · No re-trigger during period</div>
+        </div>
+
+        <div class="tl-item">
+          <div class="tl-dot yellow"></div>
+          <div class="tl-date">2024-12-15</div>
+          <div class="tl-title">Added to Watchlist <span class="tag tag-watchlist" style="font-size:10px">1st time</span></div>
+          <div class="tl-desc">Risk Level: Low · Expiry: 2025-06-15 · Added by zengyuxiang · Reason: Ramping alert pattern</div>
+        </div>
+
+        <div class="tl-item">
+          <div class="tl-dot yellow"></div>
+          <div class="tl-date">2024-12-10</div>
+          <div class="tl-title"><span class="col-link" onclick="showPage('alert-details')">Alert #19138502</span></div>
+          <div class="tl-desc">Rule: possible ramping (without tick data) · AAPL · <span class="tag tag-closed" style="font-size:10px">Cleared</span> · Source: CMP Rule</div>
+        </div>
+
+        <div class="tl-item">
+          <div class="tl-dot gray"></div>
+          <div class="tl-date">2023-08-12</div>
+          <div class="tl-title">Account Registered</div>
+          <div class="tl-desc">TBNZ License, Individual Investor</div>
         </div>
 
       </div>
@@ -1717,69 +1742,118 @@ tbody tr:hover td { background: #fffdf0; }
     </div>
 
     <div class="tab-pane" id="ct-watchlist">
-      <div style="padding:12px 16px">
-        <!-- Watchlist Config Card -->
-        <div class="wl-card">
-          <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px;">
-            <div style="font-weight:600;font-size:13px">Watchlist Configuration</div>
-            <div style="display:flex;gap:6px;align-items:center">
-              <span class="tag tag-watchlist">Monitoring</span>
-            </div>
-          </div>
-          <div class="wl-meta">
-            <div><div style="font-size:11px;color:var(--text-hint);margin-bottom:2px">Added By</div><div style="font-size:12px">houyuexuan</div></div>
-            <div><div style="font-size:11px;color:var(--text-hint);margin-bottom:2px">Added Date</div><div style="font-size:12px">2025-12-02</div></div>
-            <div><div style="font-size:11px;color:var(--text-hint);margin-bottom:2px">Expiry Date</div><div style="font-size:12px">2026-06-02</div></div>
-            <div><div style="font-size:11px;color:var(--text-hint);margin-bottom:2px">Tag</div><div style="font-size:12px">Internal</div></div>
-            <div><div style="font-size:11px;color:var(--text-hint);margin-bottom:2px">Period</div><div style="font-size:12px">6 months</div></div>
-            <div><div style="font-size:11px;color:var(--text-hint);margin-bottom:2px">Frequency</div><div style="font-size:12px">Monthly review</div></div>
-          </div>
-          <div style="margin-top:10px">
-            <div style="font-size:11px;color:var(--text-hint);margin-bottom:6px">Monitoring Rules</div>
-            <table style="font-size:12px">
-              <thead><tr><th>Rule Name</th><th>Version</th><th>Rule Type</th></tr></thead>
-              <tbody>
-                <tr><td>pre-arranged trading (Profit)</td><td>v2.4</td><td>TS Rule</td></tr>
-                <tr><td>possible wash trade (A to A)</td><td>v1.8</td><td>TS Rule</td></tr>
-                <tr><td>possible ramping</td><td>v3.1</td><td>TS Rule</td></tr>
-                <tr><td>large position accumulation</td><td>v1.2</td><td>TM Rule</td></tr>
-              </tbody>
-            </table>
-          </div>
-          <div style="margin-top:10px;padding-top:10px;border-top:1px solid #ffe58f;">
-            <div style="font-size:11px;color:var(--text-hint);margin-bottom:4px">Reason / Checkpoint</div>
-            <div style="font-size:12px;color:var(--text-base)">Case TS_798 closed with a Further Action conclusion, reported to TBNZ regulator. Per internal procedure, account trading activity will be monitored for 6 months; any high-confidence alert re-trigger will escalate to a full investigation.</div>
-          </div>
-        </div>
+      <table>
+        <thead><tr><th>Period</th><th>Added By</th><th>Reason</th><th>Rules</th><th>Alerts</th><th>Status</th><th>Operation</th></tr></thead>
+        <tbody>
+          <tr>
+            <td>2025-12-02 ~ 2026-06-02</td>
+            <td>houyuexuan</td>
+            <td style="max-width:200px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">Case TS_798 Further Action</td>
+            <td>4 rules</td>
+            <td><span style="color:#cf1322;font-weight:500">2</span></td>
+            <td><span class="tag tag-watchlist" style="font-size:10px">Active</span></td>
+            <td>
+              <button class="btn btn-sm" style="font-size:10px;padding:1px 8px" onclick="document.getElementById('wl-current-modal').style.display='flex'">Details</button>
+              <button class="btn btn-sm" style="font-size:10px;padding:1px 8px" onclick="document.getElementById('edit-wl-modal').style.display='flex'">Edit</button>
+            </td>
+          </tr>
+          <tr>
+            <td>2024-12-15 ~ 2025-06-15</td>
+            <td>zengyuxiang</td>
+            <td style="max-width:200px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">Ramping alert on AAPL</td>
+            <td>2 rules</td>
+            <td><span style="color:#389e0d">0</span></td>
+            <td><span class="tag tag-closed" style="font-size:10px">Expired</span></td>
+            <td><button class="btn btn-sm" style="font-size:10px;padding:1px 8px" onclick="document.getElementById('wl-hist-modal').style.display='flex'">Details</button></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
 
-        <!-- Triggered Alerts while on Watchlist -->
-        <div style="font-size:12px;color:var(--text-hint);margin-bottom:6px">Alerts Triggered During Watchlist Period</div>
-        <table>
-          <thead><tr><th>Alert ID</th><th>Rule Name</th><th>Symbol</th><th>Status</th><th>Source</th></tr></thead>
+  <!-- Current Watchlist Detail Modal -->
+  <div id="wl-current-modal" onclick="if(event.target===this)this.style.display='none'" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,.45);z-index:1000;align-items:center;justify-content:center">
+    <div style="width:560px;background:#fff;border-radius:8px;padding:20px 24px;box-shadow:0 6px 30px rgba(0,0,0,.15);max-height:80vh;overflow-y:auto">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px">
+        <div style="font-weight:600;font-size:14px">Watchlist Record · 2025-12-02 ~ 2026-06-02 <span class="tag tag-watchlist" style="font-size:10px;margin-left:6px">Active</span></div>
+        <span style="cursor:pointer;color:#aaa;font-size:18px" onclick="document.getElementById('wl-current-modal').style.display='none'">&#215;</span>
+      </div>
+      <div class="wl-meta" style="margin-bottom:10px">
+        <div><div style="font-size:11px;color:var(--text-hint);margin-bottom:2px">Added By</div><div style="font-size:12px">houyuexuan</div></div>
+        <div><div style="font-size:11px;color:var(--text-hint);margin-bottom:2px">Added Date</div><div style="font-size:12px">2025-12-02</div></div>
+        <div><div style="font-size:11px;color:var(--text-hint);margin-bottom:2px">Expiry Date</div><div style="font-size:12px">2026-06-02</div></div>
+        <div><div style="font-size:11px;color:var(--text-hint);margin-bottom:2px">Tag</div><div style="font-size:12px">Internal</div></div>
+        <div><div style="font-size:11px;color:var(--text-hint);margin-bottom:2px">Period</div><div style="font-size:12px">6 months</div></div>
+        <div><div style="font-size:11px;color:var(--text-hint);margin-bottom:2px">Frequency</div><div style="font-size:12px">Monthly review</div></div>
+      </div>
+      <div style="margin-bottom:10px">
+        <div style="font-size:11px;color:var(--text-hint);margin-bottom:6px">Monitoring Rules</div>
+        <table style="font-size:12px">
+          <thead><tr><th>Rule Name</th><th>Version</th><th>Rule Type</th></tr></thead>
           <tbody>
-            <tr>
-              <td class="col-link" onclick="showPage('alert-details')">19150109</td>
-              <td>pre-arranged trading (Profit)</td>
-              <td>SPXW 20260406 6615.0 C</td>
-              <td><span class="tag tag-processing">Processing</span></td>
-              <td>CMP Rule</td>
-            </tr>
-            <tr>
-              <td class="col-link" onclick="showPage('alert-details')">19149230</td>
-              <td>pre-arranged trading (Profit)</td>
-              <td>SPXW 20251217 5800.0 C</td>
-              <td><span class="tag tag-closed">Cleared</span></td>
-              <td>CMP Rule</td>
-            </tr>
+            <tr><td>pre-arranged trading (Profit)</td><td>v2.4</td><td>TS Rule</td></tr>
+            <tr><td>possible wash trade (A to A)</td><td>v1.8</td><td>TS Rule</td></tr>
+            <tr><td>possible ramping</td><td>v3.1</td><td>TS Rule</td></tr>
+            <tr><td>large position accumulation</td><td>v1.2</td><td>TM Rule</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <div style="margin-bottom:10px;padding-top:10px;border-top:1px solid var(--border)">
+        <div style="font-size:11px;color:var(--text-hint);margin-bottom:4px">Reason</div>
+        <div style="font-size:12px;color:var(--text-base)">Case TS_798 closed with a Further Action conclusion, reported to TBNZ regulator. Per internal procedure, account trading activity will be monitored for 6 months.</div>
+      </div>
+      <div style="padding-top:10px;border-top:1px solid var(--border)">
+        <div style="font-size:11px;color:var(--text-hint);margin-bottom:6px">Alerts During This Period <span style="color:#cf1322;font-weight:500">2</span></div>
+        <table style="font-size:11px">
+          <thead><tr><th>Alert ID</th><th>Rule Name</th><th>Symbol</th><th>Status</th></tr></thead>
+          <tbody>
+            <tr><td class="col-link" onclick="showPage('alert-details');document.getElementById('wl-current-modal').style.display='none'">19150109</td><td>pre-arranged trading (Profit)</td><td>SPXW 20260406 6615.0 C</td><td><span class="tag tag-processing" style="font-size:10px">Processing</span></td></tr>
+            <tr><td class="col-link" onclick="showPage('alert-details');document.getElementById('wl-current-modal').style.display='none'">19149230</td><td>pre-arranged trading (Profit)</td><td>SPXW 20251217 5800.0 C</td><td><span class="tag tag-closed" style="font-size:10px">Cleared</span></td></tr>
           </tbody>
         </table>
       </div>
     </div>
   </div>
 
+  <!-- Historical Watchlist Detail Modal -->
+  <div id="wl-hist-modal" onclick="if(event.target===this)this.style.display='none'" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,.45);z-index:1000;align-items:center;justify-content:center">
+    <div style="width:560px;background:#fff;border-radius:8px;padding:20px 24px;box-shadow:0 6px 30px rgba(0,0,0,.15);max-height:80vh;overflow-y:auto">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px">
+        <div style="font-weight:600;font-size:14px">Watchlist Record · 2024-12-15 ~ 2025-06-15 <span class="tag tag-closed" style="font-size:10px;margin-left:6px">Expired</span></div>
+        <span style="cursor:pointer;color:#aaa;font-size:18px" onclick="document.getElementById('wl-hist-modal').style.display='none'">&#215;</span>
+      </div>
+      <div class="wl-meta" style="margin-bottom:10px">
+        <div><div style="font-size:11px;color:var(--text-hint);margin-bottom:2px">Added By</div><div style="font-size:12px">zengyuxiang</div></div>
+        <div><div style="font-size:11px;color:var(--text-hint);margin-bottom:2px">Added Date</div><div style="font-size:12px">2024-12-15</div></div>
+        <div><div style="font-size:11px;color:var(--text-hint);margin-bottom:2px">Removed Date</div><div style="font-size:12px">2025-06-15</div></div>
+        <div><div style="font-size:11px;color:var(--text-hint);margin-bottom:2px">Tag</div><div style="font-size:12px">Internal</div></div>
+        <div><div style="font-size:11px;color:var(--text-hint);margin-bottom:2px">Period</div><div style="font-size:12px">6 months</div></div>
+        <div><div style="font-size:11px;color:var(--text-hint);margin-bottom:2px">Removal Reason</div><div style="font-size:12px">Expired · No re-trigger</div></div>
+      </div>
+      <div style="margin-bottom:10px">
+        <div style="font-size:11px;color:var(--text-hint);margin-bottom:6px">Monitoring Rules</div>
+        <table style="font-size:12px">
+          <thead><tr><th>Rule Name</th><th>Version</th><th>Rule Type</th></tr></thead>
+          <tbody>
+            <tr><td>possible ramping</td><td>v2.8</td><td>TS Rule</td></tr>
+            <tr><td>possible ramping (without tick data)</td><td>v1.5</td><td>TS Rule</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <div style="margin-bottom:10px;padding-top:10px;border-top:1px solid var(--border)">
+        <div style="font-size:11px;color:var(--text-hint);margin-bottom:4px">Reason</div>
+        <div style="font-size:12px;color:var(--text-sec)">Alert #19138502 triggered possible ramping on AAPL. Added for precautionary monitoring.</div>
+      </div>
+      <div style="padding-top:10px;border-top:1px solid var(--border)">
+        <div style="font-size:11px;color:var(--text-hint);margin-bottom:4px">Alerts During This Period <span style="color:#389e0d">0</span></div>
+        <div style="font-size:11px;color:var(--text-dis)">No alerts triggered during monitoring period.</div>
+      </div>
+    </div>
+  </div>
+
   <!-- Edit Watchlist Config Modal -->
-  <div class="modal-overlay" id="edit-wl-modal" style="display:none" onclick="if(event.target===this)this.style.display='none'">
-    <div class="modal" style="width:560px">
+  <div id="edit-wl-modal" onclick="if(event.target===this)this.style.display='none'" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,.45);z-index:1000;align-items:center;justify-content:center">
+    <div style="width:560px;background:#fff;border-radius:8px;padding:20px 24px;box-shadow:0 6px 30px rgba(0,0,0,.15);max-height:80vh;overflow-y:auto">
       <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px">
         <div style="font-weight:600;font-size:14px">Edit Watchlist Configuration</div>
         <span style="cursor:pointer;color:#aaa;font-size:18px" onclick="document.getElementById('edit-wl-modal').style.display='none'">&#215;</span>
@@ -2452,10 +2526,10 @@ HAVING buyTradeCount >= :orderTimes AND sellTradeCount >= :orderTimes</textarea>
 function showPage(name) {
   document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
   document.getElementById('page-' + name).classList.add('active');
-  document.querySelectorAll('.sidebar-item').forEach(s => s.classList.remove('active'));
+  document.querySelectorAll('.topnav-dropdown-item').forEach(s => s.classList.remove('active'));
   const map = { 'dashboard': 0, 'alert-viewer': 1, 'alert-details': 1, 'case-management': 2, 'case-details': 2, 'client-management': 3, 'client-details': 3, 'rule-management': 4, 'rule-details': 4 };
   const idx = map[name];
-  if (idx !== undefined) document.querySelectorAll('.sidebar-item')[idx].classList.add('active');
+  if (idx !== undefined) { const el = document.getElementById('subnav-' + idx); if (el) el.classList.add('active'); }
   window.scrollTo(0, 0);
   if (name === 'dashboard') { setTimeout(drawDashTrend, 0); setTimeout(drawAccuracyTrend, 0); }
 

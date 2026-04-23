@@ -1582,23 +1582,22 @@ tbody tr:hover td { background: #fffdf0; }
   <div class="breadcrumb"><a onclick="showPage('client-management')">Client Management</a> › Account 3215451</div>
   <div class="page-actions">
     <button class="btn btn-sm" onclick="showPage('client-management')">← Back</button>
-    <button class="btn btn-sm">Send Inquiry</button>
-    <button class="btn btn-sm" style="color:#cf1322;border-color:#ffa39e">Request Restriction</button>
     <button class="btn btn-primary btn-sm" style="margin-left:auto" onclick="document.getElementById('edit-wl-modal').style.display='flex'">Edit Watchlist Config</button>
   </div>
 
-  <!-- Compliance Status Stepper -->
-  <!-- Client Meta -->
+  <!-- Account Meta -->
   <div class="card">
     <div class="meta-grid">
       <div class="meta-item"><div class="meta-label">Account ID</div><div class="meta-val">3215451</div></div>
+      <div class="meta-item"><div class="meta-label">User ID</div><div class="meta-val">U-88210</div></div>
+      <div class="meta-item"><div class="meta-label">Account Type</div><div class="meta-val">Individual</div></div>
       <div class="meta-item"><div class="meta-label">License</div><div class="meta-val">TBNZ</div></div>
       <div class="meta-item"><div class="meta-label">Account Opening Date</div><div class="meta-val">2023-08-12</div></div>
       <div class="meta-item"><div class="meta-label">Compliance Status</div><div class="meta-val"><span class="tag tag-watchlist">Watchlist</span></div></div>
       <div class="meta-item"><div class="meta-label">Watchlist Since</div><div class="meta-val">2025-12-02</div></div>
       <div class="meta-item"><div class="meta-label">Watchlist Expiry</div><div class="meta-val">2026-06-02</div></div>
-      <div class="meta-item"><div class="meta-label">Total Alerts</div><div class="meta-val">4</div></div>
-      <div class="meta-item"><div class="meta-label">Total Cases</div><div class="meta-val">1</div></div>
+      <div class="meta-item"><div class="meta-label">Alerts</div><div class="meta-val">5</div></div>
+      <div class="meta-item"><div class="meta-label">Cases</div><div class="meta-val">1</div></div>
     </div>
   </div>
 
@@ -1699,51 +1698,34 @@ tbody tr:hover td { background: #fffdf0; }
   <!-- Tabs: Alert History / Watchlist / Inquiries -->
   <div class="card" style="margin-top:12px">
     <div class="tab-bar">
-      <div class="tab active" onclick="switchTab(this,'ct-alerts')">Alert History <span style="background:#fff2f0;color:#cf1322;border:1px solid #ffa39e;border-radius:10px;padding:0 5px;font-size:10px;margin-left:3px">4</span></div>
+      <div class="tab active" onclick="switchTab(this,'ct-alerts')">Alert History <span style="background:#fff2f0;color:#cf1322;border:1px solid #ffa39e;border-radius:10px;padding:0 5px;font-size:10px;margin-left:3px">5</span></div>
       <div class="tab" onclick="switchTab(this,'ct-cases')">Linked Cases <span style="background:#e6f4ff;color:#0958d9;border:1px solid #91caff;border-radius:10px;padding:0 5px;font-size:10px;margin-left:3px">1</span></div>
-      <div class="tab" onclick="switchTab(this,'ct-watchlist')">Watchlist Records</div>
+      <div class="tab" onclick="switchTab(this,'ct-watchlist')">Watchlist Records <span style="background:#f9f0ff;color:#531dab;border:1px solid #d3adf7;border-radius:10px;padding:0 5px;font-size:10px;margin-left:3px">2</span></div>
     </div>
     <div class="tab-pane active" id="ct-alerts">
       <table>
-        <thead><tr><th>Alert ID</th><th>Rule Name</th><th>Symbol</th><th>Status</th><th>Source</th></tr></thead>
+        <thead><tr><th>Alert ID</th><th>Trigger Time</th><th>Rule Name</th><th>Symbol</th><th>Market</th><th>Other Accounts</th><th>Status</th><th>Source</th></tr></thead>
         <tbody>
-          <tr style="background:#fafafa;font-weight:500;cursor:pointer" onclick="var b=document.getElementById('grouped-pat-rows');var o=b.style.display!=='none';b.style.display=o?'none':'table-row-group';this.querySelector('.g-arr').textContent=o?'▶':'▼'">
-            <td><span class="g-arr" style="margin-right:4px;font-size:10px;color:var(--text-dis)">▶</span> 19150109, 19149230</td>
-            <td>pre-arranged trading (Profit) <span style="font-size:10px;color:var(--text-hint);font-weight:400">x2</span></td>
-            <td>SPXW</td>
-            <td><span class="tag tag-processing">Processing</span> / <span class="tag tag-closed">Cleared</span></td>
-            <td>CMP Rule</td>
-          </tr>
-          <tbody id="grouped-pat-rows" style="display:none">
-            <tr style="background:#fafcff">
-              <td style="padding-left:24px" class="col-link" onclick="showPage('alert-details')">19150109</td>
-              <td>pre-arranged trading (Profit)</td>
-              <td>SPXW 20260406 6615.0 C</td>
-              <td><span class="tag tag-processing">Processing</span></td>
-              <td>CMP Rule</td>
-            </tr>
-            <tr style="background:#fafcff">
-              <td style="padding-left:24px" class="col-link" onclick="showPage('alert-details')">19149230</td>
-              <td>pre-arranged trading (Profit)</td>
-              <td>SPXW 20251217 5800.0 C</td>
-              <td><span class="tag tag-closed">Cleared</span></td>
-              <td>CMP Rule</td>
-            </tr>
-          </tbody>
-          <tr><td class="col-link" onclick="showPage('alert-details')">19147810</td><td>possible wash trade (A to A)</td><td>NQ2511</td><td><span class="tag tag-closed">Closed</span></td><td>CMP Rule</td></tr>
-          <tr><td class="col-link" onclick="showPage('alert-details')">19143201</td><td>possible ramping (without tick data)</td><td>FUBO</td><td><span class="tag tag-closed">Cleared</span></td><td>CMP Rule</td></tr>
+          <tr><td class="col-link" onclick="showPage('alert-details')">19150109</td><td>2026-04-07</td><td>pre-arranged trading (Profit)</td><td>SPXW 20260406 6615.0 C</td><td>US</td><td>3215450</td><td><span class="tag tag-processing">Processing</span></td><td>CMP Rule</td></tr>
+          <tr><td class="col-link" onclick="showPage('alert-details')">19149230</td><td>2025-12-18</td><td>pre-arranged trading (Profit)</td><td>SPXW 20251217 5800.0 C</td><td>US</td><td>3215450</td><td><span class="tag tag-closed">Cleared</span></td><td>CMP Rule</td></tr>
+          <tr><td class="col-link" onclick="showPage('alert-details')">19147810</td><td>2025-11-02</td><td>possible wash trade (A to A)</td><td>NQ2511</td><td>US</td><td>4183296</td><td><span class="tag tag-closed">Closed</span></td><td>CMP Rule</td></tr>
+          <tr><td class="col-link" onclick="showPage('alert-details')">19143201</td><td>2025-08-03</td><td>possible ramping (without tick data)</td><td>FUBO</td><td>US</td><td>—</td><td><span class="tag tag-closed">Cleared</span></td><td>CMP Rule</td></tr>
+          <tr><td class="col-link" onclick="showPage('alert-details')">19138502</td><td>2024-12-10</td><td>possible ramping (without tick data)</td><td>AAPL</td><td>US</td><td>—</td><td><span class="tag tag-closed">Cleared</span></td><td>CMP Rule</td></tr>
         </tbody>
       </table>
     </div>
     <div class="tab-pane" id="ct-cases">
       <table>
-        <thead><tr><th>Case ID</th><th>Status</th><th>Symbol</th><th>Other Accounts</th><th>Source</th></tr></thead>
+        <thead><tr><th>Case ID</th><th>Case Name</th><th>Status</th><th>Symbol</th><th>Other Accounts</th><th>Owner</th><th>Case Tag</th><th>Source</th></tr></thead>
         <tbody>
           <tr>
             <td class="col-link" onclick="showPage('case-details')">TS_798</td>
+            <td>NQ Futures - 3215451</td>
             <td><span class="tag tag-closed">Closed</span></td>
             <td>NQ2511</td>
             <td>4183296</td>
+            <td>mayimeng</td>
+            <td><span class="tag tag-escalated">Further Action</span></td>
             <td>Alert Escalation</td>
           </tr>
         </tbody>

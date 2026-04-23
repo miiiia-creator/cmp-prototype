@@ -447,7 +447,7 @@ tbody tr:hover td { background: #fffdf0; }
         <div class="topnav-dropdown-item active" id="subnav-0" onclick="showPage('dashboard')">Dashboard</div>
         <div class="topnav-dropdown-item" id="subnav-1" onclick="showPage('alert-viewer')">Alert Viewer</div>
         <div class="topnav-dropdown-item" id="subnav-2" onclick="showPage('case-management')">Case Management</div>
-        <div class="topnav-dropdown-item" id="subnav-3" onclick="showPage('client-management')">Client Management</div>
+        <div class="topnav-dropdown-item" id="subnav-3" onclick="showPage('client-management')">Account Management</div>
         <div class="topnav-dropdown-item" id="subnav-4" onclick="showPage('rule-management')">Rule Management</div>
       </div>
     </div>
@@ -1436,7 +1436,7 @@ tbody tr:hover td { background: #fffdf0; }
      PAGE: CLIENT MANAGEMENT
 ══════════════════════════════════════════ -->
 <div class="page" id="page-client-management">
-  <div class="breadcrumb"><span>Compliance Monitoring</span> › <span>Client Management</span></div>
+  <div class="breadcrumb"><span>Compliance Monitoring</span> › <span>Account Management</span></div>
 
     <div class="stats-bar">
       <div class="stat-card" onclick="setClientFilter('')" style="cursor:pointer">
@@ -1464,6 +1464,7 @@ tbody tr:hover td { background: #fffdf0; }
 
     <div class="filter-bar">
       <span class="filter-label">Account ID</span><input class="filter-input" style="width:90px" placeholder="Account ID">
+      <span class="filter-label">User ID</span><input class="filter-input" style="width:90px" placeholder="User ID">
       <span class="filter-label">License</span>
       <select class="filter-select"><option>All</option><option>TBNZ</option><option>TBHK</option><option>TBSG</option></select>
       <span class="filter-label">Compliance Status</span>
@@ -1473,7 +1474,7 @@ tbody tr:hover td { background: #fffdf0; }
     </div>
 
     <div class="table-bar">
-      <span>0 selected, <strong>277</strong> clients in total</span>
+      <span>0 selected, <strong>277</strong> accounts in total</span>
       <button class="btn btn-sm" style="margin-left:auto">Manage in bulk</button>
     </div>
     <div class="table-wrap">
@@ -1481,8 +1482,8 @@ tbody tr:hover td { background: #fffdf0; }
         <thead>
           <tr>
             <th style="width:32px"><input type="checkbox"></th>
-            <th>Account ID</th><th>License</th><th>Registration</th>
-            <th>Compliance Status</th><th>Watchlist Since</th><th>Watchlist Expiry</th><th>Total Alerts</th><th>Open Cases</th><th>Last Alert</th>
+            <th>Account ID</th><th>User ID</th><th>Account Type</th><th>License</th><th>Registration</th>
+            <th>Compliance Status</th><th>Watchlist Since</th><th>Watchlist Expiry</th><th>Total Alerts</th><th>Linked Cases</th><th>Last Alert</th>
             <th>Operation</th>
           </tr>
         </thead>
@@ -1490,16 +1491,18 @@ tbody tr:hover td { background: #fffdf0; }
           <tr data-status="Watchlist">
             <td><input type="checkbox"></td>
             <td class="col-link" onclick="showPage('client-details')">3215451</td>
+            <td>U-88210</td><td>Individual</td>
             <td>TBNZ</td><td>2023-08-12</td>
             <td><span class="tag tag-watchlist">Watchlist</span></td>
             <td style="font-size:11px">2025-12-02</td>
             <td style="font-size:11px;color:#d46b08;font-weight:500">2026-06-02 <span style="font-size:9px;background:#fffbe6;border:1px solid #ffe58f;border-radius:3px;padding:0 4px;margin-left:2px">41d</span></td>
             <td>4</td><td>1</td><td>2026-04-07</td>
-            <td><button class="btn btn-sm" onclick="showPage('client-details')">Detail</button></td>
+            <td style="white-space:nowrap"><button class="btn btn-sm" onclick="showPage('client-details')">Detail</button> <button class="btn btn-sm" style="margin-left:2px">Edit</button></td>
           </tr>
           <tr data-status="Detected">
             <td><input type="checkbox"></td>
             <td class="col-link" onclick="showPage('client-details')">2353510</td>
+            <td>U-66034</td><td>Individual</td>
             <td>TBNZ</td><td>2022-03-05</td>
             <td><span class="tag" style="background:#fff1f0;color:#820014;border:1px solid #ffa39e">Detected</span></td>
             <td style="color:var(--text-dis)">—</td>
@@ -1507,12 +1510,14 @@ tbody tr:hover td { background: #fffdf0; }
             <td>3</td><td>0</td><td>2026-04-06</td>
             <td style="white-space:nowrap">
               <button class="btn btn-sm" onclick="showPage('client-details')">Detail</button>
-              <button class="btn btn-sm" style="color:#531dab;border-color:#b37feb;margin-left:4px" onclick="openWLModal('2353510')">+ Watchlist</button>
+              <button class="btn btn-sm" style="margin-left:2px">Edit</button>
+              <button class="btn btn-sm" style="color:#531dab;border-color:#b37feb;margin-left:2px" onclick="openWLModal('2353510')">+ Watchlist</button>
             </td>
           </tr>
           <tr data-status="Cleared">
             <td><input type="checkbox"></td>
             <td class="col-link" onclick="showPage('client-details')">4183296</td>
+            <td>U-44501</td><td>Corporate</td>
             <td>TBNZ</td><td>2021-11-20</td>
             <td><span class="tag tag-cleared">Cleared</span></td>
             <td style="color:var(--text-dis)">—</td>
@@ -1520,22 +1525,25 @@ tbody tr:hover td { background: #fffdf0; }
             <td>8</td><td>0</td><td>2025-07-15</td>
             <td style="white-space:nowrap">
               <button class="btn btn-sm" onclick="showPage('client-details')">Detail</button>
-              <button class="btn btn-sm" style="color:#531dab;border-color:#b37feb;margin-left:4px" onclick="openWLModal('4183296')">+ Watchlist</button>
+              <button class="btn btn-sm" style="margin-left:2px">Edit</button>
+              <button class="btn btn-sm" style="color:#531dab;border-color:#b37feb;margin-left:2px" onclick="openWLModal('4183296')">+ Watchlist</button>
             </td>
           </tr>
           <tr data-status="Restricted">
             <td><input type="checkbox"></td>
             <td class="col-link" onclick="showPage('client-details')">1441692</td>
+            <td>U-33298</td><td>Individual</td>
             <td>TBNZ</td><td>2020-06-18</td>
             <td><span class="tag tag-restricted">Restricted</span></td>
             <td style="color:var(--text-dis)">—</td>
             <td style="color:var(--text-dis)">—</td>
             <td>12</td><td>0</td><td>2025-08-29</td>
-            <td><button class="btn btn-sm" onclick="showPage('client-details')">Detail</button></td>
+            <td style="white-space:nowrap"><button class="btn btn-sm" onclick="showPage('client-details')">Detail</button> <button class="btn btn-sm" style="margin-left:2px">Edit</button></td>
           </tr>
           <tr data-status="Investigating">
             <td><input type="checkbox"></td>
             <td class="col-link" onclick="showPage('client-details')">7526677</td>
+            <td>U-99182</td><td>Individual</td>
             <td>TBNZ</td><td>2024-01-09</td>
             <td><span class="tag" style="background:#fff7e6;color:#d46b08;border:1px solid #ffd591">Investigating</span></td>
             <td style="color:var(--text-dis)">—</td>
@@ -1543,7 +1551,8 @@ tbody tr:hover td { background: #fffdf0; }
             <td>2</td><td>1</td><td>2026-04-03</td>
             <td style="white-space:nowrap">
               <button class="btn btn-sm" onclick="showPage('client-details')">Detail</button>
-              <button class="btn btn-sm" style="color:#531dab;border-color:#b37feb;margin-left:4px" onclick="openWLModal('7526677')">+ Watchlist</button>
+              <button class="btn btn-sm" style="margin-left:2px">Edit</button>
+              <button class="btn btn-sm" style="color:#531dab;border-color:#b37feb;margin-left:2px" onclick="openWLModal('7526677')">+ Watchlist</button>
             </td>
           </tr>
         </tbody>
@@ -3618,6 +3627,13 @@ function submitWLModal() {
 
     <!-- Scrollable Body -->
     <div style="padding:16px 20px;overflow-y:auto;flex:1;display:flex;flex-direction:column;gap:14px;font-size:13px">
+
+      <!-- Merge / Split toggle -->
+      <div style="display:flex;align-items:center;gap:10px;padding:8px 12px;background:#fafafa;border:1px solid var(--border);border-radius:4px">
+        <span style="font-size:12px;color:#555;font-weight:500">Watchlist Mode</span>
+        <label style="display:flex;align-items:center;gap:5px;font-size:12px;cursor:pointer"><input type="radio" name="wl-mode" value="merge" checked style="margin:0"> <strong>Merge</strong> <span style="color:var(--text-hint)">— add rules to existing watchlist config</span></label>
+        <label style="display:flex;align-items:center;gap:5px;font-size:12px;cursor:pointer"><input type="radio" name="wl-mode" value="split" style="margin:0"> <strong>Split</strong> <span style="color:var(--text-hint)">— create a separate watchlist entry</span></label>
+      </div>
 
       <!-- Row 1: Account + Symbol -->
       <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px">

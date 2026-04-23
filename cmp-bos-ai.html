@@ -1606,7 +1606,7 @@ tbody tr:hover td { background: #fffdf0; }
   <div class="card" style="margin-bottom:12px">
     <div class="card-head">
       Client Risk Lifecycle
-      <span style="font-size:11px;font-weight:400;color:var(--text-hint);margin-left:4px">10 Events · 2 Watchlist Entries</span>
+      <span style="font-size:11px;font-weight:400;color:var(--text-hint);margin-left:4px">11 Events · 2 Watchlist Entries</span>
     </div>
     <div style="padding:16px;">
       <div class="timeline">
@@ -1615,10 +1615,10 @@ tbody tr:hover td { background: #fffdf0; }
           <div class="tl-dot yellow"></div>
           <div class="tl-date">2025-12-18 ~ 2026-04-07</div>
           <div class="tl-title" style="display:flex;align-items:center;gap:6px">
-            2x pre-arranged trading (Profit)
+            2x Alert Triggered · pre-arranged trading (Profit)
             <span style="background:var(--primary);color:rgba(0,0,0,.85);font-size:10px;padding:1px 5px;border-radius:3px">Latest: Today</span>
           </div>
-          <div class="tl-desc">Source: CMP Rule · 1 Processing, 1 Cleared</div>
+          <div class="tl-desc">1 Processing, 1 Cleared · Source: CMP Rule · SPXW · Rule: pre-arranged trading (Profit) · Other Accounts: 3215450</div>
           <div style="margin-top:6px;border:1px solid var(--border);border-radius:4px;overflow:hidden">
             <div style="padding:5px 10px;background:var(--bg-gray);font-size:11px;cursor:pointer;display:flex;align-items:center;gap:6px;user-select:none" onclick="var b=document.getElementById('tl-grouped-alerts');var a=document.getElementById('tl-grouped-arr');var o=b.style.display!=='none';b.style.display=o?'none':'block';a.textContent=o?'▶':'▼'">
               <span style="font-weight:500;color:var(--text-base)">Expand 2 alerts</span>
@@ -1626,10 +1626,10 @@ tbody tr:hover td { background: #fffdf0; }
             </div>
             <div id="tl-grouped-alerts" style="display:none;border-top:1px solid var(--border);font-size:11px;color:var(--text-sec)">
               <div style="padding:6px 10px;border-bottom:1px solid var(--border)">
-                <span class="col-link" onclick="showPage('alert-details')">Alert #19150109</span> · SPXW 20260406 6615C · <span class="tag tag-processing" style="font-size:10px">Processing</span> · 2026-04-07
+                <span class="col-link" onclick="showPage('alert-details')">Alert #19150109</span> · <span class="tag tag-processing" style="font-size:10px">Processing</span> · CMP Rule · SPXW 20260406 6615C · 2026-04-07
               </div>
               <div style="padding:6px 10px">
-                <span class="col-link" onclick="showPage('alert-details')">Alert #19149230</span> · SPXW 20251217 5800C · <span class="tag tag-closed" style="font-size:10px">Cleared</span> · 2025-12-18
+                <span class="col-link" onclick="showPage('alert-details')">Alert #19149230</span> · <span class="tag tag-closed" style="font-size:10px">Cleared</span> · CMP Rule · SPXW 20251217 5800C · 2025-12-18
               </div>
             </div>
           </div>
@@ -1643,24 +1643,31 @@ tbody tr:hover td { background: #fffdf0; }
         </div>
 
         <div class="tl-item">
+          <div class="tl-dot red"></div>
+          <div class="tl-date">2025-11-30</div>
+          <div class="tl-title">Account Restricted</div>
+          <div class="tl-desc"><span class="tag tag-restricted" style="font-size:10px">Restricted</span> · Options trading suspended · Initiated by houyuexuan · Reason: Case TS_798 Further Action conclusion</div>
+        </div>
+
+        <div class="tl-item">
           <div class="tl-dot green"></div>
           <div class="tl-date">2025-11-28</div>
           <div class="tl-title">Case TS_798 Closed</div>
-          <div class="tl-desc">Conclusion: Further Action · reported to regulator</div>
+          <div class="tl-desc"><span class="tag tag-escalated" style="font-size:10px">Further Action</span> · reported to regulator · NQ2511 · Other Accounts: 4183296</div>
         </div>
 
         <div class="tl-item">
           <div class="tl-dot red"></div>
           <div class="tl-date">2025-11-02</div>
           <div class="tl-title"><span class="col-link" onclick="showPage('case-details')">Case TS_798</span> Opened</div>
-          <div class="tl-desc">Status: Open · NQ2511 · Other Accounts: 4183296 · Source: Alert Escalation</div>
+          <div class="tl-desc"><span class="tag" style="background:#fff7e6;color:#d46b08;border:1px solid #ffd591;font-size:10px">Open</span> · Source: Alert Escalation · NQ2511 · Other Accounts: 4183296</div>
         </div>
 
         <div class="tl-item">
           <div class="tl-dot yellow"></div>
           <div class="tl-date">2025-08-03</div>
-          <div class="tl-title"><span class="col-link" onclick="showPage('alert-details')">Alert #19143201</span></div>
-          <div class="tl-desc">Rule: possible ramping (without tick data) · FUBO · <span class="tag tag-closed" style="font-size:10px">Cleared</span> · Source: CMP Rule</div>
+          <div class="tl-title"><span class="col-link" onclick="showPage('alert-details')">Alert Triggered #19143201</span></div>
+          <div class="tl-desc"><span class="tag tag-closed" style="font-size:10px">Cleared</span> · Source: CMP Rule · FUBO · Rule: possible ramping (without tick data)</div>
         </div>
 
         <div class="tl-item">
@@ -1680,8 +1687,8 @@ tbody tr:hover td { background: #fffdf0; }
         <div class="tl-item">
           <div class="tl-dot yellow"></div>
           <div class="tl-date">2024-12-10</div>
-          <div class="tl-title"><span class="col-link" onclick="showPage('alert-details')">Alert #19138502</span></div>
-          <div class="tl-desc">Rule: possible ramping (without tick data) · AAPL · <span class="tag tag-closed" style="font-size:10px">Cleared</span> · Source: CMP Rule</div>
+          <div class="tl-title"><span class="col-link" onclick="showPage('alert-details')">Alert Triggered #19138502</span></div>
+          <div class="tl-desc"><span class="tag tag-closed" style="font-size:10px">Cleared</span> · Source: CMP Rule · AAPL · Rule: possible ramping (without tick data)</div>
         </div>
 
         <div class="tl-item">

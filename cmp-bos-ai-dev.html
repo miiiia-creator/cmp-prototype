@@ -1462,13 +1462,27 @@ tbody tr:hover td { background: #fffdf0; }
       </div>
     </div>
 
-    <div class="filter-bar">
+    <div class="filter-bar" style="flex-wrap:wrap">
       <span class="filter-label">Account ID</span><input class="filter-input" style="width:90px" placeholder="Account ID">
       <span class="filter-label">User ID</span><input class="filter-input" style="width:90px" placeholder="User ID">
+      <span class="filter-label">Account Type</span>
+      <select class="filter-select"><option>All</option><option>Individual</option><option>Corporate</option></select>
       <span class="filter-label">License</span>
       <select class="filter-select"><option>All</option><option>TBNZ</option><option>TBHK</option><option>TBSG</option></select>
-      <span class="filter-label">Compliance Status</span>
+      <span class="filter-label">Status</span>
       <select class="filter-select" id="client-status-filter" onchange="filterClientTable(this.value)"><option value="">All</option><option>Detected</option><option>Investigating</option><option>Restricted</option><option value="Terminated">Terminated</option><option>Watchlist</option><option>Cleared</option></select>
+      <span class="filter-label">WL Since</span>
+      <input type="date" class="filter-input" style="width:115px">
+      <span style="font-size:11px;color:var(--text-hint)">~</span>
+      <input type="date" class="filter-input" style="width:115px">
+      <span class="filter-label">WL Expiry</span>
+      <input type="date" class="filter-input" style="width:115px">
+      <span style="font-size:11px;color:var(--text-hint)">~</span>
+      <input type="date" class="filter-input" style="width:115px">
+      <span class="filter-label">Alerts ≥</span>
+      <input type="number" class="filter-input" style="width:50px" min="0" placeholder="0">
+      <span class="filter-label">Cases ≥</span>
+      <input type="number" class="filter-input" style="width:50px" min="0" placeholder="0">
       <button class="btn btn-primary btn-sm">Search</button>
       <button class="btn btn-sm">Reset</button>
     </div>
@@ -1483,7 +1497,7 @@ tbody tr:hover td { background: #fffdf0; }
           <tr>
             <th style="width:32px"><input type="checkbox"></th>
             <th>Account ID</th><th>User ID</th><th>Account Type</th><th>License</th><th>Registration</th>
-            <th>Compliance Status</th><th>Watchlist Since</th><th>Watchlist Expiry</th><th>Total Alerts</th><th>Linked Cases</th><th>Last Alert</th>
+            <th>Compliance Status</th><th>Watchlist Since</th><th>Watchlist Expiry</th><th>Alerts</th><th>Cases</th><th>Last Alert</th>
             <th>Operation</th>
           </tr>
         </thead>

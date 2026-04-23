@@ -1471,18 +1471,14 @@ tbody tr:hover td { background: #fffdf0; }
       <select class="filter-select"><option>All</option><option>TBNZ</option><option>TBHK</option><option>TBSG</option></select>
       <span class="filter-label">Status</span>
       <select class="filter-select" id="client-status-filter" onchange="filterClientTable(this.value)"><option value="">All</option><option>Detected</option><option>Investigating</option><option>Restricted</option><option value="Terminated">Terminated</option><option>Watchlist</option><option>Cleared</option></select>
-      <span class="filter-label">WL Since</span>
-      <input type="date" class="filter-input" style="width:115px">
+      <span class="filter-label">On Watchlist During</span>
+      <input type="date" class="filter-input" style="width:115px" placeholder="From">
       <span style="font-size:11px;color:var(--text-hint)">~</span>
-      <input type="date" class="filter-input" style="width:115px">
-      <span class="filter-label">WL Expiry</span>
-      <input type="date" class="filter-input" style="width:115px">
-      <span style="font-size:11px;color:var(--text-hint)">~</span>
-      <input type="date" class="filter-input" style="width:115px">
-      <span class="filter-label">Alerts ≥</span>
-      <input type="number" class="filter-input" style="width:50px" min="0" placeholder="0">
-      <span class="filter-label">Cases ≥</span>
-      <input type="number" class="filter-input" style="width:50px" min="0" placeholder="0">
+      <input type="date" class="filter-input" style="width:115px" placeholder="To">
+      <span class="filter-label">Alerts</span>
+      <select class="filter-select" style="width:60px"><option>Any</option><option>≥ 1</option><option>≥ 3</option><option>≥ 5</option><option>≥ 10</option></select>
+      <span class="filter-label">Cases</span>
+      <select class="filter-select" style="width:60px"><option>Any</option><option>= 0</option><option>≥ 1</option><option>≥ 3</option></select>
       <button class="btn btn-primary btn-sm">Search</button>
       <button class="btn btn-sm">Reset</button>
     </div>

@@ -3060,26 +3060,24 @@ function drawAssocGraph(suffix) {
   const W = cssW, H = cssH;
 
   const TYPE = {
-    alert:  { bg:'#fff7e6', border:'#fa8c16', text:'#d46b08', label:'ALERT'  },
-    case:   { bg:'#f9f0ff', border:'#7c3aed', text:'#6d28d9', label:'CASE'   },
-    client: { bg:'#e6f4ff', border:'#2563eb', text:'#1d4ed8', label:'CLIENT' },
-    ip:     { bg:'#e6fffb', border:'#13c2c2', text:'#006d75', label:'IP'     },
-    device: { bg:'#f0f5ff', border:'#597ef7', text:'#1d39c4', label:'DEVICE' },
-    reg:    { bg:'#f6ffed', border:'#52c41a', text:'#389e0d', label:'REG'    },
+    alert:   { bg:'#fff7e6', border:'#fa8c16', text:'#d46b08', label:'ALERT'   },
+    case:    { bg:'#f9f0ff', border:'#7c3aed', text:'#6d28d9', label:'CASE'    },
+    account: { bg:'#e6f4ff', border:'#2563eb', text:'#1d4ed8', label:'ACCOUNT' },
+    ip:      { bg:'#e6fffb', border:'#13c2c2', text:'#006d75', label:'IP'      },
+    device:  { bg:'#f0f5ff', border:'#597ef7', text:'#1d39c4', label:'DEVICE'  },
   };
 
   const GRAPHS = {
     alert: {
       nodes: [
-        { id:'19150109',     type:'alert',  level:0, fx:0.50, fy:0.40, score:82, symbol:'SPXW',  rule:'Pre-arranged', page:'alert-details'  },
-        { id:'3215451',      type:'client', level:1, fx:0.18, fy:0.68, risk:'High', alerts:12, watchlist:true,        page:'client-details' },
-        { id:'TS_824',       type:'case',   level:1, fx:0.82, fy:0.68, status:'Processing', alerts:3,                 page:'case-details'   },
-        { id:'19150101',     type:'alert',  level:2, fx:0.05, fy:0.22, score:79, symbol:'SPXW',                       page:'alert-details'  },
-        { id:'19147810',     type:'alert',  level:2, fx:0.14, fy:0.90, score:45, symbol:'TSLA',                       page:'alert-details'  },
-        { id:'3215450',      type:'client', level:2, fx:0.86, fy:0.22, risk:'Med', alerts:5,                          page:'client-details' },
-        { id:'218.82.x.9',   type:'ip',     level:2, fx:0.68, fy:0.14, ip:'218.82.19.9'    },
-        { id:'DEV-A4C3F0',   type:'device', level:2, fx:0.93, fy:0.50, devNote:'Web Client' },
-        { id:'NZ/AKL',       type:'reg',    level:2, fx:0.05, fy:0.52, regNote:'Auckland NZ' },
+        { id:'19150109',     type:'alert',   level:0, fx:0.50, fy:0.40, score:82, symbol:'SPXW',  rule:'Pre-arranged', page:'alert-details'  },
+        { id:'3215451',      type:'account', level:1, fx:0.18, fy:0.68, alerts:12,                                     page:'client-details' },
+        { id:'TS_824',       type:'case',    level:1, fx:0.82, fy:0.68, status:'Processing', symbol:'SPXW', alerts:3,  page:'case-details'   },
+        { id:'19150101',     type:'alert',   level:2, fx:0.05, fy:0.22, score:79, symbol:'SPXW',                       page:'alert-details'  },
+        { id:'19147810',     type:'alert',   level:2, fx:0.14, fy:0.90, score:45, symbol:'TSLA',                       page:'alert-details'  },
+        { id:'3215450',      type:'account', level:2, fx:0.86, fy:0.22, alerts:5,                                      page:'client-details' },
+        { id:'218.82.x.9',   type:'ip',      level:2, fx:0.68, fy:0.14, ip:'218.82.19.9'    },
+        { id:'DEV-A4C3F0',   type:'device',  level:2, fx:0.93, fy:0.50, devNote:'Web Client' },
       ],
       edges: [
         { a:0, b:1, label:'Account'       },
@@ -3090,20 +3088,18 @@ function drawAssocGraph(suffix) {
         { a:1, b:6, label:'Shared IP'     },
         { a:5, b:6, label:'Same IP'       },
         { a:1, b:7, label:'Device'        },
-        { a:1, b:8, label:'Reg Location'  },
       ],
     },
     case: {
       nodes: [
-        { id:'TS_824',       type:'case',   level:0, fx:0.50, fy:0.40, status:'Processing', alerts:3,                 page:'case-details'   },
-        { id:'19150109',     type:'alert',  level:1, fx:0.18, fy:0.20, score:82, symbol:'SPXW', rule:'Pre-arranged',   page:'alert-details'  },
-        { id:'19150101',     type:'alert',  level:1, fx:0.18, fy:0.78, score:79, symbol:'SPXW', rule:'Wash Trade',     page:'alert-details'  },
-        { id:'3215451',      type:'client', level:1, fx:0.82, fy:0.44, risk:'High', alerts:12, watchlist:true,         page:'client-details' },
-        { id:'3215450',      type:'client', level:2, fx:0.05, fy:0.58, risk:'Med', alerts:5,                           page:'client-details' },
-        { id:'TS_798',       type:'case',   level:2, fx:0.94, fy:0.14, status:'Closed', alerts:5,                      page:'case-details'   },
-        { id:'218.82.x.9',   type:'ip',     level:2, fx:0.68, fy:0.12, ip:'218.82.19.9'    },
-        { id:'DEV-A4C3F0',   type:'device', level:2, fx:0.94, fy:0.68, devNote:'Web Client' },
-        { id:'NZ/AKL',       type:'reg',    level:2, fx:0.05, fy:0.88, regNote:'Auckland NZ' },
+        { id:'TS_824',       type:'case',    level:0, fx:0.50, fy:0.40, status:'Processing', symbol:'SPXW', alerts:3,  page:'case-details'   },
+        { id:'19150109',     type:'alert',   level:1, fx:0.18, fy:0.20, score:82, symbol:'SPXW', rule:'Pre-arranged',  page:'alert-details'  },
+        { id:'19150101',     type:'alert',   level:1, fx:0.18, fy:0.78, score:79, symbol:'SPXW', rule:'Wash Trade',    page:'alert-details'  },
+        { id:'3215451',      type:'account', level:1, fx:0.82, fy:0.44, alerts:12,                                     page:'client-details' },
+        { id:'3215450',      type:'account', level:2, fx:0.05, fy:0.58, alerts:5,                                      page:'client-details' },
+        { id:'TS_798',       type:'case',    level:2, fx:0.94, fy:0.14, status:'Closed', symbol:'NQ2511', alerts:5,    page:'case-details'   },
+        { id:'218.82.x.9',   type:'ip',      level:2, fx:0.68, fy:0.12, ip:'218.82.19.9'    },
+        { id:'DEV-A4C3F0',   type:'device',  level:2, fx:0.94, fy:0.68, devNote:'Web Client' },
       ],
       edges: [
         { a:0, b:1, label:'Trigger Alert' },
@@ -3114,20 +3110,18 @@ function drawAssocGraph(suffix) {
         { a:3, b:6, label:'Shared IP'     },
         { a:4, b:6, label:'Same IP'       },
         { a:3, b:7, label:'Device'        },
-        { a:3, b:8, label:'Reg Location'  },
       ],
     },
     client: {
       nodes: [
-        { id:'3215451',      type:'client', level:0, fx:0.50, fy:0.40, risk:'High', alerts:12, watchlist:true,         page:'client-details' },
-        { id:'19150109',     type:'alert',  level:1, fx:0.18, fy:0.20, score:82, symbol:'SPXW', rule:'Pre-arranged',   page:'alert-details'  },
-        { id:'19150101',     type:'alert',  level:1, fx:0.18, fy:0.75, score:79, symbol:'SPXW', rule:'Wash Trade',     page:'alert-details'  },
-        { id:'TS_824',       type:'case',   level:1, fx:0.82, fy:0.44, status:'Processing', alerts:3,                  page:'case-details'   },
-        { id:'3215450',      type:'client', level:2, fx:0.05, fy:0.44, risk:'Med', alerts:5,                           page:'client-details' },
-        { id:'19149981',     type:'alert',  level:2, fx:0.94, fy:0.18, score:67, symbol:'NQ2506',                      page:'alert-details'  },
-        { id:'218.82.x.9',   type:'ip',     level:2, fx:0.72, fy:0.14, ip:'218.82.19.9'    },
-        { id:'DEV-A4C3F0',   type:'device', level:2, fx:0.94, fy:0.60, devNote:'Web Client' },
-        { id:'NZ/AKL',       type:'reg',    level:2, fx:0.66, fy:0.88, regNote:'Auckland NZ' },
+        { id:'3215451',      type:'account', level:0, fx:0.50, fy:0.40, alerts:12,                                     page:'client-details' },
+        { id:'19150109',     type:'alert',   level:1, fx:0.18, fy:0.20, score:82, symbol:'SPXW', rule:'Pre-arranged',  page:'alert-details'  },
+        { id:'19150101',     type:'alert',   level:1, fx:0.18, fy:0.75, score:79, symbol:'SPXW', rule:'Wash Trade',    page:'alert-details'  },
+        { id:'TS_824',       type:'case',    level:1, fx:0.82, fy:0.44, status:'Processing', symbol:'SPXW', alerts:3,  page:'case-details'   },
+        { id:'3215450',      type:'account', level:2, fx:0.05, fy:0.44, alerts:5,                                      page:'client-details' },
+        { id:'19149981',     type:'alert',   level:2, fx:0.94, fy:0.18, score:67, symbol:'NQ2506',                     page:'alert-details'  },
+        { id:'218.82.x.9',   type:'ip',      level:2, fx:0.72, fy:0.14, ip:'218.82.19.9'    },
+        { id:'DEV-A4C3F0',   type:'device',  level:2, fx:0.94, fy:0.60, devNote:'Web Client' },
       ],
       edges: [
         { a:0, b:1, label:'Alert'         },
@@ -3138,7 +3132,6 @@ function drawAssocGraph(suffix) {
         { a:0, b:6, label:'Shared IP'     },
         { a:4, b:6, label:'Same IP'       },
         { a:0, b:7, label:'Device'        },
-        { a:0, b:8, label:'Reg Location'  },
       ],
     },
   };
@@ -3220,22 +3213,16 @@ function drawAssocGraph(suffix) {
         const sc = n.status === 'Processing' ? '#d97706' : n.status === 'Escalated' ? '#cf1322' : '#6b7280';
         ctx.fillStyle = sc; ctx.font = 'bold 9px system-ui,sans-serif'; ctx.textAlign = 'center';
         ctx.fillText(n.status || '', n.x, sy);
-        if (n.alerts !== undefined) { ctx.fillStyle = '#9ca3af'; ctx.font = '9px system-ui,sans-serif'; ctx.fillText(n.alerts + ' alerts', n.x, sy + 13); }
-      } else if (n.type === 'client') {
-        const rc = n.risk === 'High' ? '#cf1322' : n.risk === 'Med' ? '#d97706' : '#52c41a';
-        ctx.fillStyle = rc; ctx.font = 'bold 9px system-ui,sans-serif'; ctx.textAlign = 'center';
-        ctx.fillText('Risk: ' + (n.risk || ''), n.x, sy);
-        if (n.alerts !== undefined) { ctx.fillStyle = '#9ca3af'; ctx.font = '9px system-ui,sans-serif'; ctx.fillText(n.alerts + ' alerts', n.x, sy + 13); }
-        if (n.watchlist) { ctx.fillStyle = '#d97706'; ctx.font = '9px system-ui,sans-serif'; ctx.fillText('● Watchlist', n.x, sy + 26); }
+        if (n.symbol) { ctx.fillStyle = '#374151'; ctx.font = '9px system-ui,sans-serif'; ctx.fillText(n.symbol, n.x, sy + 13); }
+        if (n.alerts !== undefined) { ctx.fillStyle = '#9ca3af'; ctx.font = '9px system-ui,sans-serif'; ctx.fillText(n.alerts + ' alerts', n.x, sy + (n.symbol ? 24 : 13)); }
+      } else if (n.type === 'account') {
+        if (n.alerts !== undefined) { ctx.fillStyle = '#9ca3af'; ctx.font = '9px system-ui,sans-serif'; ctx.textAlign = 'center'; ctx.fillText(n.alerts + ' alerts', n.x, sy); }
       } else if (n.type === 'ip') {
         ctx.fillStyle = '#006d75'; ctx.font = '9px system-ui,sans-serif'; ctx.textAlign = 'center';
         ctx.fillText(n.ip || n.id, n.x, sy);
       } else if (n.type === 'device') {
         ctx.fillStyle = '#1d39c4'; ctx.font = '9px system-ui,sans-serif'; ctx.textAlign = 'center';
         ctx.fillText(n.devNote || '', n.x, sy);
-      } else if (n.type === 'reg') {
-        ctx.fillStyle = '#389e0d'; ctx.font = '9px system-ui,sans-serif'; ctx.textAlign = 'center';
-        ctx.fillText(n.regNote || n.id, n.x, sy);
       }
     } else {
       // L2: small corner badge or type indicator
@@ -3809,12 +3796,11 @@ function submitWLModal() {
           <select id="graph-type-alert" class="filter-select" style="width:75px;font-size:11px"><option>Alert</option><option>Case</option><option>Account</option></select>
           <input id="graph-center-alert" class="filter-input" style="width:100px;font-size:11px" value="19150109" placeholder="ID">
           <button class="btn btn-primary btn-sm" id="graph-gen-btn-alert" onclick="regenAssocGraph('alert')" style="font-size:11px">Generate</button>
-          <span id="graph-info-alert" style="font-size:10px;color:var(--text-hint);margin-left:auto">2 L1 nodes · 3 L2 nodes</span>
         </div>
         <div style="display:flex;flex-wrap:wrap;gap:8px;margin-bottom:8px;font-size:11px;color:var(--text-hint)">
           <span style="display:flex;align-items:center;gap:3px"><span style="width:9px;height:9px;border-radius:50%;background:#fff7e6;border:1.5px solid #fa8c16;display:inline-block"></span>Alert</span>
           <span style="display:flex;align-items:center;gap:3px"><span style="width:9px;height:9px;border-radius:50%;background:#f9f0ff;border:1.5px solid #7c3aed;display:inline-block"></span>Case</span>
-          <span style="display:flex;align-items:center;gap:3px"><span style="width:9px;height:9px;border-radius:50%;background:#e6f4ff;border:1.5px solid #2563eb;display:inline-block"></span>Client</span>
+          <span style="display:flex;align-items:center;gap:3px"><span style="width:9px;height:9px;border-radius:50%;background:#e6f4ff;border:1.5px solid #2563eb;display:inline-block"></span>Account</span>
         </div>
         <canvas id="assoc-canvas-alert" height="340" style="width:100%;display:block;border:1px solid var(--border);border-radius:4px"></canvas>
       </div>
@@ -4271,12 +4257,11 @@ function submitWLModal() {
           <select id="graph-type-case" class="filter-select" style="width:75px;font-size:11px"><option>Case</option><option>Alert</option><option>Account</option></select>
           <input id="graph-center-case" class="filter-input" style="width:100px;font-size:11px" value="TS_824" placeholder="ID">
           <button class="btn btn-primary btn-sm" id="graph-gen-btn-case" onclick="regenAssocGraph('case')" style="font-size:11px">Generate</button>
-          <span id="graph-info-case" style="font-size:10px;color:var(--text-hint);margin-left:auto">3 L1 nodes · 2 L2 nodes</span>
         </div>
         <div style="display:flex;flex-wrap:wrap;gap:8px;margin-bottom:8px;font-size:11px;color:var(--text-hint)">
           <span style="display:flex;align-items:center;gap:3px"><span style="width:9px;height:9px;border-radius:50%;background:#fff7e6;border:1.5px solid #fa8c16;display:inline-block"></span>Alert</span>
           <span style="display:flex;align-items:center;gap:3px"><span style="width:9px;height:9px;border-radius:50%;background:#f9f0ff;border:1.5px solid #7c3aed;display:inline-block"></span>Case</span>
-          <span style="display:flex;align-items:center;gap:3px"><span style="width:9px;height:9px;border-radius:50%;background:#e6f4ff;border:1.5px solid #2563eb;display:inline-block"></span>Client</span>
+          <span style="display:flex;align-items:center;gap:3px"><span style="width:9px;height:9px;border-radius:50%;background:#e6f4ff;border:1.5px solid #2563eb;display:inline-block"></span>Account</span>
         </div>
         <canvas id="assoc-canvas-case" height="340" style="width:100%;display:block;border:1px solid var(--border);border-radius:4px"></canvas>
       </div>
@@ -4668,12 +4653,11 @@ function submitWLModal() {
           <select id="graph-type-client" class="filter-select" style="width:75px;font-size:11px"><option>Account</option><option>Alert</option><option>Case</option></select>
           <input id="graph-center-client" class="filter-input" style="width:100px;font-size:11px" value="3215451" placeholder="ID">
           <button class="btn btn-primary btn-sm" id="graph-gen-btn-client" onclick="regenAssocGraph('client')" style="font-size:11px">Generate</button>
-          <span id="graph-info-client" style="font-size:10px;color:var(--text-hint);margin-left:auto">3 L1 nodes · 2 L2 nodes</span>
         </div>
         <div style="display:flex;flex-wrap:wrap;gap:8px;margin-bottom:8px;font-size:11px;color:var(--text-hint)">
           <span style="display:flex;align-items:center;gap:3px"><span style="width:9px;height:9px;border-radius:50%;background:#fff7e6;border:1.5px solid #fa8c16;display:inline-block"></span>Alert</span>
           <span style="display:flex;align-items:center;gap:3px"><span style="width:9px;height:9px;border-radius:50%;background:#f9f0ff;border:1.5px solid #7c3aed;display:inline-block"></span>Case</span>
-          <span style="display:flex;align-items:center;gap:3px"><span style="width:9px;height:9px;border-radius:50%;background:#e6f4ff;border:1.5px solid #2563eb;display:inline-block"></span>Client</span>
+          <span style="display:flex;align-items:center;gap:3px"><span style="width:9px;height:9px;border-radius:50%;background:#e6f4ff;border:1.5px solid #2563eb;display:inline-block"></span>Account</span>
         </div>
         <canvas id="assoc-canvas-client" height="340" style="width:100%;display:block;border:1px solid var(--border);border-radius:4px"></canvas>
       </div>

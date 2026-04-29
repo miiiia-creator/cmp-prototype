@@ -787,7 +787,7 @@ tbody tr:hover td { background: #fffdf0; }
 
       <!-- Priority Queue -->
       <div class="card">
-        <div class="card-head">Priority Queue <span class="section-subtitle">Sorted by AI Score</span></div>
+        <div class="card-head">Priority Queue <span class="section-subtitle">Sorted by AI Risk Score</span></div>
         <div style="padding:0 16px 8px">
           <div class="queue-row">
             <div>
@@ -873,7 +873,7 @@ tbody tr:hover td { background: #fffdf0; }
     <input class="filter-input" style="width:90px" placeholder="Account ID">
     <span class="filter-label">Symbol</span>
     <input class="filter-input" style="width:80px" placeholder="Symbol">
-    <span class="filter-label" style="color:var(--ai-color);font-weight:500">AI Score ≥</span>
+    <span class="filter-label" style="color:var(--ai-color);font-weight:500">AI Risk Score ≥</span>
     <select class="filter-select" style="width:64px;border-color:var(--ai-border)"><option>—</option><option>50</option><option>70</option><option>85</option></select>
     <button class="btn btn-primary btn-sm">Search</button>
     <button class="btn btn-sm">Reset</button>
@@ -892,7 +892,7 @@ tbody tr:hover td { background: #fffdf0; }
           <th style="width:32px"><input type="checkbox"></th>
           <th>ID</th><th>Hit Time</th><th>Source</th><th>Account ID</th><th>Symbol</th><th>License</th>
           <th>Rule Name</th><th>Status</th><th>Linked Case</th>
-          <th class="ai-col" style="color:var(--ai-dark)">AI Score <span class="tag tag-ai">AI</span></th>
+          <th class="ai-col" style="color:var(--ai-dark)">AI Risk Score <span class="tag tag-ai">AI</span></th>
           <th>Alert Owner</th><th>Operation</th>
         </tr>
       </thead>
@@ -1037,13 +1037,16 @@ tbody tr:hover td { background: #fffdf0; }
 
       <!-- ① Score + Verdict (same row) -->
       <div style="display:flex;align-items:flex-start;gap:14px;margin-bottom:14px">
-        <div style="flex-shrink:0;text-align:center">
-          <div class="ai-score-big high">82</div>
-          <div style="font-size:10px;color:var(--text-hint);margin-top:2px">Risk Level</div>
-          <div style="font-size:10px;color:var(--text-hint)">Confidence 74%</div>
-          <div style="margin-top:6px;padding-top:6px;border-top:1px solid #f0f0f0">
-            <div style="font-size:18px;font-weight:700;color:#531dab;line-height:1">91</div>
-            <div style="font-size:10px;color:var(--text-hint);margin-top:2px">Anomaly Score</div>
+        <div style="flex-shrink:0;display:flex;gap:10px;align-items:stretch">
+          <div style="text-align:center;background:#fff2f0;border:1px solid #ffa39e;border-radius:8px;padding:10px 14px;min-width:72px">
+            <div style="font-size:28px;font-weight:700;color:#cf1322;line-height:1">82</div>
+            <div style="font-size:10px;color:#cf1322;margin-top:4px;font-weight:500">Risk Level</div>
+            <div style="font-size:9px;color:var(--text-hint);margin-top:1px">Confidence 74%</div>
+          </div>
+          <div style="text-align:center;background:#f9f0ff;border:1px solid #d3adf7;border-radius:8px;padding:10px 14px;min-width:72px">
+            <div style="font-size:28px;font-weight:700;color:#531dab;line-height:1">91</div>
+            <div style="font-size:10px;color:#531dab;margin-top:4px;font-weight:500">Anomaly</div>
+            <div style="font-size:9px;color:var(--text-hint);margin-top:1px">Score</div>
           </div>
         </div>
         <div style="flex:1;background:#fff2f0;border:1px solid #ffa39e;border-radius:5px;padding:9px 14px">
